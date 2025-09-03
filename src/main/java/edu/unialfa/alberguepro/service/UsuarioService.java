@@ -18,15 +18,14 @@ public class UsuarioService {
     public void salvar(Usuario usuario) {
         // Se o usuário já existe (estamos editando)
         if (usuario.getId() != null) {
-            Usuario usuarioExistente = usuarioRepository.findById(usuario.getId()).orElse(null);
-            // Se uma nova senha foi fornecida, criptografa e atualiza
+            // Se uma nova senha foi fornecida (não está em branco), criptografa e atualiza
             if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {
                 usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
             } else {
-                // Senão, mantém a senha antiga que já estava no banco
-                if (usuarioExistente != null) {
+                // Senão, busca a senha atual no banco e a mantém
+                usuarioRepository.findById(usuario.getId()).ifPresent(usuarioExistente -> {
                     usuario.setPassword(usuarioExistente.getPassword());
-                }
+                });
             }
         } else {
             // Se é um usuário novo, apenas criptografa a senha
