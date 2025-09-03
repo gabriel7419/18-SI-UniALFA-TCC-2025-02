@@ -15,11 +15,21 @@
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
         </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-link nav-link">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </form>
+            </li>
+        </ul>
     </nav>
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="#" class="brand-link">
             <span class="brand-text font-weight-light">AlberguePro</span>
         </a>
+        
 
         <div class="sidebar">
             <nav class="mt-2">
@@ -60,6 +70,14 @@
                                 </a>
                             </li>
                         </ul>
+                    </li>
+                    <li class="nav-item">
+                    <a href="/admin/usuarios" class="nav-link">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Gerenciar Usuários
+                        </p>
+                    </a>
                     </li>
                 </ul>
             </nav>

@@ -14,33 +14,45 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/webjars/**", "/login").permitAll() // Permite acesso à página de login e aos recursos do AdminLTE
-                        .anyRequest().authenticated() // Exige autenticação para todas as outras páginas
-                )
-                .formLogin((form) -> form
-                        .loginPage("/login") // Define a sua página de login personalizada
-                        .defaultSuccessUrl("/", true) // Redireciona para a página inicial após o login
-                        .permitAll()
-                )
-                .logout((logout) -> logout.permitAll());
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+            .authorizeHttpRequests((requests) -> requests
+                    .requestMatchers("/webjars/**", "/login").permitAll()
+                    .requestMatchers("/admin/**").hasRole("ADMIN") // Apenas usuários com role ADMIN podem acessar /admin/...
+                    .anyRequest().authenticated()
+            )
+            .formLogin((form) -> form
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/", true)
+                    .permitAll()
+            )
+            .logout((logout) -> logout
+                .logoutSuccessUrl("/login?logout") // Redireciona para a pág. de login com msg
+                .permitAll()
+            );
 
-        return http.build();
-    }
+    return http.build();
+}
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        // Cria um usuário em memória para teste
-        UserDetails user =
-                User.withDefaultPasswordEncoder()
-                        .username("user")
-                        .password("password")
-                        .roles("USER")
-                        .build();
+@Bean
+public UserDetailsService userDetailsService() {
+    // Cria um usuário comum
+    UserDetails user =
+            User.withDefaultPasswordEncoder()
+                    .username("user")
+                    .password("password")
+                    .roles("USER")
+                    .build();
 
-        return new InMemoryUserDetailsManager(user);
-    }
+    // Cria um usuário administrador
+    UserDetails admin =
+            User.withDefaultPasswordEncoder()
+                    .username("admin")
+                    .password("admin123")
+                    .roles("ADMIN")
+                    .build();
+
+    return new InMemoryUserDetailsManager(user, admin);
+}
 }

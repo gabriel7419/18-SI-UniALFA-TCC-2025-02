@@ -1,0 +1,37 @@
+package edu.unialfa.alberguepro.controller;
+
+import edu.unialfa.alberguepro.model.Usuario;
+import edu.unialfa.alberguepro.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/admin/usuarios")
+public class UsuarioController {
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @GetMapping
+    public String listarUsuarios(Model model) {
+        model.addAttribute("usuarios", usuarioRepository.findAll());
+        return "admin/usuarios/index"; // -> templates/admin/usuarios/index.html
+    }
+
+    @GetMapping("/novo")
+    public String novoUsuarioForm(Model model) {
+        model.addAttribute("usuario", new Usuario());
+        return "admin/usuarios/form"; // -> templates/admin/usuarios/form.html
+    }
+
+    @PostMapping("/salvar")
+    public String salvarUsuario(Usuario usuario) {
+        // PROVISÓRIO - A SENHA NÃO É CRIPTOGRAFADA
+        usuarioRepository.save(usuario);
+        return "redirect:/admin/usuarios";
+    }
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title}, ~{::section})}">
+<head>
+    <title>Cadastro de Usuário - AlberguePro</title>
+</head>
+<body>
+    <section>
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Administrar Usuários - Cadastro</h3>
+          </div>
+          <form th:action="@{/admin/usuarios/salvar}" th:object="${usuario}" method="post">
+            <div class="card-body">
+              <div class="form-group">
+                <label for="username">Usuário</label>
+                <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="Nome do usuário">
+              </div>
+              <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Senha">
+              </div>
+              <div class="form-group">
+                <label for="role">Tipo</label>
+                <select class="form-control" id="role" th:field="*{role}">
+                    <option value="USER">Usuário</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary">Salvar</button>
+              <a href="/admin/usuarios" class="btn btn-secondary">Voltar</a>
+            </div>
+          </form>
+        </div>
+    </section>
+</body>
+</html>
