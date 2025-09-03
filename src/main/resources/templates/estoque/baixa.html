@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+<head>
+    <title>Dar Baixa no Estoque</title>
+</head>
+<body>
+<section>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Dar Baixa em Produtos do Estoque</h3>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/estoque/baixa}" method="get" class="mb-4">
+                <div class="input-group">
+                    <input type="text" name="filtro" class="form-control" placeholder="Buscar produto por nome..." th:value="${filtro}">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th style="width: 120px;">Qtd. Atual</th>
+                    <th style="width: 150px;">Unidade</th>
+                    <th style="width: 250px;">Quantidade para Baixa</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="produto : ${produtos}">
+                    <td th:text="${produto.nome}">Arroz</td>
+                    <td th:text="${produto.quantidade}">50</td>
+                    <td th:text="${produto.unidade}">kg</td>
+                    <td>
+                        <form th:action="@{/estoque/dar-baixa}" method="post" class="form-inline">
+                            <input type="hidden" name="produtoId" th:value="${produto.id}" />
+                            <div class="input-group">
+                                <input type="number" name="quantidade" class="form-control" placeholder="0" min="1" th:max="${produto.quantidade}" required>
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-success">Salvar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</body>
+</html>
