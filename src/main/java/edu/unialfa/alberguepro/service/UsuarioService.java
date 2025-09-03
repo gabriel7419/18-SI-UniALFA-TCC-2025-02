@@ -5,6 +5,7 @@ import edu.unialfa.alberguepro.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UsuarioService {
@@ -16,7 +17,7 @@ public class UsuarioService {
     private PasswordEncoder passwordEncoder;
 
     public void salvar(Usuario usuario) {
-        // Se o usuário já existe (estamos editando)
+        // Se o usuário já existe
         if (usuario.getId() != null) {
             // Se uma nova senha foi fornecida (não está em branco), criptografa e atualiza
             if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {
@@ -37,5 +38,18 @@ public class UsuarioService {
 
         public void excluir(Long id) {
         usuarioRepository.deleteById(id);
+    }
+
+     @Transactional
+    public void toggleAtivo(Long id) {
+        // Busca o usuário no banco ou lança uma exceção se não encontrar
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Usuário não encontrado: " + id));
+        
+        // Inverte o status atual (se era true, vira false; se era false, vira true)
+        usuario.setAtivo(!usuario.isAtivo());
+        
+        // Salva a alteração no banco de dados
+        usuarioRepository.save(usuario);
     }
 }

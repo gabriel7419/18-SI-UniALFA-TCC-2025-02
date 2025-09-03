@@ -57,4 +57,10 @@ public class UsuarioController {
         usuarioService.excluir(id);
         return "redirect:/admin/usuarios";
     }
+
+    @PostMapping("/toggle/{id}")
+    public String toggleAtivo(@PathVariable("id") Long id) {
+        usuarioService.toggleAtivo(id);
+        return "redirect:/admin/usuarios";
+    }
 }

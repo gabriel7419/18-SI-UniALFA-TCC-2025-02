@@ -14,6 +14,7 @@ public class Usuario {
     private String username;
     private String password;
     private String role; // Ex: "ADMIN", "USER"
+    private boolean ativo = true;
     
     // Getters e Setters
     public Long getId() {
@@ -39,5 +40,12 @@ public class Usuario {
     }
     public void setRole(String role) {
         this.role = role;
+    }
+    
+    public boolean isAtivo() {
+        return ativo;
+    }
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }
