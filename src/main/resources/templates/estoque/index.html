@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+<head>
+    <title>Consultar Estoque</title>
+</head>
+<body>
+    <section>
+        <div class="mb-3">
+            <a th:href="@{/estoque/novo}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Novo Produto
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Lista de Produtos no Estoque</h3>
+            </div>
+            <div class="card-body">
+                <div th:if="${#lists.isEmpty(produtos)}" class="alert alert-info">
+                    Nenhum produto cadastrado no estoque.
+                </div>
+
+                <table class="table table-bordered" th:if="${not #lists.isEmpty(produtos)}">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Tipo</th>
+                            <th>Quantidade</th>
+                            <th>Unidade</th>
+                            <th>Data de Vencimento</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="produto : ${produtos}" th:classappend="${produto.quantidade == 0 ? 'table-warning' : ''}">
+                            <td th:text="${produto.nome}">Arroz</td>
+                            <td th:text="${produto.tipo}">Alimento</td>
+                            <td>
+                                <span th:text="${produto.quantidade}">50</span>
+                                <span th:if="${produto.quantidade == 0}" class="badge bg-danger">Esgotado</span>
+                            </td>
+                            <td th:text="${produto.unidade}">kg</td>
+                            <td th:text="${#temporals.format(produto.dataDeVencimento, 'dd/MM/yyyy')}">15/10/2025</td>
+                            <td>
+                                <a th:href="@{/estoque/editar/{id}(id=${produto.id})}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

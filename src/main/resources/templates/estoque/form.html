@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+<head>
+    <title>Cadastrar Produto no Estoque</title>
+</head>
+<body>
+    <section>
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Controle de Estoque - Cadastrar</h3>
+          </div>
+          <form th:action="@{/estoque/salvar}" th:object="${produto}" method="post">
+            <input type="hidden" th:field="*{id}" />
+            <div class="card-body">
+              <div class="form-group">
+                <label>Tipo</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" th:field="*{tipo}" value="Alimento" checked>
+                  <label class="form-check-label">Alimento</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" th:field="*{tipo}" value="Higiene">
+                  <label class="form-check-label">Higiene</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" th:field="*{tipo}" value="Limpeza">
+                  <label class="form-check-label">Limpeza</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" class="form-control" id="nome" th:field="*{nome}" placeholder="Nome do produto" required>
+              </div>
+              <div class="form-group">
+                <label for="quantidade">Quantidade</label>
+                <input type="number" class="form-control" id="quantidade" th:field="*{quantidade}" placeholder="0" required>
+              </div>
+              <div class="form-group">
+                <label for="unidade">Unidade</label>
+                <input type="text" class="form-control" id="unidade" th:field="*{unidade}" placeholder="kg, pacote, litro, etc." required>
+              </div>
+              <div class="form-group">
+                <label for="dataDeVencimento">Data de Vencimento</label>
+                <input type="date" class="form-control" id="dataDeVencimento" th:field="*{dataDeVencimento}">
+              </div>
+            </div>
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary">Salvar</button>
+              <a th:href="@{/estoque}" class="btn btn-secondary">Cancelar</a>
+            </div>
+          </form>
+        </div>
+    </section>
+</body>
+</html>
