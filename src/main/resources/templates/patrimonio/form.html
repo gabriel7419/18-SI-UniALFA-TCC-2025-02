@@ -1,0 +1,57 @@
+<!-- Formulário de produto (novo ou edição) -->
+<!DOCTYPE html>
+<!-- Puxa o layout principal -->
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+<head>
+    <title>Cadastro de Patrimônios</title>
+</head>
+<body>
+    <section>
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Gestão de Patrimônio - Cadastrar</h3>
+          </div>
+          <!-- Formulário pra salvar produto -->
+          <form th:action="@{/patrimonio/salvar}" th:object="${patrimonio}" method="post">
+            <!-- ID escondido, pra saber se é novo ou editado -->
+            <input type="hidden" th:field="*{id}" />
+            <div class="card-body">
+              <!-- Situção do patrimonio -->
+              <div class="form-group">
+                <label>Situação</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" th:field="*{situacao}" value="Servivel" checked>
+                  <label class="form-check-label">Servivel</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" th:field="*{situacao}" value="Inservivel">
+                  <label class="form-check-label">Inservivel</label>
+                </div>
+              </div>
+              <!-- Nome do patrimonio -->
+              <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" class="form-control" id="nome" th:field="*{nome}" placeholder=" insira o nome do patrimonio" required>
+              </div>
+              <!-- Patrimonio -->
+              <div class="form-group">
+                <label for="patrimonio">Patrimônio</label>
+                <input type="number" class="form-control" id="patrimonio" th:field="*{patrimonio}" placeholder="insira o patrimônio" required>
+              </div>
+              <!-- Estado -->
+              <div class="form-group">
+                <label for="estado">Estado</label>
+                <input type="text" class="form-control" id="estado" th:field="*{estado}" placeholder="descreva o estado" required>
+              </div>
+            </div>
+            <!-- Botões -->
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary">Salvar</button>
+              <a th:href="@{/patrimonio}" class="btn btn-secondary">Cancelar</a>
+            </div>
+          </form>
+        </div>
+    </section>
+</body>
+</html>
