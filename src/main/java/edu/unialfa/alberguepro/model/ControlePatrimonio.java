@@ -20,8 +20,9 @@ public class ControlePatrimonio {
     private Long id;
 
     private Integer patrimonio;
-
     private String nome;
-    private String estado;
-    private String situacao;
+    private String data_aquisicao;
+    private String status;
+    private String local_atual;
+    private String observacao;
 }

@@ -39,8 +39,10 @@
                         <tr>
                             <th>Nome</th>
                             <th>Patrimônio</th>
-                            <th>Situação</th>
-                            <th>Estado</th>
+                            <th>Status</th>
+                            <th>Data da aquisição</th>
+                            <th>Localização atual</th>
+                            <th>Observação</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -52,8 +54,10 @@
                             <!-- Mostra os dados do produto -->
                             <td th:text="${patrimonio.nome}"></td>
                             <td th:text="${patrimonio.patrimonio}"></td>
-                            <td th:text="${patrimonio.situacao}"></td>
-                            <td th:text="${patrimonio.estado}"></td>
+                            <td th:text="${patrimonio.status}"></td>
+                            <td th:text="${patrimonio.data_aquisicao}"></td>
+                            <td th:text="${patrimonio.local_atual}"></td>
+                            <td th:text="${patrimonio.observacao}"></td>
                                 <!-- Botão pra editar o produto -->
                             <td>
                                 <a th:href="@{/patrimonio/editar/{id}(id=${patrimonio.id})}" class="btn btn-warning btn-sm">
