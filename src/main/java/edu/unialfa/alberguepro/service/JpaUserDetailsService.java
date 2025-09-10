@@ -34,6 +34,7 @@ public class JpaUserDetailsService implements UserDetailsService {
                 .username(usuario.getUsername())
                 .password(usuario.getPassword()) // A senha já está criptografada no banco
                 .roles(usuario.getRole()) // Ex: "ADMIN", "USER"
+                .disabled(!usuario.isAtivo())
                 .build();
     }
 }

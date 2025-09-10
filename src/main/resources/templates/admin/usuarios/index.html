@@ -30,7 +30,6 @@
                 <table class="table table-bordered table-hover" th:if="${not #lists.isEmpty(usuarios)}">
                     <thead>
                         <tr>
-                            <th>Código</th>
                             <th>Usuário</th>
                             <th>Tipo</th>
                             <th>Status</th>
@@ -40,21 +39,20 @@
                     <tbody>
                         <!-- Loop pra mostrar cada usuário -->
                         <tr th:each="usuario : ${usuarios}">
-                            <td th:text="${usuario.id}">1</td>
                             <td th:text="${usuario.username}">Admin</td>
                             <td th:text="${usuario.role}">ADMIN</td>
                             <td>
                                 <!-- Badge de status Ativo/Inativo -->
                                 <span th:if="${usuario.ativo}" class="badge bg-success">Ativo</span>
-                                <span th:unless="${usuario.ativo}" class="badge bg-secondary">Inativo</span>
+                                <span th:unless="${usuario.ativo}" class="badge bg-danger">Inativo</span>
                             </td>
                             <td>
                                 <!-- Botão de ativar/desativar -->
                                 <form th:action="@{/admin/usuarios/toggle/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">
                                     <button type="submit"
-                                            th:classappend="${usuario.ativo ? 'btn-outline-secondary' : 'btn-outline-success'}"
+                                            th:classappend="${usuario.ativo ? 'btn-outline-success' : 'btn-outline-danger'}"
                                             class="btn btn-sm"
-                                            style="width: 35px;"
+                                            style="width: 45px;"
                                             th:title="${usuario.ativo ? 'Desativar' : 'Ativar'}">
                                         <i th:classappend="${usuario.ativo ? 'fas fa-toggle-off' : 'fas fa-toggle-on'}"></i>
                                     </button>

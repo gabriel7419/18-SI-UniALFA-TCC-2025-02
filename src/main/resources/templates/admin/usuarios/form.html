@@ -22,19 +22,19 @@
                     <!-- Campo de usuário -->
                     <div class="form-group">
                         <label for="username">Usuário</label>
-                        <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="Nome do usuário">
+                        <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="Insira o nome de usuário." required>
                     </div>
                     <!-- Campo de senha -->
                     <div class="form-group">
                         <label for="password">Senha</label>
-                        <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Deixe em branco para não alterar">
+                        <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Insira uma senha segura.">
                     </div>
                     <!-- Seletor de tipo (role) -->
                     <div class="form-group">
                         <label for="role">Tipo</label>
                         <select class="form-control" id="role" th:field="*{role}">
-                            <option value="USER">Usuário</option>
-                            <option value="ADMIN">Admin</option>
+                            <option value="USER">Usuário - Acesso Básico</option>
+                            <option value="ADMIN">Administrador - Acesso Completo</option>
                         </select>
                     </div>
                 </div>
