@@ -60,8 +60,8 @@ public class ControlePatrimonioController {
         }
     }
 
-  /*  @GetMapping("/baixa")
-    public String darBaixaForm(@RequestParam(value = "filtro", required = false) String filtro, Model model) {
+  @GetMapping("/pesquisar")
+    public String pesquisaForm(@RequestParam(value = "filtro", required = false) String filtro, Model model) {
         List<ControlePatrimonio> controlePatrimonios;
         if (filtro != null && !filtro.isEmpty()) {
             // Se houver um filtro, busca no repositório
@@ -70,12 +70,12 @@ public class ControlePatrimonioController {
             // Senão, busca todos
             controlePatrimonios = controlePatrimonioRepository.findAll();
         }
-        model.addAttribute("produtos", controlePatrimonios);
+        model.addAttribute("patrimonios", controlePatrimonios);
         model.addAttribute("filtro", filtro); // Envia o filtro de volta para a view
-        return "patrimonio/baixa";
+        return "/patrimonio/index";
     }
 
-    @PostMapping("/dar-baixa")
+    /*@PostMapping("/dar-baixa")
     public String processarBaixaIndividual(@RequestParam("patrimonioId") Long patrimonioId, @RequestParam("quantidade") Integer quantidade) {
         estoqueService.darBaixa(produtoId, quantidade);
         // Redireciona de volta para a página de baixa para continuar o trabalho
