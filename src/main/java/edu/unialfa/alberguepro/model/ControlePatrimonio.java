@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -21,7 +23,7 @@ public class ControlePatrimonio {
 
     private Integer patrimonio;
     private String nome;
-    private String data_aquisicao;
+    private LocalDate data_aquisicao;
     private String status;
     private String local_atual;
     private String observacao;
