@@ -1,11 +1,11 @@
 package edu.unialfa.alberguepro.controller;
 
 import edu.unialfa.alberguepro.model.ControlePatrimonio;
-import edu.unialfa.alberguepro.model.Produto;
+// import edu.unialfa.alberguepro.model.Produto;
 import edu.unialfa.alberguepro.repository.ControlePatrimonioRepository;
-import edu.unialfa.alberguepro.repository.ProdutoRepository;
-import edu.unialfa.alberguepro.service.ControlePatrimonioService;
-import edu.unialfa.alberguepro.service.EstoqueService;
+// import edu.unialfa.alberguepro.repository.ProdutoRepository;
+// import edu.unialfa.alberguepro.service.ControlePatrimonioService;
+// import edu.unialfa.alberguepro.service.EstoqueService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
