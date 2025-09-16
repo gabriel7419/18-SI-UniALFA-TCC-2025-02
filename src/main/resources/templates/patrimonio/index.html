@@ -2,14 +2,24 @@
 <!DOCTYPE html>
 <!-- Puxa o layout principal, passando o título e o conteúdo -->
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+    th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+
 <head>
     <!-- Título que vai aparecer na aba do navegador -->
     <title>Consultar Patrimônio</title>
 </head>
+
 <body>
     <!-- Conteúdo principal da página -->
     <section>
+        <!-- Alerta de sucesso, só aparece se o controller mandar a 'successMessage' -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
         <!-- Botões de ação -->
         <div class="mb-3">
             <!-- Botão pra criar patrimonio novo -->
@@ -21,7 +31,8 @@
         <!-- Formulário de busca pra filtrar os patrimonios -->
         <form th:action="@{/patrimonio/pesquisar}" method="get" class="mb-4">
             <div class="input-group">
-                <input type="text" name="filtro" class="form-control" placeholder="Buscar os patrimônios por nome..." th:value="${filtro}">
+                <input type="text" name="filtro" class="form-control" placeholder="Buscar os patrimônios por nome..."
+                    th:value="${filtro}">
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="submit">
                         <i class="fas fa-search"></i> Buscar
@@ -63,12 +74,13 @@
                             <td th:text="${patrimonio.nome}"></td>
                             <td th:text="${patrimonio.patrimonio}"></td>
                             <td th:text="${patrimonio.status}"></td>
-                            <td th:text="${patrimonio.data_aquisicao}"></td>
-                            <td th:text="${patrimonio.local_atual}"></td>
+                            <td th:text="${#temporals.format(patrimonio.dataAquisicao, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${patrimonio.localAtual}"></td>
                             <td th:text="${patrimonio.observacao}"></td>
-                                <!-- Botão pra editar o produto -->
+                            <!-- Botão pra editar o produto -->
                             <td>
-                                <a th:href="@{/patrimonio/editar/{id}(id=${patrimonio.id})}" class="btn btn-warning btn-sm">
+                                <a th:href="@{/patrimonio/editar/{id}(id=${patrimonio.id})}"
+                                    class="btn btn-warning btn-sm">
                                     <i class="fas fa-edit"></i>
                                 </a>
                             </td>
@@ -79,4 +91,5 @@
         </div>
     </section>
 </body>
+
 </html>

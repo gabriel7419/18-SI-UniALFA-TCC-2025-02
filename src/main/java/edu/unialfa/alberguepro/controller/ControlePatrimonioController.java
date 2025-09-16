@@ -7,14 +7,17 @@ import edu.unialfa.alberguepro.repository.ControlePatrimonioRepository;
 // import edu.unialfa.alberguepro.service.ControlePatrimonioService;
 // import edu.unialfa.alberguepro.service.EstoqueService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,9 +46,13 @@ public class ControlePatrimonioController {
     }
 
     @PostMapping("/salvar")
-    public String salvarPatrimonio(ControlePatrimonio controlePatrimonio) {
+    public String salvarPatrimonio(@Valid ControlePatrimonio controlePatrimonio, BindingResult result, RedirectAttributes attributes) {
+        if (result.hasErrors()) {
+            return "patrimonio/form";
+        }
         controlePatrimonioRepository.save(controlePatrimonio);
-        // Redireciona para a lista de patrimonios
+        attributes.addFlashAttribute("successMessage", "Patrimônio salvo com sucesso!");
+        // Redireciona para a lista de patrimônios
         return "redirect:/patrimonio";
     }
 
