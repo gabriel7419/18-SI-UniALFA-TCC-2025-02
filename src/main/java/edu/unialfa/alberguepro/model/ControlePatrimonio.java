@@ -14,30 +14,17 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ControleEstoque {
+public class ControlePatrimonio {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Integer patrimonio;
     private String nome;
-    private Integer quantidade;
-    private LocalDate data_vencimento;
-
-    public enum Unidade {
-        Kilo,
-        Litro,
-        Unidade
-    }
-
-    private Unidade unidade;
-
-    public enum TipoProduto {
-        Alimento,
-        Higiene,
-        Limpeza
-    }
-
-    private TipoProduto tipo;
-
+    private LocalDate data_aquisicao;
+    private String status;
+    private String local_atual;
+    private String observacao;
 }
