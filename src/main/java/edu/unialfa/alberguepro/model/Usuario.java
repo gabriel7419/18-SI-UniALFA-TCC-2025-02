@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Usuario {
@@ -12,12 +11,8 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank(message = "O nome de usuário é obrigatório.")
     private String username;
     private String password;
-
-    @NotBlank(message = "O tipo de usuário é obrigatório.")
     private String role; // Ex: "ADMIN", "USER"
     private boolean ativo = true;
     

@@ -2,24 +2,14 @@
 <!DOCTYPE html>
 <!-- Puxa o layout principal, passando o título e o conteúdo -->
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
-
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
 <head>
     <!-- Título que vai aparecer na aba do navegador -->
     <title>Consultar Estoque</title>
 </head>
-
 <body>
     <!-- Conteúdo principal da página -->
     <section>
-        <!-- Alerta de sucesso, só aparece se o controller mandar a 'successMessage' -->
-        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
-            <span th:text="${successMessage}"></span>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-
         <!-- Botões de ação -->
         <div class="mb-3">
             <!-- Botão pra criar produto novo -->
@@ -58,8 +48,7 @@
                     <tbody>
                         <!-- Loop pra criar uma linha pra cada produto -->
                         <!-- Se a qtd for 0, a linha fica amarela -->
-                        <tr th:each="produto : ${produtos}"
-                            th:classappend="${produto.quantidade == 0 ? 'table-warning' : ''}">
+                        <tr th:each="produto : ${produtos}" th:classappend="${produto.quantidade == 0 ? 'table-warning' : ''}">
                             <!-- Mostra os dados do produto -->
                             <td th:text="${produto.nome}">Arroz</td>
                             <td th:text="${produto.tipo}">Alimento</td>
@@ -76,13 +65,18 @@
                                 <a th:href="@{/estoque/editar/{id}(id=${produto.id})}" class="btn btn-warning btn-sm">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                            </td>
+                                </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+        <!-- Botão de baixa aqui de novo pra quando houver mais produtos em estoque -->
+        <div class="mt-3">
+            <a th:href="@{/estoque/baixa}" class="btn btn-info">
+                <i class="fas fa-arrow-down"></i> Registrar Baixa
+            </a>
+        </div>
     </section>
 </body>
-
 </html>

@@ -4,17 +4,14 @@ import edu.unialfa.alberguepro.model.Produto;
 import edu.unialfa.alberguepro.repository.ProdutoRepository;
 import edu.unialfa.alberguepro.service.EstoqueService;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,12 +39,8 @@ public class EstoqueController {
     }
 
     @PostMapping("/salvar")
-    public String salvarProduto(@Valid Produto produto, BindingResult result, RedirectAttributes attributes) {
-        if (result.hasErrors()) {
-            return "estoque/form";
-        }
+    public String salvarProduto(Produto produto) {
         produtoRepository.save(produto);
-        attributes.addFlashAttribute("successMessage", "Produto salvo com sucesso!");
         // Redireciona para a lista de produtos
         return "redirect:/estoque";
     }

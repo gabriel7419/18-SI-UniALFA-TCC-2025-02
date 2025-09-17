@@ -3,11 +3,9 @@
 <!-- Puxa o layout principal -->
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
     th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
-
 <head>
     <title>Cadastro de Usuário - AlberguePro</title>
 </head>
-
 <body>
     <section>
         <div class="card card-primary">
@@ -24,30 +22,20 @@
                     <!-- Campo de usuário -->
                     <div class="form-group">
                         <label for="username">Usuário</label>
-                        <input type="text" class="form-control"
-                            th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''" id="username"
-                            th:field="*{username}" placeholder="Insira o nome de usuário.">
-                        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="invalid-feedback">
-                        </div>
+                        <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="Insira o nome de usuário." required>
                     </div>
                     <!-- Campo de senha -->
                     <div class="form-group">
                         <label for="password">Senha</label>
-                        <input type="password" class="form-control" id="password" th:field="*{password}"
-                            placeholder="Insira uma senha segura.">
-                        <small class="form-text text-muted">Deixe em branco para manter a senha atual ao editar.</small>
+                        <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Insira uma senha segura.">
                     </div>
                     <!-- Seletor de tipo (role) -->
                     <div class="form-group">
                         <label for="role">Tipo</label>
-                        <select class="form-control" th:classappend="${#fields.hasErrors('role')} ? 'is-invalid' : ''"
-                            id="role" th:field="*{role}">
-                            <option value="">Selecione um tipo</option>
+                        <select class="form-control" id="role" th:field="*{role}">
                             <option value="USER">Usuário - Acesso Básico</option>
                             <option value="ADMIN">Administrador - Acesso Completo</option>
                         </select>
-                        <div th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="invalid-feedback">
-                        </div>
                     </div>
                 </div>
                 <!-- Botões de Salvar e Cancelar -->
@@ -59,5 +47,4 @@
         </div>
     </section>
 </body>
-
 </html>
