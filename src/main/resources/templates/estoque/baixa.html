@@ -4,7 +4,6 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
 <head>
-    <title>Dar Baixa no Estoque</title>
 </head>
 <body>
 <section>
@@ -23,13 +22,22 @@
         <div class="card-body">
             <!-- Formulário de busca pra filtrar produto -->
             <form th:action="@{/estoque/baixa}" method="get" class="mb-4">
-                <div class="input-group">
+                <div class="input-group mb-3">
                     <input type="text" name="filtro" class="form-control" placeholder="Buscar produto por nome..." th:value="${filtro}">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="submit">
                             <i class="fas fa-search"></i> Buscar
                         </button>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="tipo" class="mr-2">Tipo:</label>
+                    <select id="tipo" name="tipo" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="Alimento" th:selected="${tipo == 'Alimento'}">Alimento</option>
+                        <option value="Higiene" th:selected="${tipo == 'Higiene'}">Higiene</option>
+                        <option value="Limpeza" th:selected="${tipo == 'Limpeza'}">Limpeza</option>
+                    </select>
                 </div>
             </form>
 
@@ -48,7 +56,7 @@
                 <tr th:each="produto : ${produtos}">
                     <td th:text="${produto.nome}">Arroz</td>
                     <td th:text="${produto.quantidade}">50</td>
-                    <td th:text="${produto.unidade}">kg</td>
+                    <td th:text="${produto.unidade.nome}">kg</td>
                     <td>
                         <!-- Form pra dar baixa em cada produto -->
                         <form th:action="@{/estoque/dar-baixa}" method="post" class="form-inline">

@@ -7,10 +7,14 @@ import edu.unialfa.alberguepro.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import jakarta.validation.Valid;
+
 import java.util.Optional;
 
 @Controller
@@ -36,9 +40,12 @@ public class UsuarioController {
     }
 
     @PostMapping("/salvar")
-        public String salvarUsuario(Usuario usuario) {
-            usuarioService.salvar(usuario);
-            return "redirect:/admin/usuarios";
+    public String salvarUsuario(@Valid Usuario usuario, BindingResult result) {
+        if (result.hasErrors()) {
+            return "admin/usuarios/form";
+        }
+        usuarioService.salvar(usuario);
+        return "redirect:/admin/usuarios";
     }
 
     @GetMapping("/editar/{id}")
@@ -52,7 +59,7 @@ public class UsuarioController {
         }
     }
 
-        @PostMapping("/excluir/{id}")
+    @PostMapping("/excluir/{id}")
     public String excluirUsuario(@PathVariable("id") Long id) {
         usuarioService.excluir(id);
         return "redirect:/admin/usuarios";

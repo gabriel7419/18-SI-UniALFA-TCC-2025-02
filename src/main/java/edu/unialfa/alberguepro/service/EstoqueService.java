@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class EstoqueService {
 
@@ -30,5 +32,17 @@ public class EstoqueService {
 
         produto.setQuantidade(novaQuantidade);
         produtoRepository.save(produto);
+    }
+
+    public boolean isNomeAndTipoUnique(String nome, String tipo, Long id) {
+        Optional<Produto> existingProduto;
+        if (id == null) {
+            // New product, check if any product with same name and type exists
+            existingProduto = produtoRepository.findByNomeIgnoreCaseAndTipoIgnoreCase(nome, tipo);
+        } else {
+            // Editing existing product, check if any *other* product with same name and type exists
+            existingProduto = produtoRepository.findByNomeIgnoreCaseAndTipoIgnoreCaseAndIdNot(nome, tipo, id);
+        }
+        return existingProduto.isEmpty();
     }
 }
