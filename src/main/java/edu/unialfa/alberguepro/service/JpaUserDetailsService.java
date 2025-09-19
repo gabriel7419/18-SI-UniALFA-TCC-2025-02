@@ -8,7 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.security.authentication.LockedException;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -28,6 +30,11 @@ public class JpaUserDetailsService implements UserDetailsService {
         }
 
         Usuario usuario = usuarioOpt.get();
+
+        // Check if account is locked
+        if (usuario.getAccountLockedUntil() != null && usuario.getAccountLockedUntil().isAfter(LocalDateTime.now())) {
+            throw new LockedException("Sua conta está bloqueada até " + usuario.getAccountLockedUntil());
+        }
 
         // Cria e retorna um objeto UserDetails que o Spring Security entende
         return User.builder()

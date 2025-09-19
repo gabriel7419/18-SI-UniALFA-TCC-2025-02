@@ -20,9 +20,15 @@
 
       <!-- Formulário de login que manda pro Spring Security -->
       <form th:action="@{/login}" method="post">
+        <div th:if="${param.error}" class="alert alert-danger">
+            Usuário ou senha inválidos.
+        </div>
+        <div th:if="${param.logout}" class="alert alert-success">
+            Você foi desconectado.
+        </div>
         <!-- Campo de usuário -->
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Usuário" name="username">
+          <input type="text" class="form-control" placeholder="Usuário" name="username" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
@@ -31,7 +37,7 @@
         </div>
         <!-- Campo de senha -->
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Senha" name="password">
+          <input type="password" class="form-control" placeholder="Senha" name="password" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>

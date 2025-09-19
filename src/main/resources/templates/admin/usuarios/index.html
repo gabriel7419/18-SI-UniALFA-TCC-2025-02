@@ -4,10 +4,16 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
 <head>
-    <title>Gerenciar Usuários - AlberguePro</title>
+    <title>Gerenciamento de Usuários</title>
 </head>
 <body>
     <section>
+        <!-- Mensagem de erro -->
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
         <!-- Botão pra criar usuário novo -->
         <div class="mb-3">
             <a th:href="@{/admin/usuarios/novo}" class="btn btn-primary">
@@ -30,15 +36,18 @@
                 <table class="table table-bordered table-hover" th:if="${not #lists.isEmpty(usuarios)}">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Usuário</th>
                             <th>Tipo</th>
                             <th>Status</th>
+                            <th>Data de Criação</th>
                             <th style="width: 150px;">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- Loop pra mostrar cada usuário -->
                         <tr th:each="usuario : ${usuarios}">
+                            <td th:text="${usuario.id}">1</td>
                             <td th:text="${usuario.username}">Admin</td>
                             <td th:text="${usuario.role}">ADMIN</td>
                             <td>
@@ -46,6 +55,7 @@
                                 <span th:if="${usuario.ativo}" class="badge bg-success">Ativo</span>
                                 <span th:unless="${usuario.ativo}" class="badge bg-danger">Inativo</span>
                             </td>
+                            <td th:text="${usuario.dataCriacao != null ? #temporals.format(usuario.dataCriacao, 'dd/MM/yyyy HH:mm') : 'N/A'}">01/01/2025 10:00</td>
                             <td>
                                 <!-- Botão de ativar/desativar -->
                                 <form th:action="@{/admin/usuarios/toggle/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">
