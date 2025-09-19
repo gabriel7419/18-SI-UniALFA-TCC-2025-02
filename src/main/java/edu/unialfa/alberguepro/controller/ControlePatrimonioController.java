@@ -1,20 +1,15 @@
 package edu.unialfa.alberguepro.controller;
 
 import edu.unialfa.alberguepro.model.ControlePatrimonio;
-// import edu.unialfa.alberguepro.model.Produto;
 import edu.unialfa.alberguepro.repository.ControlePatrimonioRepository;
-// import edu.unialfa.alberguepro.repository.ProdutoRepository;
-// import edu.unialfa.alberguepro.service.ControlePatrimonioService;
-// import edu.unialfa.alberguepro.service.EstoqueService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,12 +18,8 @@ import java.util.Optional;
 @RequestMapping("/patrimonio")
 public class ControlePatrimonioController {
 
-
     @Autowired
     private ControlePatrimonioRepository controlePatrimonioRepository;
-
-    //@Autowired
-    //private ControlePatrimonioService controlePatrimonioService; // Service para a lógica de baixa
 
     @GetMapping
     public String listarPatrimonios(Model model) {
@@ -37,17 +28,27 @@ public class ControlePatrimonioController {
     }
 
     @GetMapping("/novo")
-    public String novoPatrimonioForm(Model model) {
-        model.addAttribute("patrimonio", new ControlePatrimonio());
-        return "patrimonio/form";
+    public ModelAndView novoPatrimonioForm() {
+        ModelAndView mv = new ModelAndView("patrimonio/form");
+        mv.addObject("patrimonio", new ControlePatrimonio());
+        return mv;
     }
 
     @PostMapping("/salvar")
-    public String salvarPatrimonio(ControlePatrimonio controlePatrimonio) {
+    public ModelAndView salvarPatrimonio(
+            @Valid @ModelAttribute("patrimonio") ControlePatrimonio controlePatrimonio,
+            BindingResult result) {
+
+        if (result.hasErrors()) {
+            // Retorna à mesma página com os erros de validação
+            return new ModelAndView("patrimonio/form");
+        }
+
+        // Salva o patrimônio no banco se não houver erros
         controlePatrimonioRepository.save(controlePatrimonio);
-        // Redireciona para a lista de patrimonios
-        return "redirect:/patrimonio";
+        return new ModelAndView("redirect:/patrimonio");
     }
+
 
     @GetMapping("/editar/{id}")
     public String editarPatrimonioForm(@PathVariable("id") Long id, Model model) {
@@ -60,31 +61,16 @@ public class ControlePatrimonioController {
         }
     }
 
-  @GetMapping("/pesquisar")
+    @GetMapping("/pesquisar")
     public String pesquisaForm(@RequestParam(value = "filtro", required = false) String filtro, Model model) {
         List<ControlePatrimonio> controlePatrimonios;
         if (filtro != null && !filtro.isEmpty()) {
-            // Se houver um filtro, busca no repositório
             controlePatrimonios = controlePatrimonioRepository.findByNomeContainingIgnoreCase(filtro);
         } else {
-            // Senão, busca todos
             controlePatrimonios = controlePatrimonioRepository.findAll();
         }
         model.addAttribute("patrimonios", controlePatrimonios);
-        model.addAttribute("filtro", filtro); // Envia o filtro de volta para a view
+        model.addAttribute("filtro", filtro);
         return "/patrimonio/index";
     }
-
-    /*@PostMapping("/dar-baixa")
-    public String processarBaixaIndividual(@RequestParam("patrimonioId") Long patrimonioId, @RequestParam("quantidade") Integer quantidade) {
-        estoqueService.darBaixa(produtoId, quantidade);
-        // Redireciona de volta para a página de baixa para continuar o trabalho
-        return "redirect:/estoque/baixa";
-    }
-
-    @PostMapping("/excluir/{id}")
-    public String excluirProduto(@PathVariable("id") Long id) {
-        produtoRepository.deleteById(id);
-        return "redirect:/estoque";
-    }*/
 }

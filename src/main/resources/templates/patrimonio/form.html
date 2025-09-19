@@ -1,74 +1,102 @@
-<!-- Formulário de produto (novo ou edição) -->
 <!DOCTYPE html>
-<!-- Puxa o layout principal -->
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
 <head>
-    <title>Cadastro de Patrimônios</title>
+  <title>Cadastro de Patrimônios</title>
 </head>
 <body>
-    <section>
-        <div class="card card-primary">
-          <div class="card-header">
-            <h3 class="card-title">Gestão de Patrimônio - Cadastrar</h3>
+<section>
+  <div class="card card-primary">
+    <div class="card-header">
+      <h3 class="card-title">Gestão de Patrimônio - Cadastrar</h3>
+    </div>
+
+    <form th:action="@{/patrimonio/salvar}" th:object="${patrimonio}" method="post">
+      <input type="hidden" th:field="*{id}" />
+
+      <div class="card-body">
+        <!-- STATUS -->
+        <div class="form-group">
+          <label>Status</label>
+          <div class="form-check">
+            <input class="form-check-input"
+                   th:classappend="${#fields.hasErrors('status')} ? 'is-invalid'"
+                   type="radio" th:field="*{status}" value="Em uso">
+            <label class="form-check-label">Em uso</label>
           </div>
-          <!-- Formulário pra salvar produto -->
-          <form th:action="@{/patrimonio/salvar}" th:object="${patrimonio}" method="post">
-            <!-- ID escondido, pra saber se é novo ou editado -->
-            <input type="hidden" th:field="*{id}" />
-            <div class="card-body">
-              <!-- Status do patrimonio -->
-              <div class="form-group">
-                <label>Status</label>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" th:field="*{status}" value="Em uso" checked>
-                  <label class="form-check-label">Em uso</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" th:field="*{status}" value="Em manutenção">
-                  <label class="form-check-label">Em manutenção</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" th:field="*{status}" value="Em estoque">
-                  <label class="form-check-label">Em estoque</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" th:field="*{status}" value="Baixado">
-                  <label class="form-check-label">Baixado</label>
-                </div>
-              </div>
-              <!-- Nome do patrimonio -->
-              <div class="form-group">
-                <label for="nome">Nome</label>
-                <input type="text" class="form-control" id="nome" th:field="*{nome}" placeholder="Nome do item patrimoniado" required>
-              </div>
-              <!-- Patrimonio -->
-              <div class="form-group">
-                <label for="patrimonio">Patrimônio</label>
-                <input type="number" class="form-control" id="patrimonio" th:field="*{patrimonio}" placeholder="Insira o patrimônio" required>
-              </div>
-              <!-- Data da aquisição -->
-              <div class="form-group">
-                <label for="data">Data da aquisição</label>
-                <input type="date" class="form-control" id="data" th:field="*{data_aquisicao}" placeholder="Data da aquisição" required>
-              </div>
-              <!-- Locaizacao atual -->
-              <div class="form-group">
-                <label for="local">Localização Atual</label>
-                <input type="text" class="form-control" id="local" th:field="*{local_atual}" placeholder="Local atual, ex: escritorio, refeitorio" required>
-              </div>
-              <div class="form-group">
-                <label for="observacao">Observação</label>
-                <input type="text" class="form-control" id="observacao" th:field="*{observacao}" placeholder="Observações Adicionais" required>
-              </div>
-            </div>
-            <!-- Botões -->
-            <div class="card-footer">
-              <button type="submit" class="btn btn-primary">Salvar</button>
-              <a th:href="@{/patrimonio}" class="btn btn-secondary">Cancelar</a>
-            </div>
-          </form>
+          <div class="form-check">
+            <input class="form-check-input"
+                   th:classappend="${#fields.hasErrors('status')} ? 'is-invalid'"
+                   type="radio" th:field="*{status}" value="Em manutenção">
+            <label class="form-check-label">Em manutenção</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input"
+                   th:classappend="${#fields.hasErrors('status')} ? 'is-invalid'"
+                   type="radio" th:field="*{status}" value="Em estoque">
+            <label class="form-check-label">Em estoque</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input"
+                   th:classappend="${#fields.hasErrors('status')} ? 'is-invalid'"
+                   type="radio" th:field="*{status}" value="Baixado">
+            <label class="form-check-label">Baixado</label>
+          </div>
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
         </div>
-    </section>
+
+        <!-- NOME -->
+        <div class="form-group">
+          <label for="nome">Nome</label>
+          <input type="text"
+                 th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'"
+                 class="form-control" id="nome" th:field="*{nome}" placeholder="Nome do item patrimoniado">
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+        </div>
+
+        <!-- PATRIMONIO -->
+        <div class="form-group">
+          <label for="patrimonio">Patrimônio</label>
+          <input type="number"
+                 th:classappend="${#fields.hasErrors('patrimonio')} ? 'is-invalid'"
+                 class="form-control" id="patrimonio" th:field="*{patrimonio}" placeholder="Insira o patrimônio">
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('patrimonio')}" th:errors="*{patrimonio}"></div>
+        </div>
+
+        <!-- DATA -->
+        <div class="form-group">
+          <label for="data">Data da aquisição</label>
+          <input type="date"
+                 th:classappend="${#fields.hasErrors('data_aquisicao')} ? 'is-invalid'"
+                 class="form-control" id="data" th:field="*{data_aquisicao}" placeholder="Data da aquisição">
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('data_aquisicao')}" th:errors="*{data_aquisicao}"></div>
+        </div>
+
+        <!-- LOCAL -->
+        <div class="form-group">
+          <label for="local">Localização Atual</label>
+          <input type="text"
+                 th:classappend="${#fields.hasErrors('local_atual')} ? 'is-invalid'"
+                 class="form-control" id="local" th:field="*{local_atual}" placeholder="Local atual, ex: escritorio, refeitorio">
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('local_atual')}" th:errors="*{local_atual}"></div>
+        </div>
+
+        <!-- OBSERVACAO -->
+        <div class="form-group">
+          <label for="observacao">Observação</label>
+          <input type="text"
+                 th:classappend="${#fields.hasErrors('observacao')} ? 'is-invalid'"
+                 class="form-control" id="observacao" th:field="*{observacao}" placeholder="Observações Adicionais">
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('observacao')}" th:errors="*{observacao}"></div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a th:href="@{/patrimonio}" class="btn btn-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</section>
 </body>
 </html>
