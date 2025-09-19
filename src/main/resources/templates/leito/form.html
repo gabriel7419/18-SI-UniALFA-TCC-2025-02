@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+<head>
+    <title>Cadastro de Leito</title>
+</head>
+<body>
+<section>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Gestão de Leito - Cadastrar</h3>
+        </div>
+
+        <form th:action="@{/leito/salvar}" th:object="${leito}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+
+            <div class="card-body">
+
+                <div class="form-group">
+                    <label for="acolhido">Acolhido</label>
+                    <select class="form-control" id="acolhido" th:field="*{acolhido.id}" required>
+                        <option value="">Selecione...</option>
+                        <option th:each="a : ${acolhidos}"
+                                th:value="${a.id}"
+                                th:text="${a.nome}"
+                                th:selected="${leito.acolhido != null and leito.acolhido.id == a.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataEntrada">Data de Entrada</label>
+                    <input type="date" class="form-control" id="dataEntrada" th:field="*{dataEntrada}" required>
+                </div>
+
+                <!-- Data de Saída -->
+                <div class="form-group">
+                    <label for="dataSaida">Data de Saída</label>
+                    <input type="date" class="form-control" id="dataSaida" th:field="*{dataSaida}">
+                </div>
+
+                <!-- Seleção de Leito -->
+                <div class="form-group">
+                    <label for="leito">Leito</label>
+                    <select id="leito" class="form-control" th:field="*{numeroLeito}" required>
+                        <option value="">Selecione...</option>
+                        <option th:each="l : ${T(edu.unialfa.alberguepro.model.Leito.NumeroLeito).values()}"
+                                th:value="${l}" th:text="${l}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Seleção de Quarto -->
+                <div class="form-group">
+                    <label for="quarto">Quarto</label>
+                    <select id="quarto" class="form-control" th:field="*{quarto}" required>
+                        <option value="">Selecione...</option>
+                        <option th:each="q : ${T(edu.unialfa.alberguepro.model.Leito.Quarto).values()}"
+                                th:value="${q}" th:text="${q}">
+                        </option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <a th:href="@{/leito/listar}" class="btn btn-secondary">Cancelar</a>
+            </div>
+
+        </form>
+    </div>
+</section>
+</body>
+</html>

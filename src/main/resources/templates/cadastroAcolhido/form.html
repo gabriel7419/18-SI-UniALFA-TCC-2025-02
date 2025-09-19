@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+<head>
+    <title>Cadastrar Acolhido</title>
+</head>
+<body>
+<section>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Cadastro de Acolhido</h3>
+        </div>
+        <form th:action="@{/cadastroAcolhido/salvar}" th:object="${cadastroAcolhido}" method="post">
+            <input type="hidden" th:field="*{id}" />
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="nome">Nome</label>
+                    <input type="text" class="form-control" id="nome" th:field="*{nome}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataNascimento">Data de Nascimento</label>
+                    <input type="date" class="form-control" id="dataNascimento" th:field="*{dataNascimento}">
+                </div>
+
+                <div class="form-group">
+                    <label for="naturalidade">Naturalidade</label>
+                    <input type="text" class="form-control" id="naturalidade" th:field="*{naturalidade}">
+                </div>
+
+                <div class="form-group">
+                    <label for="idade">Idade</label>
+                    <input type="number" class="form-control" id="idade" th:field="*{idade}">
+                </div>
+
+                <div class="form-group">
+                    <label for="profissao">Profissão</label>
+                    <input type="text" class="form-control" id="profissao" th:field="*{profissao}">
+                </div>
+
+                <div class="form-group">
+                    <label>Sexo</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" th:field="*{sexo}" value="Masculino">
+                        <label class="form-check-label">Masculino</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" th:field="*{sexo}" value="Feminino">
+                        <label class="form-check-label">Feminino</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cor">Cor</label>
+                    <input type="text" class="form-control" id="cor" th:field="*{cor}">
+                </div>
+
+                <div class="form-group">
+                    <label for="rg">RG</label>
+                    <input type="text" class="form-control" id="rg" th:field="*{rg}">
+                </div>
+                <div class="form-group">
+                    <label for="cpf">CPF</label>
+                    <input type="text" class="form-control" id="cpf" th:field="*{cpf}">
+                </div>
+                <div class="form-group">
+                    <label for="certidaoNascimento">Certidão de Nascimento</label>
+                    <input type="text" class="form-control" id="certidaoNascimento" th:field="*{certidaoNascimento}">
+                </div>
+
+                <div class="form-group">
+                    <label for="filiacao">Filiação</label>
+                    <input type="text" class="form-control" id="filiacao" th:field="*{filiacao}">
+                </div>
+
+                <div class="form-group">
+                    <label for="estadoCivil">Estado Civil</label>
+                    <select class="form-control" id="estadoCivil" th:field="*{estadoCivil}">
+                        <option th:value="Solteiro">Solteiro</option>
+                        <option th:value="Casado">Casado</option>
+                        <option th:value="Divorciado">Divorciado</option>
+                        <option th:value="UniaoEstavel">União Estável</option>
+                        <option th:value="Viuvo">Viúvo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="nomeConjuge">Nome do Cônjuge</label>
+                    <input type="text" class="form-control" id="nomeConjuge" th:field="*{nomeConjuge}">
+                </div>
+
+                <div class="form-group">
+                    <label>Possui filhos?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" th:field="*{filho}" value="Sim">
+                        <label class="form-check-label">Sim</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" th:field="*{filho}" value="Nao">
+                        <label class="form-check-label">Não</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantidadeFilhos">Quantidade de Filhos</label>
+                    <input type="number" class="form-control" id="quantidadeFilhos" th:field="*{quantidadeFilhos}">
+                </div>
+
+                <div class="form-group">
+                    <label for="endereco">Endereço</label>
+                    <input type="text" class="form-control" id="endereco" th:field="*{endereco}">
+                </div>
+
+                <div class="form-group">
+                    <label for="telefoneFamiliar">Telefone Familiar</label>
+                    <input type="text" class="form-control" id="telefoneFamiliar" th:field="*{telefoneFamiliar}">
+                </div>
+
+                <div class="form-group">
+                    <label for="escolariade">Escolaridade</label>
+                    <select class="form-control" id="escolariade" th:field="*{escolariade}">
+                        <option th:value="Analfabeto">Analfabeto</option>
+                        <option th:value="EnsinoFundamentalIncompleto">Ensino Fundamental Incompleto</option>
+                        <option th:value="EnsinoFundamentalCompleto">Ensino Fundamental Completo</option>
+                        <option th:value="EnsinoMedioIncompleto">Ensino Médio Incompleto</option>
+                        <option th:value="EnsinoMedioCompleto">Ensino Médio Completo</option>
+                        <option th:value="SuperiorIncompleto">Superior Incompleto</option>
+                        <option th:value="SuperiorCompleto">Superior Completo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="renda">Possui Renda?</label>
+                    <select class="form-control" id="renda" th:field="*{renda}">
+                        <option th:value="Sim">Sim</option>
+                        <option th:value="Nao">Não</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="beneficioSocial">Recebe Benefício Social?</label>
+                    <select class="form-control" id="beneficioSocial" th:field="*{beneficioSocial}">
+                        <option th:value="Sim">Sim</option>
+                        <option th:value="Nao">Não</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="qualBeneficio">Qual Benefício</label>
+                    <input type="text" class="form-control" id="qualBeneficio" th:field="*{qualBeneficio}">
+                </div>
+
+                <div class="form-group">
+                    <label for="estadoSaude">Estado de Saúde</label>
+                    <select class="form-control" id="estadoSaude" th:field="*{estadoSaude}">
+                        <option th:value="Bom">Bom</option>
+                        <option th:value="Regular">Regular</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="medicamentoControlado">Usa Medicamento Controlado?</label>
+                    <select class="form-control" id="medicamentoControlado" th:field="*{medicamentoControlado}">
+                        <option th:value="Sim">Sim</option>
+                        <option th:value="Nao">Não</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="qualMedicamento">Qual Medicamento</label>
+                    <input type="text" class="form-control" id="qualMedicamento" th:field="*{qualMedicamento}">
+                </div>
+
+                <div class="form-group">
+                    <label for="doencaSexualmentetramissivel">Doença Sexualmente Transmissível?</label>
+                    <select class="form-control" id="doencaSexualmentetramissivel" th:field="*{doencaSexualmentetramissivel}">
+                        <option th:value="Sim">Sim</option>
+                        <option th:value="Nao">Não</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="possuiAlergia">Possui Alergia?</label>
+                    <select class="form-control" id="possuiAlergia" th:field="*{possuiAlergia}">
+                        <option th:value="Sim">Sim</option>
+                        <option th:value="Nao">Não</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="qualAlergia">Qual Alergia</label>
+                    <input type="text" class="form-control" id="qualAlergia" th:field="*{qualAlergia}">
+                </div>
+
+                <div class="form-group">
+                    <label for="fumante">Fumante?</label>
+                    <select class="form-control" id="fumante" th:field="*{fumante}">
+                        <option th:value="Sim">Sim</option>
+                        <option th:value="Nao">Não</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bebidaAlcoolica">Usa Bebida Alcoólica?</label>
+                    <select class="form-control" id="bebidaAlcoolica" th:field="*{bebidaAlcoolica}">
+                        <option th:value="Sim">Sim</option>
+                        <option th:value="Nao">Não</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="usaDrogas">Usa Drogas?</label>
+                    <select class="form-control" id="usaDrogas" th:field="*{usaDrogas}">
+                        <option th:value="Sim">Sim</option>
+                        <option th:value="Nao">Não</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="qualDroga">Qual Droga</label>
+                    <input type="text" class="form-control" id="qualDroga" th:field="*{qualDroga}">
+                </div>
+
+                <div class="form-group">
+                    <label for="situacaoRua">Está em Situação de Rua?</label>
+                    <select class="form-control" id="situacaoRua" th:field="*{situacaoRua}">
+                        <option th:value="Sim">Sim</option>
+                        <option th:value="Nao">Não</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tempoRua">Tempo de Rua</label>
+                    <input type="text" class="form-control" id="tempoRua" th:field="*{tempoRua}">
+                </div>
+
+                <div class="form-group">
+                    <label for="vinculoFamiliar">Possui Vínculo Familiar?</label>
+                    <select class="form-control" id="vinculoFamiliar" th:field="*{vinculoFamiliar}">
+                        <option th:value="Sim">Sim</option>
+                        <option th:value="Nao">Não</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="vinculoFamiliarQuem">Quem?</label>
+                    <input type="text" class="form-control" id="vinculoFamiliarQuem" th:field="*{vinculoFamiliarQuem}">
+                </div>
+
+                <div class="form-group">
+                    <label for="cidadeVinculoFamiliar">Cidade do Vínculo Familiar</label>
+                    <input type="text" class="form-control" id="cidadeVinculoFamiliar" th:field="*{cidadeVinculoFamiliar}">
+                </div>
+
+                <div class="form-group">
+                    <label for="servicoAcolhimento">Já foi acolhido antes?</label>
+                    <select class="form-control" id="servicoAcolhimento" th:field="*{servicoAcolhimento}">
+                        <option th:value="Sim">Sim</option>
+                        <option th:value="Nao">Não</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="vezesAcolhido">Quantas vezes?</label>
+                    <input type="text" class="form-control" id="vezesAcolhido" th:field="*{vezesAcolhido}">
+                </div>
+
+                <div class="form-group">
+                    <label for="ultimaCidadeQueEsteve">Última Cidade que Esteve</label>
+                    <input type="text" class="form-control" id="ultimaCidadeQueEsteve" th:field="*{ultimaCidadeQueEsteve}">
+                </div>
+
+                <div class="form-group">
+                    <label for="tempoUltimaCidade">Tempo na Última Cidade</label>
+                    <input type="text" class="form-control" id="tempoUltimaCidade" th:field="*{tempoUltimaCidade}">
+                </div>
+
+                <div class="form-group">
+                    <label for="objetivoAcolhimento">Objetivo do Acolhimento</label>
+                    <input type="text" class="form-control" id="objetivoAcolhimento" th:field="*{objetivoAcolhimento}">
+                </div>
+
+                <div class="form-group">
+                    <label for="dataIngresso">Data de Ingresso</label>
+                    <input type="datetime-local" class="form-control" id="dataIngresso" th:field="*{dataIngresso}">
+                </div>
+                <div class="form-group">
+                    <label for="dataSaida">Data de Saída</label>
+                    <input type="datetime-local" class="form-control" id="dataSaida" th:field="*{dataSaida}">
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <a th:href="@{/cadastroAcolhido/listar}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+</html>
