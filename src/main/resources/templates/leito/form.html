@@ -18,7 +18,7 @@
 
                 <div class="form-group">
                     <label for="acolhido">Acolhido</label>
-                    <select class="form-control" id="acolhido" th:field="*{acolhido.id}" required>
+                    <select class="form-control" id="acolhido" th:field="*{acolhido.id}">
                         <option value="">Selecione...</option>
                         <option th:each="a : ${acolhidos}"
                                 th:value="${a.id}"
@@ -26,39 +26,41 @@
                                 th:selected="${leito.acolhido != null and leito.acolhido.id == a.id}">
                         </option>
                     </select>
+                    <div th:if="${#fields.hasErrors('acolhido.id')}" th:errors="*{acolhido.id}" class="text-danger"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="dataEntrada">Data de Entrada</label>
-                    <input type="date" class="form-control" id="dataEntrada" th:field="*{dataEntrada}" required>
+                    <input type="date" class="form-control" id="dataEntrada" th:field="*{dataEntrada}">
+                    <div th:if="${#fields.hasErrors('dataEntrada')}" th:errors="*{dataEntrada}" class="text-danger"></div>
                 </div>
 
-                <!-- Data de Saída -->
                 <div class="form-group">
                     <label for="dataSaida">Data de Saída</label>
                     <input type="date" class="form-control" id="dataSaida" th:field="*{dataSaida}">
+                    <div th:if="${#fields.hasErrors('dataSaida')}" th:errors="*{dataSaida}" class="text-danger"></div>
                 </div>
 
-                <!-- Seleção de Leito -->
                 <div class="form-group">
                     <label for="leito">Leito</label>
-                    <select id="leito" class="form-control" th:field="*{numeroLeito}" required>
+                    <select id="leito" class="form-control" th:field="*{numeroLeito}">
                         <option value="">Selecione...</option>
-                        <option th:each="l : ${T(edu.unialfa.alberguepro.model.Leito.NumeroLeito).values()}"
+                        <option th:each="l : ${numeroLeitos}"
                                 th:value="${l}" th:text="${l}">
                         </option>
                     </select>
+                    <div th:if="${#fields.hasErrors('numeroLeito')}" th:errors="*{numeroLeito}" class="text-danger"></div>
                 </div>
 
-                <!-- Seleção de Quarto -->
                 <div class="form-group">
                     <label for="quarto">Quarto</label>
-                    <select id="quarto" class="form-control" th:field="*{quarto}" required>
+                    <select id="quarto" class="form-control" th:field="*{quarto}">
                         <option value="">Selecione...</option>
-                        <option th:each="q : ${T(edu.unialfa.alberguepro.model.Leito.Quarto).values()}"
+                        <option th:each="q : ${quartos}"
                                 th:value="${q}" th:text="${q}">
                         </option>
                     </select>
+                    <div th:if="${#fields.hasErrors('quarto')}" th:errors="*{quarto}" class="text-danger"></div>
                 </div>
 
             </div>
