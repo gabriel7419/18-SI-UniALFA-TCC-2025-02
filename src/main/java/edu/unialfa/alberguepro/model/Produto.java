@@ -1,6 +1,7 @@
 package edu.unialfa.alberguepro.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.PostLoad;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
@@ -24,7 +25,8 @@ public class Produto {
 
     @ManyToOne
     @JoinColumn(name = "unidade_id")
-    @NotNull(message = "A unidade de medida é obrigatória.")
+    // A validação @NotNull foi movida para o campo 'unidadeId', que é o campo recebido do formulário.
+    // A constraint do banco de dados em 'unidade_id' garante a integridade.
     private Unidade unidade;
 
     @NotNull(message = "A data de vencimento é obrigatória.")
@@ -32,7 +34,15 @@ public class Produto {
     private LocalDate dataDeVencimento;
 
     @Transient
+    @NotNull(message = "A unidade de medida é obrigatória.")
     private Long unidadeId;
+
+    @PostLoad
+    private void onLoad() {
+        if (this.unidade != null) {
+            this.unidadeId = this.unidade.getId();
+        }
+    }
 
     // Getters e Setters
     public Long getId() {

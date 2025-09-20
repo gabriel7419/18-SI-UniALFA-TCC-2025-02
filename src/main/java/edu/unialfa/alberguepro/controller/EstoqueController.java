@@ -93,37 +93,28 @@ public class EstoqueController {
     }
 
     @PostMapping("/salvar")
-    public String salvarProduto(Produto produto, BindingResult result, Model model) {
+    public String salvarProduto(@Valid Produto produto, BindingResult result, Model model) {
+        // Validação de unicidade que requer acesso ao banco
+        if (produto.getNome() != null && produto.getTipo() != null) {
+            if (!estoqueService.isNomeAndTipoUnique(produto.getNome(), produto.getTipo(), produto.getId())) {
+                result.rejectValue("nome", "error.produto", "Já existe um produto com este nome e tipo.");
+            }
+        }
+
+        // Verifica todos os erros de validação
         if (result.hasErrors()) {
             carregarUnidades(model);
             return "estoque/form";
         }
-        
-        
 
-        // If unidadeId is present, fetch the Unidade object and set it to the Produto
-        if (produto.getUnidadeId() != null && produto.getUnidadeId() > 0) {
-            Optional<Unidade> unidadeOptional = unidadeRepository.findById(produto.getUnidadeId());
-            if (unidadeOptional.isPresent()) {
-                produto.setUnidade(unidadeOptional.get());
-            } else {
-                result.rejectValue("unidade", "error.produto", "Unidade selecionada não encontrada.");
-                carregarUnidades(model);
-                return "estoque/form";
-            }
-        } else {
-            result.rejectValue("unidade", "error.produto", "Selecione uma unidade válida.");
+        // Se a validação passou, o 'unidadeId' existe. 
+        Optional<Unidade> unidadeOptional = unidadeRepository.findById(produto.getUnidadeId());
+        if (unidadeOptional.isEmpty()) {    
+            result.rejectValue("unidadeId", "error.produto", "Unidade selecionada é inválida.");
             carregarUnidades(model);
             return "estoque/form";
         }
-
-        // Validate uniqueness of nome and tipo
-        if (!estoqueService.isNomeAndTipoUnique(produto.getNome(), produto.getTipo(), produto.getId())) {
-            result.rejectValue("nome", "error.produto", "Já existe um produto com este nome e tipo.");
-            carregarUnidades(model);
-            return "estoque/form";
-        }
-        
+        produto.setUnidade(unidadeOptional.get());
         produtoRepository.save(produto);
         return "redirect:/estoque";
     }
