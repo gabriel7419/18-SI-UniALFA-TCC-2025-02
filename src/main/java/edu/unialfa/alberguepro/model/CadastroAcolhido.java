@@ -98,7 +98,6 @@ public class CadastroAcolhido {
     private LocalDateTime dataIngresso;
     private LocalDateTime dataSaida;
 
-    // ====== GETTERS E SETTERS MANUAIS PARA TODOS ENUMS ======
 
     public Sexo getSexo() {
         return sexo;

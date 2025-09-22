@@ -10,27 +10,31 @@
         <div class="card-header">
             <h3 class="card-title">Cadastro de Acolhido</h3>
         </div>
-        <form th:action="@{/cadastroAcolhido/salvar}" th:object="${cadastroAcolhido}" method="post">
+        <form th:action="@{/cadastroAcolhido/salvar}" th:object="${acolhido}" method="post">
             <input type="hidden" th:field="*{id}" />
             <div class="card-body">
                 <div class="form-group">
                     <label for="nome">Nome</label>
-                    <input type="text" class="form-control" id="nome" th:field="*{nome}" required>
+                    <input type="text" class="form-control" id="nome" th:field="*{nome}">
+                    <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="text-danger"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="dataNascimento">Data de Nascimento</label>
                     <input type="date" class="form-control" id="dataNascimento" th:field="*{dataNascimento}">
+                    <div th:if="${#fields.hasErrors('dataNascimento')}" th:errors="*{dataNascimento}" class="text-danger"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="naturalidade">Naturalidade</label>
                     <input type="text" class="form-control" id="naturalidade" th:field="*{naturalidade}">
+                    <div th:if="${#fields.hasErrors('naturalidade')}" th:errors="*{naturalidade}" class="text-danger"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="idade">Idade</label>
                     <input type="number" class="form-control" id="idade" th:field="*{idade}">
+                    <div th:if="${#fields.hasErrors('idade')}" th:errors="*{idade}" class="text-danger"></div>
                 </div>
 
                 <div class="form-group">
@@ -48,29 +52,35 @@
                         <input class="form-check-input" type="radio" th:field="*{sexo}" value="Feminino">
                         <label class="form-check-label">Feminino</label>
                     </div>
+                    <div th:if="${#fields.hasErrors('sexo')}" th:errors="*{sexo}" class="text-danger"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="cor">Cor</label>
                     <input type="text" class="form-control" id="cor" th:field="*{cor}">
+                    <div th:if="${#fields.hasErrors('cor')}" th:errors="*{cor}" class="text-danger"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="rg">RG</label>
                     <input type="text" class="form-control" id="rg" th:field="*{rg}">
+                    <div th:if="${#fields.hasErrors('rg')}" th:errors="*{rg}" class="text-danger"></div>
                 </div>
                 <div class="form-group">
                     <label for="cpf">CPF</label>
                     <input type="text" class="form-control" id="cpf" th:field="*{cpf}">
+                    <div th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}" class="text-danger"></div>
                 </div>
                 <div class="form-group">
                     <label for="certidaoNascimento">Certidão de Nascimento</label>
                     <input type="text" class="form-control" id="certidaoNascimento" th:field="*{certidaoNascimento}">
+                    <div th:if="${#fields.hasErrors('certidaoNascimento')}" th:errors="*{certidaoNascimento}" class="text-danger"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="filiacao">Filiação</label>
                     <input type="text" class="form-control" id="filiacao" th:field="*{filiacao}">
+                    <div th:if="${#fields.hasErrors('filiacao')}" th:errors="*{filiacao}" class="text-danger"></div>
                 </div>
 
                 <div class="form-group">
@@ -82,6 +92,7 @@
                         <option th:value="UniaoEstavel">União Estável</option>
                         <option th:value="Viuvo">Viúvo</option>
                     </select>
+                    <div th:if="${#fields.hasErrors('estadoCivil')}" th:errors="*{estadoCivil}" class="text-danger"></div>
                 </div>
 
                 <div class="form-group">
@@ -109,6 +120,7 @@
                 <div class="form-group">
                     <label for="endereco">Endereço</label>
                     <input type="text" class="form-control" id="endereco" th:field="*{endereco}">
+                    <div th:if="${#fields.hasErrors('endereco')}" th:errors="*{endereco}" class="text-danger"></div>
                 </div>
 
                 <div class="form-group">
@@ -283,10 +295,12 @@
                 <div class="form-group">
                     <label for="dataIngresso">Data de Ingresso</label>
                     <input type="datetime-local" class="form-control" id="dataIngresso" th:field="*{dataIngresso}">
+                    <div th:if="${#fields.hasErrors('dataIngresso')}" th:errors="*{dataIngresso}" class="text-danger"></div>
                 </div>
                 <div class="form-group">
                     <label for="dataSaida">Data de Saída</label>
                     <input type="datetime-local" class="form-control" id="dataSaida" th:field="*{dataSaida}">
+                    <div th:if="${#fields.hasErrors('dataSaida')}" th:errors="*{dataSaida}" class="text-danger"></div>
                 </div>
             </div>
             <div class="card-footer">

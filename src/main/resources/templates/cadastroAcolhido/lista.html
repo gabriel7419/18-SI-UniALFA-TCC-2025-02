@@ -28,11 +28,11 @@
             <h3 class="card-title">Acolhidos Cadastrados</h3>
         </div>
         <div class="card-body">
-            <div th:if="${#lists.isEmpty(cadastroAcolhido)}" class="alert alert-info">
+            <div th:if="${#lists.isEmpty(acolhidos)}" class="alert alert-info">
                 Nenhum acolhido cadastrado.
             </div>
 
-            <table class="table table-bordered" th:if="${not #lists.isEmpty(cadastroAcolhido)}">
+            <table class="table table-bordered" th:if="${not #lists.isEmpty(acolhidos)}">
                 <thead>
                 <tr>
                     <th>Nome</th>
@@ -43,7 +43,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="acolhido : ${cadastroAcolhido}">
+                <tr th:each="acolhido : ${acolhidos}">
                     <td th:text="${acolhido.nome}">João da Silva</td>
                     <td th:text="${acolhido.idade}">35</td>
                     <td th:text="${acolhido.sexo}">Masculino</td>
@@ -52,7 +52,9 @@
                         <a th:href="@{/cadastroAcolhido/editar/{id}(id=${acolhido.id})}" class="btn btn-warning btn-sm">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a th:href="@{/cadastroAcolhido/remover/{id}(id=${acolhido.id})}" class="btn btn-danger btn-sm">
+                        <a th:href="@{/cadastroAcolhido/remover/{id}(id=${acolhido.id})}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Tem certeza que deseja remover o acolhido ' + '${acolhido.nome}' + '?');">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>
