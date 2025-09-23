@@ -70,6 +70,10 @@ public class CadastroAcolhidoController {
             result.rejectValue("certidaoNascimento", "campo.obrigatorio", "A certidão de nascimento é obrigatória.");
         }
 
+        if (acolhido.getCertidaoNascimento() == null || acolhido.getCertidaoNascimento().trim().isEmpty()) {
+            result.rejectValue("certidaoNascimento", "campo.obrigatorio", "A certidão de nascimento é obrigatória.");
+        }
+
         if (acolhido.getFiliacao() == null || acolhido.getFiliacao().trim().isEmpty()) {
             result.rejectValue("filiacao", "campo.obrigatorio", "A filiação é obrigatória.");
         }
@@ -82,7 +86,10 @@ public class CadastroAcolhidoController {
             result.rejectValue("nomeConjuge", "campo.obrigatorio", "O nome do cônjuge é obrigatório.");
         }
 
-        if (acolhido.getFilho() == CadastroAcolhido.Filho.Sim && (acolhido.getQuantidadeFilhos() == null || acolhido.getQuantidadeFilhos() <= 0)) {
+        if (acolhido.getFilho() == null) {
+            result.rejectValue("filho", "campo.obrigatorio", "Informe se possui filhos.");
+        } else if (acolhido.getFilho() == CadastroAcolhido.Filho.Sim
+                && (acolhido.getQuantidadeFilhos() == null || acolhido.getQuantidadeFilhos() <= 0)) {
             result.rejectValue("quantidadeFilhos", "campo.obrigatorio", "Informe a quantidade de filhos.");
         }
 
@@ -98,7 +105,10 @@ public class CadastroAcolhidoController {
             result.rejectValue("renda", "campo.obrigatorio", "Informe se possui renda.");
         }
 
-        if (acolhido.getBeneficioSocial() == CadastroAcolhido.BeneficioSocial.Sim && (acolhido.getQualBeneficio() == null || acolhido.getQualBeneficio().trim().isEmpty())) {
+        if (acolhido.getBeneficioSocial() == null) {
+            result.rejectValue("beneficioSocial", "campo.obrigatorio", "Informe se recebe benefício social.");
+        } else if (acolhido.getBeneficioSocial() == CadastroAcolhido.BeneficioSocial.Sim
+                && (acolhido.getQualBeneficio() == null || acolhido.getQualBeneficio().trim().isEmpty())) {
             result.rejectValue("qualBeneficio", "campo.obrigatorio", "Informe qual benefício recebe.");
         }
 
@@ -106,7 +116,10 @@ public class CadastroAcolhidoController {
             result.rejectValue("estadoSaude", "campo.obrigatorio", "O estado de saúde é obrigatório.");
         }
 
-        if (acolhido.getPossuiAlergia() == CadastroAcolhido.PossuiAlergia.Sim && (acolhido.getQualAlergia() == null || acolhido.getQualAlergia().trim().isEmpty())) {
+        if (acolhido.getPossuiAlergia() == null) {
+            result.rejectValue("possuiAlergia", "campo.obrigatorio", "Informe se possui alergia.");
+        } else if (acolhido.getPossuiAlergia() == CadastroAcolhido.PossuiAlergia.Sim
+                && (acolhido.getQualAlergia() == null || acolhido.getQualAlergia().trim().isEmpty())) {
             result.rejectValue("qualAlergia", "campo.obrigatorio", "Informe a alergia.");
         }
 
@@ -118,12 +131,18 @@ public class CadastroAcolhidoController {
             result.rejectValue("bebidaAlcoolica", "campo.obrigatorio", "Informe se consome bebida alcoólica.");
         }
 
-        if (acolhido.getUsaDrogas() == CadastroAcolhido.UsaDrogas.Sim && (acolhido.getQualDroga() == null || acolhido.getQualDroga().trim().isEmpty())) {
+        if (acolhido.getUsaDrogas() == null) {
+            result.rejectValue("usaDrogas", "campo.obrigatorio", "Informe se utiliza drogas.");
+        } else if (acolhido.getUsaDrogas() == CadastroAcolhido.UsaDrogas.Sim
+                && (acolhido.getQualDroga() == null || acolhido.getQualDroga().trim().isEmpty())) {
             result.rejectValue("qualDroga", "campo.obrigatorio", "Informe qual droga utiliza.");
         }
 
-        if (acolhido.getSituacaoRua() == CadastroAcolhido.SituacaoRua.Sim && (acolhido.getTempoRua() == null || acolhido.getTempoRua().trim().isEmpty())) {
-            result.rejectValue("tempoRua", "campo.obrigatorio", "Informe o tempo de rua.");
+        if (acolhido.getSituacaoRua() == null) {
+            result.rejectValue("situacaoRua", "campo.obrigatorio", "Informe se está em situação de rua.");
+        } else if (acolhido.getSituacaoRua() == CadastroAcolhido.SituacaoRua.Sim
+                && (acolhido.getTempoRua() == null || acolhido.getTempoRua().trim().isEmpty())) {
+            result.rejectValue("tempoRua", "campo.obrigatorio", "Informe o tempo na rua.");
         }
 
         if (acolhido.getVinculoFamiliar() == CadastroAcolhido.VinculoFamiliar.Sim) {
@@ -135,8 +154,23 @@ public class CadastroAcolhidoController {
             }
         }
 
-        if (acolhido.getVezesAcolhido() == null || acolhido.getVezesAcolhido().trim().isEmpty()) {
-            result.rejectValue("vezesAcolhido", "campo.obrigatorio", "O campo vezes acolhido é obrigatório.");
+        if (acolhido.getMedicamentoControlado() == null) {
+            result.rejectValue("medicamentoControlado", "campo.obrigatorio", "Informe se usa medicamento controlado.");
+        } else if (acolhido.getMedicamentoControlado() == CadastroAcolhido.MedicamentoControlado.Sim
+                && (acolhido.getQualMedicamento() == null || acolhido.getQualMedicamento().trim().isEmpty())) {
+            result.rejectValue("qualMedicamento", "campo.obrigatorio", "Informe qual medicamento.");
+        }
+
+        if (acolhido.getDoencaSexualmentetransmissivel() == null) {
+            result.rejectValue("doencaSexualmentetransmissivel", "campo.obrigatorio", "Informe se possui DST.");
+        }
+
+
+        if (acolhido.getServicoAcolhimento() == null) {
+            result.rejectValue("servicoAcolhimento", "campo.obrigatorio", "Informe se já foi acolhido antes.");
+        } else if (acolhido.getServicoAcolhimento() == CadastroAcolhido.ServicoAcolhimento.Sim
+                && (acolhido.getVezesAcolhido() == null || acolhido.getVezesAcolhido().trim().isEmpty())) {
+            result.rejectValue("vezesAcolhido", "campo.obrigatorio", "Informe quantas vezes já foi acolhido.");
         }
 
         if (acolhido.getUltimaCidadeQueEsteve() == null || acolhido.getUltimaCidadeQueEsteve().trim().isEmpty()) {
@@ -155,14 +189,11 @@ public class CadastroAcolhidoController {
             acolhido.setDataIngresso(LocalDateTime.now());
         }
 
+        if (acolhido.getDataIngresso() == null) {
+            acolhido.setDataIngresso(LocalDateTime.now());
+        }
         if (acolhido.getDataSaida() != null && acolhido.getDataSaida().isBefore(acolhido.getDataIngresso())) {
             result.rejectValue("dataSaida", "data.invalida", "A data de saída não pode ser anterior à data de ingresso.");
-        }
-
-        if (acolhido.getServicoAcolhimento() == CadastroAcolhido.ServicoAcolhimento.Sim) {
-            if (acolhido.getVezesAcolhido() == null || acolhido.getVezesAcolhido().trim().isEmpty()) {
-                result.rejectValue("vezesAcolhido", "campo.obrigatorio", "Informe quantas vezes já foi acolhido.");
-            }
         }
 
         if (result.hasErrors()) {
