@@ -18,6 +18,15 @@
         <!-- ID escondido, pra saber se é novo ou editado -->
         <input type="hidden" th:field="*{id}" />
         <div class="card-body">
+
+          <!-- Error Summary -->
+          <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
+            <strong>Por favor, corrija os erros abaixo:</strong>
+            <ul>
+              <li th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+            </ul>
+          </div>
+
           <!-- Tipo do produto -->
           <div class="form-group">
             <label>Tipo</label>
@@ -39,21 +48,21 @@
           <div class="form-group">
             <label for="nome">Nome</label>
             <input type="text" class="form-control" id="nome" th:field="*{nome}" placeholder="Nome do produto"
-              th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid' : ''">
+              th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid' : ''" required>
             <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="invalid-feedback"></div>
           </div>
           <!-- Quantidade -->
           <div class="form-group">
             <label for="quantidade">Quantidade</label>
             <input type="number" class="form-control" id="quantidade" th:field="*{quantidade}" placeholder="0"
-              th:classappend="${#fields.hasErrors('quantidade')} ? 'is-invalid' : ''">
+              th:classappend="${#fields.hasErrors('quantidade')} ? 'is-invalid' : ''" required>
             <div th:if="${#fields.hasErrors('quantidade')}" th:errors="*{quantidade}" class="invalid-feedback"></div>
           </div>
           <!-- Unidade de medida -->
           <div class="form-group">
             <label for="unidade">Unidade</label>
             <select class="form-control" id="unidade" th:field="*{unidadeId}"
-              th:classappend="${#fields.hasErrors('unidadeId')} ? 'is-invalid' : ''">
+              th:classappend="${#fields.hasErrors('unidadeId')} ? 'is-invalid' : ''" required>
               <option value="">Selecione a Unidade</option>
               <option th:each="unidadeOpt : ${unidades}" th:value="${unidadeOpt.id}" th:text="${unidadeOpt.nome}"
                 th:selected="${produto.unidadeId != null and unidadeOpt.id == produto.unidadeId}"></option>
@@ -64,7 +73,7 @@
           <div class="form-group">
             <label for="dataDeVencimento">Data de Vencimento</label>
             <input type="date" class="form-control" id="dataDeVencimento" th:field="*{dataDeVencimento}"
-              th:classappend="${#fields.hasErrors('dataDeVencimento')} ? 'is-invalid' : ''">
+              th:classappend="${#fields.hasErrors('dataDeVencimento')} ? 'is-invalid' : ''" required>
             <div th:if="${#fields.hasErrors('dataDeVencimento')}" th:errors="*{dataDeVencimento}"
               class="invalid-feedback"></div>
           </div>

@@ -204,3 +204,14 @@ a:hover {
 .mt-3 {
     margin-top: 1.5rem !important;
 }
+
+/* Alerta de erro */
+.alert-danger .close {
+    color: var(--white);
+    opacity: 0.7;
+    text-shadow: none;
+}
+
+.alert-danger .close:hover {
+    opacity: 1;
+}

@@ -25,7 +25,9 @@
                         <input type="text" class="form-control" id="username" th:field="*{username}" 
                                placeholder="Insira o nome de usuário."
                                th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''">
-                        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="invalid-feedback"></div>
+                        <div th:if="${#fields.hasErrors('username')}" class="invalid-feedback">
+                            <span th:each="err : ${#fields.errors('username')}" th:text="${err}"></span>
+                        </div>
                     </div>
                     <!-- Campo de senha -->
                     <div class="form-group mb-3">
@@ -33,7 +35,9 @@
                         <input type="password" class="form-control" id="password" th:field="*{password}" 
                                th:placeholder="${usuario.id == null ? 'Insira uma senha segura.' : 'Deixe em branco para manter a senha atual.'}"
                                th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''">
-                        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback"></div>
+                        <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">
+                            <span th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
+                        </div>
                     </div>
                     <!-- Seletor de tipo (role) -->
                     <div class="form-group mb-3">
@@ -48,7 +52,9 @@
                                    th:classappend="${#fields.hasErrors('role')} ? 'is-invalid' : ''">
                             <label class="form-check-label" for="roleAdmin">Administrador - Acesso Completo</label>
                         </div>
-                        <div th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="invalid-feedback d-block"></div>
+                        <div th:if="${#fields.hasErrors('role')}" class="invalid-feedback d-block">
+                            <span th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
+                        </div>
                     </div>
                 </div>
                 <!-- Botões de Salvar e Cancelar -->
