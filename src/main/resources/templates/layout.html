@@ -107,6 +107,56 @@
                             </li>
                         </ul>
                     </li>
+                    <!-- Item do menu: cadastroAcolhido (com sub-itens) -->
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-box-open"></i>
+                            <p>
+                                Gestão de Acolhido
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <!-- Sub-itens do Cadastro Acolhidos -->
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a th:href="@{/cadastroAcolhido/listar}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Consultar</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{/cadastroAcolhido}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Cadastrar</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Item do menu: Leito (com sub-itens) -->
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-bed"></i>
+                            <p>
+                                Gestão de Leitos
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <!-- Sub-itens do Leito -->
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a th:href="@{/leito/listar}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Consultar</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{/leito}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Cadastrar</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <!-- Item do menu: Usuários -->
                     <li class="nav-item">
                         <a th:href="@{/admin/usuarios}" class="nav-link">
