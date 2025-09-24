@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 
 @Entity
 @Data
@@ -95,8 +95,8 @@ public class CadastroAcolhido {
     private String ultimaCidadeQueEsteve;
     private String tempoUltimaCidade;
     private String objetivoAcolhimento;
-    private LocalDateTime dataIngresso;
-    private LocalDateTime dataSaida;
+    private LocalDate dataIngresso;
+    private LocalDate dataSaida;
 
 
     public Sexo getSexo() {

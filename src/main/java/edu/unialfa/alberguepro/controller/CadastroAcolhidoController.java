@@ -9,7 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.List;
 
 @Controller
@@ -186,12 +186,9 @@ public class CadastroAcolhidoController {
         }
 
         if (acolhido.getDataIngresso() == null) {
-            acolhido.setDataIngresso(LocalDateTime.now());
+            acolhido.setDataIngresso(LocalDate.now());
         }
 
-        if (acolhido.getDataIngresso() == null) {
-            acolhido.setDataIngresso(LocalDateTime.now());
-        }
         if (acolhido.getDataSaida() != null && acolhido.getDataSaida().isBefore(acolhido.getDataIngresso())) {
             result.rejectValue("dataSaida", "data.invalida", "A data de saída não pode ser anterior à data de ingresso.");
         }
