@@ -22,7 +22,7 @@ services:
     image: mysql:8.0
     # mapeia a porta 3307 do host para a 3306 do container
     ports:
-      - "3307:3306"
+      - "3307:3306" # deixei nessa porta pois no meu computador a 3306 já está em uso pq tenho o mysql instalado localmente
     # define as variaveis de ambiente para o banco de dados
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes

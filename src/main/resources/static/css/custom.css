@@ -215,3 +215,41 @@ a:hover {
 .alert-danger .close:hover {
     opacity: 1;
 }
+
+/* Estilos customizados para as tabelas */
+.table-custom thead th {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+.table-custom tbody tr:hover {
+    background-color: #f8f9fa !important;
+}
+.table-custom td, .table-custom th {
+    border-top: 1px solid #dee2e6 !important;
+}
+.table-custom thead th {
+    border-bottom: 2px solid #dee2e6 !important;
+}
+
+/* Badges de Status para Patrimônio */
+.badge-status {
+    font-size: 0.8rem !important;
+    padding: 0.4em 0.7em !important;
+    border-radius: 0.25rem !important;
+    color: #fff !important;
+    text-transform: capitalize !important;
+}
+.badge-em-uso { background-color: #007bff !important; } /* Azul */
+.badge-disponivel { background-color: #28a745 !important; } /* Verde */
+.badge-manutencao { background-color: #ffc107 !important; color: #212529 !important; } /* Amarelo */
+.badge-baixado { background-color: #dc3545 !important; } /* Vermelho */
+.badge-default { background-color: #6c757d !important; } /* Cinza */
+
+/* Destaque para quantidade em estoque */
+.estoque-baixo {
+    font-weight: bold !important;
+    color: #dc3545 !important;
+}

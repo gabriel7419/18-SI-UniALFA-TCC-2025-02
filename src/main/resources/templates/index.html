@@ -55,113 +55,153 @@
         </div>
     </div>
 
-    <!-- Linha dos Gráficos -->
-    <div class="row">
-        <!-- Gráfico de Patrimônio -->
-        <div class="col-md-6">
-            <div class="card card-primary">
+    <!-- Linha das Tabelas -->
+    <div class="row table-row">
+        <!-- Coluna da Esquerda -->
+        <div class="col-md-6 d-flex flex-column">
+            <!-- Tabela de Patrimônio -->
+            <div class="card card-primary card-outline">
                 <div class="card-header">
                     <h3 class="card-title">Patrimônio por Status</h3>
                 </div>
-                <div class="card-body">
-                    <canvas id="patrimonioChart"></canvas>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-custom">
+                            <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Quantidade</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="entry : ${dashboard.patrimonioPorStatus}">
+                                <td>
+                                    <span th:switch="${entry.key.toLowerCase()}">
+                                        <span th:case="'em uso'" class="badge-status badge-em-uso" th:text="${entry.key}"></span>
+                                        <span th:case="'disponivel'" class="badge-status badge-disponivel" th:text="${entry.key}"></span>
+                                        <span th:case="'em manutencao'" class="badge-status badge-manutencao" th:text="${entry.key}"></span>
+                                        <span th:case="'baixado'" class="badge-status badge-baixado" th:text="${entry.key}"></span>
+                                        <span th:case="*" class="badge-status badge-default" th:text="${entry.key}"></span>
+                                    </span>
+                                </td>
+                                <td th:text="${entry.value}"></td>
+                            </tr>
+                            <tr th:if="${#maps.isEmpty(dashboard.patrimonioPorStatus)}">
+                                <td colspan="2" class="text-center">Nenhum patrimônio cadastrado</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Leitos -->
+            <div class="card card-info card-outline mt-3 flex-grow-1 d-flex flex-column">
+                <div class="card-header">
+                    <h3 class="card-title">Situação dos Leitos</h3>
+                </div>
+                <div class="card-body p-0 flex-grow-1">
+                    <div class="table-responsive h-100">
+                        <table class="table table-striped table-hover table-custom">
+                            <thead>
+                            <tr>
+                                <th>Quarto</th>
+                                <th>Leito</th>
+                                <th>Status</th>
+                                <th>Acolhido</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="leito : ${leitos.pageList}">
+                                <td th:text="${leito.quarto}"></td>
+                                <td th:text="${leito.numeroLeito}"></td>
+                                <td>
+                                    <span th:if="${leito.acolhido != null}" class="badge bg-danger">Ocupado</span>
+                                    <span th:if="${leito.acolhido == null}" class="badge bg-success">Livre</span>
+                                </td>
+                                <td th:text="${leito.acolhido?.nome}"></td>
+                            </tr>
+                            <tr th:if="${leitos.source.isEmpty()}">
+                                <td colspan="4" class="text-center">Nenhum leito cadastrado</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer clearfix" th:if="${leitos.pageCount > 1}">
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        <li class="page-item" th:classappend="${leitos.isFirstPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=0, pageEstoque=${produtosBaixoEstoque.page})}">« Início</a>
+                        </li>
+                        <li class="page-item" th:classappend="${leitos.isFirstPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=${leitos.page - 1}, pageEstoque=${produtosBaixoEstoque.page})}">‹ Anterior</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, leitos.pageCount - 1)}" th:classappend="${i == leitos.page} ? 'active' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=${i}, pageEstoque=${produtosBaixoEstoque.page})}" th:text="${i + 1}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${leitos.isLastPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=${leitos.page + 1}, pageEstoque=${produtosBaixoEstoque.page})}">Próximo ›</a>
+                        </li>
+                        <li class="page-item" th:classappend="${leitos.isLastPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=${leitos.pageCount - 1}, pageEstoque=${produtosBaixoEstoque.page})}">Fim »</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Gráfico de Estoque Baixo -->
-        <div class="col-md-6">
-            <div class="card card-danger">
+        <!-- Coluna da Direita -->
+        <div class="col-md-6 d-flex flex-column">
+            <!-- Tabela de Estoque Baixo -->
+            <div class="card card-danger card-outline flex-grow-1 d-flex flex-column">
                 <div class="card-header">
-                    <h3 class="card-title">Top 5 Produtos com Estoque Baixo</h3>
+                    <h3 class="card-title">Produtos com Estoque Baixo</h3>
                 </div>
-                <div class="card-body">
-                    <canvas id="estoqueChart"></canvas>
+                <div class="card-body p-0 flex-grow-1">
+                    <div class="table-responsive h-100">
+                        <table class="table table-striped table-hover table-custom">
+                            <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Quantidade</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="produto : ${produtosBaixoEstoque.pageList}">
+                                <td th:text="${produto.nome}"></td>
+                                <td class="estoque-baixo" th:text="${produto.quantidade}"></td>
+                            </tr>
+                            <tr th:if="${produtosBaixoEstoque.source.isEmpty()}">
+                                <td colspan="2" class="text-center">Nenhum produto com estoque baixo</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer clearfix" th:if="${produtosBaixoEstoque.pageCount > 1}">
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        <li class="page-item" th:classappend="${produtosBaixoEstoque.isFirstPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageEstoque=0, pageLeitos=${leitos.page})}">« Início</a>
+                        </li>
+                        <li class="page-item" th:classappend="${produtosBaixoEstoque.isFirstPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageEstoque=${produtosBaixoEstoque.page - 1}, pageLeitos=${leitos.page})}">‹ Anterior</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, produtosBaixoEstoque.pageCount - 1)}" th:classappend="${i == produtosBaixoEstoque.page} ? 'active' : ''">
+                            <a class="page-link" th:href="@{/(pageEstoque=${i}, pageLeitos=${leitos.page})}" th:text="${i + 1}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${produtosBaixoEstoque.isLastPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageEstoque=${produtosBaixoEstoque.page + 1}, pageLeitos=${leitos.page})}">Próximo ›</a>
+                        </li>
+                        <li class="page-item" th:classappend="${produtosBaixoEstoque.isLastPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageEstoque=${produtosBaixoEstoque.pageCount - 1}, pageLeitos=${leitos.page})}">Fim »</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
 </section>
-
-<!-- Script para inicializar os gráficos -->
-<script th:inline="javascript">
-    /*<![CDATA[*/
-
-    // Aguarda o documento carregar
-    document.addEventListener('DOMContentLoaded', function () {
-
-        // --- DADOS DO BACKEND --- //
-        const patrimonioData = /*[[${dashboard.patrimonioPorStatus}]]*/ {};
-        const estoqueData = /*[[${dashboard.estoqueBaixo}]]*/ {};
-
-        // --- GRÁFICO DE PATRIMÔNIO (PIZZA) --- //
-        const patrimonioCtx = document.getElementById('patrimonioChart').getContext('2d');
-        if (Object.keys(patrimonioData).length > 0) {
-            new Chart(patrimonioCtx, {
-                type: 'pie',
-                data: {
-                    labels: Object.keys(patrimonioData),
-                    datasets: [{
-                        label: 'Status do Patrimônio',
-                        data: Object.values(patrimonioData),
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.7)',
-                            'rgba(54, 162, 235, 0.7)',
-                            'rgba(255, 206, 86, 0.7)',
-                            'rgba(75, 192, 192, 0.7)',
-                            'rgba(153, 102, 255, 0.7)',
-                        ],
-                        borderColor: 'rgba(255, 255, 255, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true
-                }
-            });
-        } else {
-            patrimonioCtx.font = "16px Arial";
-            patrimonioCtx.textAlign = "center";
-            patrimonioCtx.fillText("Nenhum dado de patrimônio para exibir", patrimonioCtx.canvas.width / 2, patrimonioCtx.canvas.height / 2);
-        }
-
-
-        // --- GRÁFICO DE ESTOQUE (BARRAS) --- //
-        const estoqueCtx = document.getElementById('estoqueChart').getContext('2d');
-        if (Object.keys(estoqueData).length > 0) {
-            new Chart(estoqueCtx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(estoqueData),
-                    datasets: [{
-                        label: 'Quantidade em Estoque',
-                        data: Object.values(estoqueData),
-                        backgroundColor: 'rgba(220, 53, 69, 0.7)',
-                        borderColor: 'rgba(220, 53, 69, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        } else {
-            estoqueCtx.font = "16px Arial";
-            estoqueCtx.textAlign = "center";
-            estoqueCtx.fillText("Nenhum produto com estoque baixo", estoqueCtx.canvas.width / 2, estoqueCtx.canvas.height / 2);
-        }
-    });
-
-    /*]]>*/
-</script>
 
 </body>
 </html>
