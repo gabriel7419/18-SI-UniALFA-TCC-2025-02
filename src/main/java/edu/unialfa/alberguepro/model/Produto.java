@@ -1,9 +1,10 @@
 package edu.unialfa.alberguepro.model;
 
 import jakarta.persistence.*;
-import jakarta.persistence.PostLoad;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Produto {
@@ -31,6 +32,7 @@ public class Produto {
 
     @NotNull(message = "A data de vencimento é obrigatória.")
     @Future(message = "A data de vencimento deve ser uma data futura.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataDeVencimento;
 
     @Transient
