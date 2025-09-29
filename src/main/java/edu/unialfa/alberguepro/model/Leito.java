@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -17,7 +19,10 @@ public class Leito {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataEntrada;
+    
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataSaida;
 
     @Enumerated(EnumType.STRING)
