@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 
 @Entity
 @Data
@@ -19,7 +21,10 @@ public class CadastroAcolhido {
     private Long id;
 
     private String nome;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataNascimento;
+
     private String naturalidade;
     private Integer idade;
     private String profissao;
@@ -95,7 +100,11 @@ public class CadastroAcolhido {
     private String ultimaCidadeQueEsteve;
     private String tempoUltimaCidade;
     private String objetivoAcolhimento;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataIngresso;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataSaida;
 
 
