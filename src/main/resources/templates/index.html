@@ -7,25 +7,201 @@
     <title>Dashboard - AlberguePro</title>
 </head>
 <body>
-    <section>
-        <!-- Caixinhas com stats -->
-        <div class="row">
-            <div class="col-lg-3 col-6">
-            <!-- Caixa de Acolhidos -->
+<section>
+    <!-- Linha de Caixas de Informação -->
+    <div class="row">
+        <!-- Acolhidos Ativos -->
+        <div class="col-lg-3 col-6">
             <div class="small-box bg-info">
-              <div class="inner">
-                <!-- Número fixo por enquanto, podia vir do controller -->
-                <h3>150</h3>
-
-                <p>Acolhidos</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-bag"></i>
-              </div>
-              <a href="#" class="small-box-footer">Mais info <i class="fas fa-arrow-circle-right"></i></a>
+                <div class="inner">
+                    <h3 th:text="${dashboard.totalAcolhidos}">0</h3>
+                    <p>Acolhidos Ativos</p>
+                </div>
+                <div class="icon"><i class="fas fa-users"></i></div>
             </div>
-          </div>
         </div>
-    </section>
+
+        <!-- Leitos -->
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3 th:text="${dashboard.leitosLivres} + ' / ' + ${dashboard.totalLeitos}">0 / 0</h3>
+                    <p>Leitos Livres</p>
+                </div>
+                <div class="icon"><i class="fas fa-bed"></i></div>
+            </div>
+        </div>
+
+        <!-- Quartos -->
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3 th:text="${dashboard.quartosLivres} + ' / ' + ${dashboard.totalQuartos}">0 / 0</h3>
+                    <p>Quartos Livres</p>
+                </div>
+                <div class="icon"><i class="fas fa-door-open"></i></div>
+            </div>
+        </div>
+
+        <!-- Total de Usuários -->
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3 th:text="${dashboard.totalUsuarios}">0</h3>
+                    <p>Usuários do Sistema</p>
+                </div>
+                <div class="icon"><i class="fas fa-user-shield"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Linha das Tabelas -->
+    <div class="row table-row">
+        <!-- Coluna da Esquerda -->
+        <div class="col-md-6 d-flex flex-column">
+            <!-- Tabela de Patrimônio -->
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">Patrimônio por Status</h3>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-custom">
+                            <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Quantidade</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="entry : ${dashboard.patrimonioPorStatus}">
+                                <td>
+                                    <span th:switch="${entry.key.toLowerCase()}">
+                                        <span th:case="'em uso'" class="badge-status badge-em-uso" th:text="${entry.key}"></span>
+                                        <span th:case="'disponivel'" class="badge-status badge-disponivel" th:text="${entry.key}"></span>
+                                        <span th:case="'em manutencao'" class="badge-status badge-manutencao" th:text="${entry.key}"></span>
+                                        <span th:case="'baixado'" class="badge-status badge-baixado" th:text="${entry.key}"></span>
+                                        <span th:case="*" class="badge-status badge-default" th:text="${entry.key}"></span>
+                                    </span>
+                                </td>
+                                <td th:text="${entry.value}"></td>
+                            </tr>
+                            <tr th:if="${#maps.isEmpty(dashboard.patrimonioPorStatus)}">
+                                <td colspan="2" class="text-center">Nenhum patrimônio cadastrado</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Leitos -->
+            <div class="card card-info card-outline mt-3 flex-grow-1 d-flex flex-column">
+                <div class="card-header">
+                    <h3 class="card-title">Situação dos Leitos</h3>
+                </div>
+                <div class="card-body p-0 flex-grow-1">
+                    <div class="table-responsive h-100">
+                        <table class="table table-striped table-hover table-custom">
+                            <thead>
+                            <tr>
+                                <th>Quarto</th>
+                                <th>Leito</th>
+                                <th>Status</th>
+                                <th>Acolhido</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="leito : ${leitos.pageList}">
+                                <td th:text="${leito.quarto}"></td>
+                                <td th:text="${leito.numeroLeito}"></td>
+                                <td>
+                                    <span th:if="${leito.acolhido != null}" class="badge bg-danger">Ocupado</span>
+                                    <span th:if="${leito.acolhido == null}" class="badge bg-success">Livre</span>
+                                </td>
+                                <td th:text="${leito.acolhido?.nome}"></td>
+                            </tr>
+                            <tr th:if="${leitos.source.isEmpty()}">
+                                <td colspan="4" class="text-center">Nenhum acolhido atribuído a um leito</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer clearfix" th:if="${leitos.pageCount > 1}">
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        <li class="page-item" th:classappend="${leitos.isFirstPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=0, pageEstoque=${produtosBaixoEstoque.page})}">« Início</a>
+                        </li>
+                        <li class="page-item" th:classappend="${leitos.isFirstPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=${leitos.page - 1}, pageEstoque=${produtosBaixoEstoque.page})}">‹ Anterior</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, leitos.pageCount - 1)}" th:classappend="${i == leitos.page} ? 'active' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=${i}, pageEstoque=${produtosBaixoEstoque.page})}" th:text="${i + 1}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${leitos.isLastPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=${leitos.page + 1}, pageEstoque=${produtosBaixoEstoque.page})}">Próximo ›</a>
+                        </li>
+                        <li class="page-item" th:classappend="${leitos.isLastPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=${leitos.pageCount - 1}, pageEstoque=${produtosBaixoEstoque.page})}">Fim »</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna da Direita -->
+        <div class="col-md-6 d-flex flex-column">
+            <!-- Tabela de Estoque Baixo -->
+            <div class="card card-danger card-outline flex-grow-1 d-flex flex-column">
+                <div class="card-header">
+                    <h3 class="card-title">Produtos com Estoque Baixo</h3>
+                </div>
+                <div class="card-body p-0 flex-grow-1">
+                    <div class="table-responsive h-100">
+                        <table class="table table-striped table-hover table-custom">
+                            <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Quantidade</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="produto : ${produtosBaixoEstoque.pageList}">
+                                <td th:text="${produto.nome}"></td>
+                                <td class="estoque-baixo" th:text="${produto.quantidade}"></td>
+                            </tr>
+                            <tr th:if="${produtosBaixoEstoque.source.isEmpty()}">
+                                <td colspan="2" class="text-center">Nenhum produto com estoque baixo</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer clearfix" th:if="${produtosBaixoEstoque.pageCount > 1}">
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        <li class="page-item" th:classappend="${produtosBaixoEstoque.isFirstPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageEstoque=0, pageLeitos=${leitos.page})}">« Início</a>
+                        </li>
+                        <li class="page-item" th:classappend="${produtosBaixoEstoque.isFirstPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageEstoque=${produtosBaixoEstoque.page - 1}, pageLeitos=${leitos.page})}">‹ Anterior</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, produtosBaixoEstoque.pageCount - 1)}" th:classappend="${i == produtosBaixoEstoque.page} ? 'active' : ''">
+                            <a class="page-link" th:href="@{/(pageEstoque=${i}, pageLeitos=${leitos.page})}" th:text="${i + 1}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${produtosBaixoEstoque.isLastPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageEstoque=${produtosBaixoEstoque.page + 1}, pageLeitos=${leitos.page})}">Próximo ›</a>
+                        </li>
+                        <li class="page-item" th:classappend="${produtosBaixoEstoque.isLastPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageEstoque=${produtosBaixoEstoque.pageCount - 1}, pageLeitos=${leitos.page})}">Fim »</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
 </body>
 </html>

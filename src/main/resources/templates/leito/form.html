@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+<head>
+    <title>Cadastro de Leito</title>
+</head>
+<body>
+<section>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Gestão de Leito - Cadastrar</h3>
+        </div>
+
+        <form th:action="@{/leito/salvar}" th:object="${leito}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+
+            <div class="card-body">
+
+                <div class="form-group">
+                    <label for="acolhido">Acolhido</label>
+                    <select class="form-control" id="acolhido" th:field="*{acolhido.id}">
+                        <option value="">Selecione...</option>
+                        <option th:each="a : ${acolhidos}"
+                                th:value="${a.id}"
+                                th:text="${a.nome}"
+                                th:selected="${leito.acolhido != null and leito.acolhido.id == a.id}">
+                        </option>
+                    </select>
+                    <div th:if="${#fields.hasErrors('acolhido.id')}" th:errors="*{acolhido.id}" class="text-danger"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataEntrada">Data de Entrada</label>
+                    <input type="date" class="form-control" id="dataEntrada" th:field="*{dataEntrada}">
+                    <div th:if="${#fields.hasErrors('dataEntrada')}" th:errors="*{dataEntrada}" class="text-danger"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataSaida">Data de Saída</label>
+                    <input type="date" class="form-control" id="dataSaida" th:field="*{dataSaida}">
+                    <div th:if="${#fields.hasErrors('dataSaida')}" th:errors="*{dataSaida}" class="text-danger"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="leito">Leito</label>
+                    <select id="leito" class="form-control" th:field="*{numeroLeito}">
+                        <option value="">Selecione...</option>
+                        <option th:each="l : ${numeroLeitos}"
+                                th:value="${l}" th:text="${l}">
+                        </option>
+                    </select>
+                    <div th:if="${#fields.hasErrors('numeroLeito')}" th:errors="*{numeroLeito}" class="text-danger"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="quarto">Quarto</label>
+                    <select id="quarto" class="form-control" th:field="*{quarto}">
+                        <option value="">Selecione...</option>
+                        <option th:each="q : ${quartos}"
+                                th:value="${q}" th:text="${q}">
+                        </option>
+                    </select>
+                    <div th:if="${#fields.hasErrors('quarto')}" th:errors="*{quarto}" class="text-danger"></div>
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <a th:href="@{/leito/listar}" class="btn btn-secondary">Cancelar</a>
+            </div>
+
+        </form>
+    </div>
+</section>
+</body>
+</html>

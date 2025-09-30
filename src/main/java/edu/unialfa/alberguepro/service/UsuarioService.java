@@ -50,15 +50,21 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-@Transactional
+    @Transactional
     public void toggleAtivo(Long id) {
-        // Busca o usuário no banco ou lança uma exceção se não encontrar
+        String usernameLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Usuário não encontrado: " + id));
-        
+
+        // Check if the user is trying to deactivate themselves
+        if (usuario.getUsername().equals(usernameLogado) && usuario.isAtivo()) {
+            throw new IllegalStateException("Não é possível desativar o próprio usuário.");
+        }
+
         // Inverte o status atual (se era true, vira false; se era false, vira true)
         usuario.setAtivo(!usuario.isAtivo());
-        
+
         // Salva a alteração no banco de dados
         usuarioRepository.save(usuario);
     }

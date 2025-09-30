@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
 public class Produto {
 
@@ -24,15 +26,25 @@ public class Produto {
 
     @ManyToOne
     @JoinColumn(name = "unidade_id")
-    @NotNull(message = "A unidade de medida é obrigatória.")
+    // A validação @NotNull foi movida para o campo 'unidadeId', que é o campo recebido do formulário.
+    // A constraint do banco de dados em 'unidade_id' garante a integridade.
     private Unidade unidade;
 
     @NotNull(message = "A data de vencimento é obrigatória.")
     @Future(message = "A data de vencimento deve ser uma data futura.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataDeVencimento;
 
     @Transient
+    @NotNull(message = "A unidade de medida é obrigatória.")
     private Long unidadeId;
+
+    @PostLoad
+    private void onLoad() {
+        if (this.unidade != null) {
+            this.unidadeId = this.unidade.getId();
+        }
+    }
 
     // Getters e Setters
     public Long getId() {

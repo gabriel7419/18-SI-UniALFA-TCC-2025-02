@@ -1,7 +1,7 @@
 <!-- Molde principal das páginas -->
 <!DOCTYPE html>
 <!-- Define o layout e os parâmetros que ele recebe (título e conteúdo) -->
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:fragment="layout (title, content)">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="layout (title, content)">
 <head>
     <meta charset="UTF-8">
     <!-- Título da aba -->
@@ -85,7 +85,7 @@
                     <!-- Item do menu: Patrimônio (com sub-itens) -->
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-box-open"></i>
+                            <i class="nav-icon fas fa-landmark"></i>
                             <p>
                                 Gestão de Patrimônio
                                 <i class="right fas fa-angle-left"></i>
@@ -101,6 +101,56 @@
                             </li>
                             <li class="nav-item">
                                 <a th:href="@{/patrimonio/novo}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Cadastrar</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Item do menu: cadastroAcolhido (com sub-itens) -->
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>
+                                Gestão de Acolhido
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <!-- Sub-itens do Cadastro Acolhidos -->
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a th:href="@{/cadastroAcolhido/listar}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Consultar</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{/cadastroAcolhido}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Cadastrar</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Item do menu: Leito (com sub-itens) -->
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-bed"></i>
+                            <p>
+                                Gestão de Leitos
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <!-- Sub-itens do Leito -->
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a th:href="@{/leito/listar}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Consultar</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{/leito}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Cadastrar</p>
                                 </a>
@@ -152,5 +202,7 @@
 <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/webjars/AdminLTE/3.2.0/dist/js/adminlte.min.js}"></script>
+<!-- ChartJS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
