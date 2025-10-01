@@ -7,12 +7,12 @@
 <body>
 <section>
     <div class="mb-3">
-        <a th:href="@{/leito}" class="btn btn-primary">
+        <a th:href="@{/vaga}" class="btn btn-primary">
             <i class="fas fa-plus"></i> Novo Leito
         </a>
     </div>
 
-    <form th:action="@{/leito/listar}" method="get" class="mb-3">
+    <form th:action="@{/vaga/listar}" method="get" class="mb-3">
         <div class="input-group">
             <input type="text" name="filtro" class="form-control"
                    placeholder="Buscar leito pelo nome do acolhido..." th:value="${filtro}">
@@ -30,11 +30,11 @@
         </div>
 
         <div class="card-body">
-            <div th:if="${#lists.isEmpty(leitos)}" class="alert alert-info">
+            <div th:if="${#lists.isEmpty(vagas)}" class="alert alert-info">
                 Nenhum leito cadastrado.
             </div>
 
-            <table class="table table-bordered" th:if="${not #lists.isEmpty(leitos)}">
+            <table class="table table-bordered" th:if="${not #lists.isEmpty(vagas)}">
                 <thead>
                 <tr>
                     <th>Acolhido</th>
@@ -46,18 +46,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="leito : ${leitos}">
-                    <td th:text="${leito.acolhido != null} ? ${leito.acolhido.nome} : '---'">Nome Acolhido</td>
-                    <td th:text="${leito.dataEntrada != null} ? ${#temporals.format(leito.dataEntrada,'dd/MM/yyyy')} : '---'">10/09/2025</td>
-                    <td th:text="${leito.dataSaida != null} ? ${#temporals.format(leito.dataSaida,'dd/MM/yyyy')} : '---'">---</td>
-                    <td th:text="${leito.numeroLeito != null} ? ${leito.numeroLeito} : '---'">Leito1</td>
-                    <td th:text="${leito.quarto != null} ? ${leito.quarto} : '---'">Quarto1</td>
+                <tr th:each="vaga : ${vagas}">
+                    <td th:text="${vaga.acolhido != null} ? ${vaga.acolhido.nome} : '---'">Nome Acolhido</td>
+                    <td th:text="${vaga.dataEntrada != null} ? ${#temporals.format(vaga.dataEntrada,'dd/MM/yyyy')} : '---'">10/09/2025</td>
+                    <td th:text="${vaga.dataSaida != null} ? ${#temporals.format(vaga.dataSaida,'dd/MM/yyyy')} : '---'">---</td>
+                    <td th:text="${vaga.numeroLeito != null} ? ${vaga.numeroLeito} : '---'">Leito1</td>
+                    <td th:text="${vaga.quarto != null} ? ${vaga.quarto} : '---'">Quarto1</td>
 
                     <td>
-                        <a th:href="@{/leito/editar/{id}(id=${leito.id})}" class="btn btn-warning btn-sm">
+                        <a th:href="@{/vaga/editar/{id}(id=${vaga.id})}" class="btn btn-warning btn-sm">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a th:href="@{/leito/remover/{id}(id=${leito.id})}" class="btn btn-danger btn-sm">
+                        <a th:href="@{/vaga/remover/{id}(id=${vaga.id})}" class="btn btn-danger btn-sm">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>

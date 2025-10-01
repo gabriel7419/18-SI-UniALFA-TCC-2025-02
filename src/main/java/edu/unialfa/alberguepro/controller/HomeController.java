@@ -2,7 +2,7 @@ package edu.unialfa.alberguepro.controller;
 
 import edu.unialfa.alberguepro.dto.DashboardDTO;
 import edu.unialfa.alberguepro.model.ControlePatrimonio;
-import edu.unialfa.alberguepro.model.Leito;
+import edu.unialfa.alberguepro.model.Vaga;
 import edu.unialfa.alberguepro.model.Produto;
 import edu.unialfa.alberguepro.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class HomeController {
     private CadastroAcolhidoRepository cadastroAcolhidoRepository;
 
     @Autowired
-    private LeitoRepository leitoRepository;
+    private VagaRepository vagaRepository;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -44,16 +44,16 @@ public class HomeController {
         dashboardDTO.setTotalAcolhidos(cadastroAcolhidoRepository.countByDataSaidaIsNull());
 
         // Leitos
-        long leitosOcupados = leitoRepository.countByAcolhidoIsNotNull();
-        long totalLeitos = (long) Leito.Quarto.values().length * Leito.NumeroLeito.values().length;
+        long leitosOcupados = vagaRepository.countByAcolhidoIsNotNull();
+        long totalLeitos = (long) Vaga.Quarto.values().length * Vaga.NumeroLeito.values().length;
         dashboardDTO.setLeitosOcupados(leitosOcupados);
         dashboardDTO.setLeitosLivres(totalLeitos - leitosOcupados);
         dashboardDTO.setTotalLeitos(totalLeitos);
 
         // Quartos
-        long totalQuartos = Leito.Quarto.values().length;
-        long camasPorQuarto = Leito.NumeroLeito.values().length;
-        List<Object[]> occupiedBedsByRoom = leitoRepository.countOccupiedBedsByRoom();
+        long totalQuartos = Vaga.Quarto.values().length;
+        long camasPorQuarto = Vaga.NumeroLeito.values().length;
+        List<Object[]> occupiedBedsByRoom = vagaRepository.countOccupiedBedsByRoom();
 
         long quartosCheios = occupiedBedsByRoom.stream()
             .filter(result -> (Long) result[1] >= camasPorQuarto)
@@ -88,8 +88,8 @@ public class HomeController {
         model.addAttribute("produtosBaixoEstoque", pagedListEstoque);
 
         // Paginação para Leitos
-        List<Leito> leitos = leitoRepository.findAll();
-        PagedListHolder<Leito> pagedListLeitos = new PagedListHolder<>(leitos);
+        List<Vaga> leitos = vagaRepository.findAll();
+        PagedListHolder<Vaga> pagedListLeitos = new PagedListHolder<>(leitos);
         pagedListLeitos.setPageSize(5);
         pagedListLeitos.setPage(pageLeitos);
         model.addAttribute("leitos", pagedListLeitos);
