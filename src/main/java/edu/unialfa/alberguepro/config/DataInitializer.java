@@ -2,14 +2,18 @@ package edu.unialfa.alberguepro.config;
 
 import edu.unialfa.alberguepro.model.Unidade;
 import edu.unialfa.alberguepro.model.Usuario;
+import edu.unialfa.alberguepro.model.Vaga;
 import edu.unialfa.alberguepro.repository.UnidadeRepository;
 import edu.unialfa.alberguepro.repository.UsuarioRepository;
+import edu.unialfa.alberguepro.repository.VagaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -19,6 +23,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private VagaRepository vagaRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -55,6 +62,22 @@ public class DataInitializer implements CommandLineRunner {
 
             unidadeRepository.saveAll(Arrays.asList(un1, un2, un3, un4, un5));
             System.out.println("Unidades de medida criadas com sucesso!");
+        }
+
+        // Verifica se as vagas já existem
+        if (vagaRepository.count() == 0) {
+            System.out.println("Criando vagas padrão...");
+            List<Vaga> vagas = new ArrayList<>();
+            for (Vaga.Quarto quarto : Vaga.Quarto.values()) {
+                for (Vaga.NumeroLeito leito : Vaga.NumeroLeito.values()) {
+                    Vaga vaga = new Vaga();
+                    vaga.setQuarto(quarto);
+                    vaga.setNumeroLeito(leito);
+                    vagas.add(vaga);
+                }
+            }
+            vagaRepository.saveAll(vagas);
+            System.out.println(vagas.size() + " vagas criadas com sucesso!");
         }
     }
 }
