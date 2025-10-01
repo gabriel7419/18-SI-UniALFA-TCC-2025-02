@@ -25,7 +25,7 @@ public class ControlePatrimonio {
     private String nome;
 
     @NotNull(message = "O número de patrimônio é obrigatório")
-    @Max(value = 30000, message = "O patrimônio não pode ter mais de 30000git  caracteres")
+    @Max(value = 30000, message = "O patrimônio não pode ter mais de 30000  caracteres")
     private Integer patrimonio;
 
     @NotNull(message = "A data de aquisição é obrigatória")

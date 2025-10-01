@@ -13,7 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Leito {
+public class Vaga {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

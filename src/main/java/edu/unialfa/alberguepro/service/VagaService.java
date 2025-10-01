@@ -1,27 +1,27 @@
 package edu.unialfa.alberguepro.service;
 
-import edu.unialfa.alberguepro.model.Leito;
-import edu.unialfa.alberguepro.repository.LeitoRepository;
+import edu.unialfa.alberguepro.model.Vaga;
+import edu.unialfa.alberguepro.repository.VagaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class LeitoService {
+public class VagaService {
 
     @Autowired
-    private LeitoRepository repository;
+    private VagaRepository repository;
 
-    public void salvar(Leito leito) {
-        repository.save(leito);
+    public void salvar(Vaga vaga) {
+        repository.save(vaga);
     }
 
-    public List<Leito> listarTodos() {
+    public List<Vaga> listarTodos() {
         return repository.findAll();
     }
 
-    public Leito buscarPorId(Long id) {
+    public Vaga buscarPorId(Long id) {
         return repository.findById(id).orElse(null);
     }
 

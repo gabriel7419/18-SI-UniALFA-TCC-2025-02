@@ -1,9 +1,9 @@
 package edu.unialfa.alberguepro.controller;
 
 import edu.unialfa.alberguepro.model.CadastroAcolhido;
-import edu.unialfa.alberguepro.model.Leito;
+import edu.unialfa.alberguepro.model.Vaga;
 import edu.unialfa.alberguepro.service.CadastroAcolhidoService;
-import edu.unialfa.alberguepro.service.LeitoService;
+import edu.unialfa.alberguepro.service.VagaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,91 +14,91 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-@RequestMapping("/leito")
-public class LeitoController {
+@RequestMapping("/vaga")
+public class VagaController {
 
     @Autowired
-    private LeitoService service;
+    private VagaService service;
 
     @Autowired
     private CadastroAcolhidoService acolhidoService;
 
     @GetMapping
     public String iniciar(Model model) {
-        model.addAttribute("leito", new Leito());
+        model.addAttribute("vaga", new Vaga());
         model.addAttribute("acolhidos", acolhidoService.listarTodos());
-        model.addAttribute("quartos", Leito.Quarto.values());
-        model.addAttribute("numeroLeitos", Leito.NumeroLeito.values());
-        return "leito/form";
+        model.addAttribute("quartos", Vaga.Quarto.values());
+        model.addAttribute("numeroLeitos", Vaga.NumeroLeito.values());
+        return "vaga/form";
     }
 
     @PostMapping("salvar")
-    public String salvar(@ModelAttribute("leito") Leito leito, BindingResult result, Model model) {
+    public String salvar(@ModelAttribute("vaga") Vaga vaga, BindingResult result, Model model) {
 
-        if (leito.getAcolhido() == null || leito.getAcolhido().getId() == null) {
+        if (vaga.getAcolhido() == null || vaga.getAcolhido().getId() == null) {
             result.rejectValue("acolhido.id", "campo.obrigatorio", "O acolhido é obrigatório.");
         }
 
-        if (leito.getDataEntrada() == null) {
+        if (vaga.getDataEntrada() == null) {
             result.rejectValue("dataEntrada", "campo.obrigatorio", "A data de entrada é obrigatória.");
-        } else if (leito.getDataEntrada().isBefore(LocalDate.now())) {
+        } else if (vaga.getDataEntrada().isBefore(LocalDate.now())) {
             result.rejectValue("dataEntrada", "data.invalida", "A data de entrada deve ser hoje ou futura.");
         }
 
-        if (leito.getDataSaida() == null) {
+        if (vaga.getDataSaida() == null) {
             result.rejectValue("dataSaida", "campo.obrigatorio", "A data de saída é obrigatória.");
-        } else if (leito.getDataEntrada() != null && !leito.getDataSaida().isAfter(leito.getDataEntrada())) {
+        } else if (vaga.getDataEntrada() != null && !vaga.getDataSaida().isAfter(vaga.getDataEntrada())) {
             result.rejectValue("dataSaida", "data.invalida", "A data de saída deve ser posterior à data de entrada.");
         }
 
-        if (leito.getDataSaida() == null && leito.getDataEntrada() != null) {
-            leito.setDataSaida(leito.getDataEntrada().plusMonths(3));
+        if (vaga.getDataSaida() == null && vaga.getDataEntrada() != null) {
+            vaga.setDataSaida(vaga.getDataEntrada().plusMonths(3));
         }
 
-        if (leito.getNumeroLeito() == null) {
+        if (vaga.getNumeroLeito() == null) {
             result.rejectValue("numeroLeito", "campo.obrigatorio", "O número do leito é obrigatório.");
         }
 
-        if (leito.getQuarto() == null) {
+        if (vaga.getQuarto() == null) {
             result.rejectValue("quarto", "campo.obrigatorio", "O quarto é obrigatório.");
         }
 
 
         if (result.hasErrors()) {
             model.addAttribute("acolhidos", acolhidoService.listarTodos());
-            model.addAttribute("quartos", Leito.Quarto.values());
-            model.addAttribute("numeroLeitos", Leito.NumeroLeito.values());
-            return "leito/form";
+            model.addAttribute("quartos", Vaga.Quarto.values());
+            model.addAttribute("numeroLeitos", Vaga.NumeroLeito.values());
+            return "vaga/form";
         }
 
-        if (leito.getAcolhido() != null && leito.getAcolhido().getId() != null) {
-            CadastroAcolhido full = acolhidoService.buscarPorId(leito.getAcolhido().getId());
-            leito.setAcolhido(full);
+        if (vaga.getAcolhido() != null && vaga.getAcolhido().getId() != null) {
+            CadastroAcolhido full = acolhidoService.buscarPorId(vaga.getAcolhido().getId());
+            vaga.setAcolhido(full);
         }
 
-        service.salvar(leito);
-        return "redirect:/leito/listar";
+        service.salvar(vaga);
+        return "redirect:/vaga/listar";
     }
 
     @GetMapping("listar")
     public String listar(Model model) {
-        List<Leito> leitos = service.listarTodos();
-        model.addAttribute("leitos", leitos);
-        return "leito/lista";
+        List<Vaga> vaga = service.listarTodos();
+        model.addAttribute("vagas", vaga);
+        return "vaga/lista";
     }
 
     @GetMapping("editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
-        model.addAttribute("leito", service.buscarPorId(id));
+        model.addAttribute("vaga", service.buscarPorId(id));
         model.addAttribute("acolhidos", acolhidoService.listarTodos());
-        model.addAttribute("quartos", Leito.Quarto.values());
-        model.addAttribute("numeroLeitos", Leito.NumeroLeito.values());
-        return "leito/form";
+        model.addAttribute("quartos", Vaga.Quarto.values());
+        model.addAttribute("numeroLeitos", Vaga.NumeroLeito.values());
+        return "vaga/form";
     }
 
     @GetMapping("remover/{id}")
     public String remover(@PathVariable Long id) {
         service.deletarPorId(id);
-        return "redirect:/leito/listar";
+        return "redirect:/vaga/listar";
     }
 }

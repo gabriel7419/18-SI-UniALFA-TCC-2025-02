@@ -2,16 +2,16 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
 <head>
-    <title>Cadastro de Leito</title>
+    <title>Cadastro de Vagas</title>
 </head>
 <body>
 <section>
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title">Gestão de Leito - Cadastrar</h3>
+            <h3 class="card-title">Gestão de Vagas - Cadastrar</h3>
         </div>
 
-        <form th:action="@{/leito/salvar}" th:object="${leito}" method="post">
+        <form th:action="@{/vaga/salvar}" th:object="${vaga}" method="post">
             <input type="hidden" th:field="*{id}"/>
 
             <div class="card-body">
@@ -23,7 +23,7 @@
                         <option th:each="a : ${acolhidos}"
                                 th:value="${a.id}"
                                 th:text="${a.nome}"
-                                th:selected="${leito.acolhido != null and leito.acolhido.id == a.id}">
+                                th:selected="${vaga.acolhido != null and vaga.acolhido.id == a.id}">
                         </option>
                     </select>
                     <div th:if="${#fields.hasErrors('acolhido.id')}" th:errors="*{acolhido.id}" class="text-danger"></div>
@@ -67,7 +67,7 @@
 
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Salvar</button>
-                <a th:href="@{/leito/listar}" class="btn btn-secondary">Cancelar</a>
+                <a th:href="@{/vaga/listar}" class="btn btn-secondary">Cancelar</a>
             </div>
 
         </form>
