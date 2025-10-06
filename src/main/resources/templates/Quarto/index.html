@@ -1,0 +1,22 @@
+<!-- Tela de lista de quartos -->
+<!DOCTYPE html>
+<!-- Puxa o layout principal, passando o título e o conteúdo -->
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+<head>
+    <!-- Título que vai aparecer na aba do navegador -->
+    <title>Consultar Quartos</title>
+</head>
+<body>
+    <!-- Conteúdo principal da página -->
+    <section>
+        <!-- Botões de ação -->
+        <div class="mb-3">
+            <!-- Botão pra criar Quarto novo -->
+            <a th:href="@{/quarto/novo}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Novo Quarto
+            </a>
+        </div>
+    </section>
+</body>
+</html>
