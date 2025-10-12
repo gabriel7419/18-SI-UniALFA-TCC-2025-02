@@ -31,7 +31,7 @@ public class JpaUserDetailsService implements UserDetailsService {
 
         Usuario usuario = usuarioOpt.get();
 
-        // Check if account is locked
+        // validação se o usuário está bloqueado
         if (usuario.getAccountLockedUntil() != null && usuario.getAccountLockedUntil().isAfter(LocalDateTime.now())) {
             throw new LockedException("Sua conta está bloqueada até " + usuario.getAccountLockedUntil());
         }

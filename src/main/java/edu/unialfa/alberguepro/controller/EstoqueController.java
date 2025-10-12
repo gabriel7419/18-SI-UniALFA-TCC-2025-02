@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/estoque")  // ⬅️ ADICIONE ESTA LINHA - Esta é a correção principal!
+@RequestMapping("/estoque")
 public class EstoqueController {
 
     @Autowired
@@ -52,12 +52,12 @@ public class EstoqueController {
         model.addAttribute("unidades", unidades);
     }
 
-    @GetMapping({"/", ""})  // ⬅️ Aceita tanto /estoque/ quanto /estoque
+    @GetMapping({"/", ""})
     public String listarProdutos(Model model,
-                                 @RequestParam(required = false) String nome,
-                                 @RequestParam(required = false) String tipo,
-                                 @RequestParam(required = false) Long unidadeId) {
-        Specification<Produto> spec = Specification.where(null);
+        @RequestParam(required = false) String nome,
+        @RequestParam(required = false) String tipo,
+        @RequestParam(required = false) Long unidadeId) {
+    Specification<Produto> spec = Specification.where(null);
 
         if (nome != null && !nome.isEmpty()) {
             spec = spec.and(ProdutoSpecification.comNome(nome));
@@ -68,8 +68,7 @@ public class EstoqueController {
         }
 
         Unidade unidade = null;
-        // ⬇️ CORREÇÃO: Mudança para evitar o erro de ID = 0
-        if (unidadeId != null && unidadeId > 0) {  // Mudou de != 0 para > 0
+        if (unidadeId != null && unidadeId > 0) {
             unidade = unidadeRepository.findById(unidadeId).orElse(null);
             if (unidade != null) {
                 spec = spec.and(ProdutoSpecification.comUnidade(unidade));
@@ -94,7 +93,7 @@ public class EstoqueController {
 
     @PostMapping("/salvar")
     public String salvarProduto(@Valid Produto produto, BindingResult result, Model model) {
-        // Validação de unicidade que requer acesso ao banco
+        // validação de unicidade que requer acesso ao banco
         if (produto.getNome() != null && produto.getTipo() != null) {
             if (!estoqueService.isNomeAndTipoUnique(produto.getNome(), produto.getTipo(), produto.getId())) {
                 result.rejectValue("nome", "error.produto", "Já existe um produto com este nome e tipo.");
@@ -134,8 +133,8 @@ public class EstoqueController {
 
     @GetMapping("/baixa")
     public String darBaixaForm(@RequestParam(value = "filtro", required = false) String filtro,
-                                 @RequestParam(value = "tipo", required = false) String tipo,
-                                 Model model) {
+            @RequestParam(value = "tipo", required = false) String tipo,
+            Model model) {
         List<Produto> produtos;
         if ((filtro != null && !filtro.isEmpty()) || (tipo != null && !tipo.isEmpty())) {
             produtos = produtoRepository.findByNomeContainingIgnoreCaseAndTipoContainingIgnoreCase(filtro, tipo);
@@ -174,7 +173,7 @@ public class EstoqueController {
             spec = spec.and(ProdutoSpecification.comTipo(tipo));
         }
         Unidade unidade = null;
-        if (unidadeId != null && unidadeId > 0) {  // ⬅️ Correção aqui também
+        if (unidadeId != null && unidadeId > 0) { 
             unidade = unidadeRepository.findById(unidadeId).orElse(null);
             if (unidade != null) {
                 spec = spec.and(ProdutoSpecification.comUnidade(unidade));
@@ -205,7 +204,7 @@ public class EstoqueController {
             spec = spec.and(ProdutoSpecification.comTipo(tipo));
         }
         Unidade unidade = null;
-        if (unidadeId != null && unidadeId > 0) {  // ⬅️ Correção aqui também
+        if (unidadeId != null && unidadeId > 0) { 
             unidade = unidadeRepository.findById(unidadeId).orElse(null);
             if (unidade != null) {
                 spec = spec.and(ProdutoSpecification.comUnidade(unidade));

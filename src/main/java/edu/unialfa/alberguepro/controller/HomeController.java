@@ -37,18 +37,18 @@ public class HomeController {
     @GetMapping("/")
     public String index(Model model,
                         @RequestParam(required = false, defaultValue = "0") int pageEstoque,
-                        @RequestParam(required = false, defaultValue = "0") int pageLeitos) {
+                        @RequestParam(required = false, defaultValue = "0") int pageVagas) {
         DashboardDTO dashboardDTO = new DashboardDTO();
 
         // Acolhidos
         dashboardDTO.setTotalAcolhidos(cadastroAcolhidoRepository.countByDataSaidaIsNull());
 
-        // Leitos
-        long leitosOcupados = vagaRepository.countByAcolhidoIsNotNull();
-        long totalLeitos = (long) Vaga.Quarto.values().length * Vaga.NumeroLeito.values().length;
-        dashboardDTO.setLeitosOcupados(leitosOcupados);
-        dashboardDTO.setLeitosLivres(totalLeitos - leitosOcupados);
-        dashboardDTO.setTotalLeitos(totalLeitos);
+        // Vagas
+        long vagasOcupadas = vagaRepository.countByAcolhidoIsNotNull();
+        long totalVagas = vagaRepository.count();
+        dashboardDTO.setVagasOcupadas(vagasOcupadas);
+        dashboardDTO.setVagasLivres(totalVagas - vagasOcupadas);
+        dashboardDTO.setTotalVagas(totalVagas);
 
         // Quartos
         long totalQuartos = Vaga.Quarto.values().length;
@@ -87,12 +87,12 @@ public class HomeController {
         pagedListEstoque.setPage(pageEstoque);
         model.addAttribute("produtosBaixoEstoque", pagedListEstoque);
 
-        // Paginação para Leitos
-        List<Vaga> leitos = vagaRepository.findAll();
-        PagedListHolder<Vaga> pagedListLeitos = new PagedListHolder<>(leitos);
-        pagedListLeitos.setPageSize(5);
-        pagedListLeitos.setPage(pageLeitos);
-        model.addAttribute("leitos", pagedListLeitos);
+        // Paginação para Vagas
+        List<Vaga> vagas = vagaRepository.findAll();
+        PagedListHolder<Vaga> pagedListVagas = new PagedListHolder<>(vagas);
+        pagedListVagas.setPageSize(5);
+        pagedListVagas.setPage(pageVagas);
+        model.addAttribute("vagas", pagedListVagas);
 
 
         return "index";
