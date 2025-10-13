@@ -1,33 +1,25 @@
 package edu.unialfa.alberguepro.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList; // Importe este
-import java.util.List;
-
+@Entity
 @Getter
 @Setter
-@Entity
 public class Quarto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String numeroQuarto;
+private String quarto;
 
-    @OneToMany(mappedBy = "quarto",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
+private String leito;
 
-    private List<Leito> leitos = new ArrayList<>();
-
-    public void addLeito(Leito leito) {
-        this.leitos.add(leito);
-        leito.setQuarto(this);
-    }
 }
+
