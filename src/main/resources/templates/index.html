@@ -21,12 +21,12 @@
             </div>
         </div>
 
-        <!-- Vagas -->
+        <!-- Leitos -->
         <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3 th:text="${dashboard.vagasLivres} + ' / ' + ${dashboard.totalVagas}">0 / 0</h3>
-                    <p>Vagas Livres</p>
+                    <h3 th:text="${dashboard.leitosLivres} + ' / ' + ${dashboard.totalLeitos}">0 / 0</h3>
+                    <p>Leitos Livres</p>
                 </div>
                 <div class="icon"><i class="fas fa-bed"></i></div>
             </div>
@@ -95,10 +95,10 @@
                 </div>
             </div>
 
-            <!-- Tabela de Vagas -->
+            <!-- Tabela de Leitos -->
             <div class="card card-info card-outline mt-3 flex-grow-1 d-flex flex-column">
                 <div class="card-header">
-                    <h3 class="card-title">Situação das Vagas</h3>
+                    <h3 class="card-title">Situação dos Leitos</h3>
                 </div>
                 <div class="card-body p-0 flex-grow-1">
                     <div class="table-responsive h-100">
@@ -106,44 +106,44 @@
                             <thead>
                             <tr>
                                 <th>Quarto</th>
-                                <th>Vaga</th>
+                                <th>Leito</th>
                                 <th>Status</th>
                                 <th>Acolhido</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="vaga : ${vagas.pageList}">
-                                <td th:text="${vaga.quarto}"></td>
-                                <td th:text="${vaga.numeroLeito}"></td>
+                            <tr th:each="leito : ${leitos.pageList}">
+                                <td th:text="${leito.quarto}"></td>
+                                <td th:text="${leito.numeroLeito}"></td>
                                 <td>
-                                    <span th:if="${vaga.acolhido != null}" class="badge bg-danger">Ocupado</span>
-                                    <span th:if="${vaga.acolhido == null}" class="badge bg-success">Livre</span>
+                                    <span th:if="${leito.acolhido != null}" class="badge bg-danger">Ocupado</span>
+                                    <span th:if="${leito.acolhido == null}" class="badge bg-success">Livre</span>
                                 </td>
-                                <td th:text="${vaga.acolhido?.nome}"></td>
+                                <td th:text="${leito.acolhido?.nome}"></td>
                             </tr>
-                            <tr th:if="${vagas.source.isEmpty()}">
-                                <td colspan="4" class="text-center">Nenhuma vaga ocupada</td>
+                            <tr th:if="${leitos.source.isEmpty()}">
+                                <td colspan="4" class="text-center">Nenhum acolhido atribuído a um leito</td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="card-footer clearfix" th:if="${vagas.pageCount > 1}">
+                <div class="card-footer clearfix" th:if="${leitos.pageCount > 1}">
                     <ul class="pagination pagination-sm m-0 float-right">
-                        <li class="page-item" th:classappend="${vagas.isFirstPage()} ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{/(pageVagas=0, pageEstoque=${produtosBaixoEstoque.page})}">« Início</a>
+                        <li class="page-item" th:classappend="${leitos.isFirstPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=0, pageEstoque=${produtosBaixoEstoque.page})}">« Início</a>
                         </li>
-                        <li class="page-item" th:classappend="${vagas.isFirstPage()} ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{/(pageVagas=${vagas.page - 1}, pageEstoque=${produtosBaixoEstoque.page})}">‹ Anterior</a>
+                        <li class="page-item" th:classappend="${leitos.isFirstPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=${leitos.page - 1}, pageEstoque=${produtosBaixoEstoque.page})}">‹ Anterior</a>
                         </li>
-                        <li class="page-item" th:each="i : ${#numbers.sequence(0, vagas.pageCount - 1)}" th:classappend="${i == vagas.page} ? 'active' : ''">
-                            <a class="page-link" th:href="@{/(pageVagas=${i}, pageEstoque=${produtosBaixoEstoque.page})}" th:text="${i + 1}"></a>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, leitos.pageCount - 1)}" th:classappend="${i == leitos.page} ? 'active' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=${i}, pageEstoque=${produtosBaixoEstoque.page})}" th:text="${i + 1}"></a>
                         </li>
-                        <li class="page-item" th:classappend="${vagas.isLastPage()} ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{/(pageVagas=${vagas.page + 1}, pageEstoque=${produtosBaixoEstoque.page})}">Próximo ›</a>
+                        <li class="page-item" th:classappend="${leitos.isLastPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=${leitos.page + 1}, pageEstoque=${produtosBaixoEstoque.page})}">Próximo ›</a>
                         </li>
-                        <li class="page-item" th:classappend="${vagas.isLastPage()} ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{/(pageVagas=${vagas.pageCount - 1}, pageEstoque=${produtosBaixoEstoque.page})}">Fim »</a>
+                        <li class="page-item" th:classappend="${leitos.isLastPage()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/(pageLeitos=${leitos.pageCount - 1}, pageEstoque=${produtosBaixoEstoque.page})}">Fim »</a>
                         </li>
                     </ul>
                 </div>
@@ -181,19 +181,19 @@
                 <div class="card-footer clearfix" th:if="${produtosBaixoEstoque.pageCount > 1}">
                     <ul class="pagination pagination-sm m-0 float-right">
                         <li class="page-item" th:classappend="${produtosBaixoEstoque.isFirstPage()} ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{/(pageEstoque=0, pageVagas=${vagas.page})}">« Início</a>
+                            <a class="page-link" th:href="@{/(pageEstoque=0, pageLeitos=${leitos.page})}">« Início</a>
                         </li>
                         <li class="page-item" th:classappend="${produtosBaixoEstoque.isFirstPage()} ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{/(pageEstoque=${produtosBaixoEstoque.page - 1}, pageVagas=${vagas.page})}">‹ Anterior</a>
+                            <a class="page-link" th:href="@{/(pageEstoque=${produtosBaixoEstoque.page - 1}, pageLeitos=${leitos.page})}">‹ Anterior</a>
                         </li>
                         <li class="page-item" th:each="i : ${#numbers.sequence(0, produtosBaixoEstoque.pageCount - 1)}" th:classappend="${i == produtosBaixoEstoque.page} ? 'active' : ''">
-                            <a class="page-link" th:href="@{/(pageEstoque=${i}, pageVagas=${vagas.page})}" th:text="${i + 1}"></a>
+                            <a class="page-link" th:href="@{/(pageEstoque=${i}, pageLeitos=${leitos.page})}" th:text="${i + 1}"></a>
                         </li>
                         <li class="page-item" th:classappend="${produtosBaixoEstoque.isLastPage()} ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{/(pageEstoque=${produtosBaixoEstoque.page + 1}, pageVagas=${vagas.page})}">Próximo ›</a>
+                            <a class="page-link" th:href="@{/(pageEstoque=${produtosBaixoEstoque.page + 1}, pageLeitos=${leitos.page})}">Próximo ›</a>
                         </li>
                         <li class="page-item" th:classappend="${produtosBaixoEstoque.isLastPage()} ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{/(pageEstoque=${produtosBaixoEstoque.pageCount - 1}, pageVagas=${vagas.page})}">Fim »</a>
+                            <a class="page-link" th:href="@{/(pageEstoque=${produtosBaixoEstoque.pageCount - 1}, pageLeitos=${leitos.page})}">Fim »</a>
                         </li>
                     </ul>
                 </div>

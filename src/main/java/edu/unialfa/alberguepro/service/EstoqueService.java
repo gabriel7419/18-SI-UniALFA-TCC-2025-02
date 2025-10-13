@@ -25,6 +25,8 @@ public class EstoqueService {
 
         int novaQuantidade = produto.getQuantidade() - quantidadeParaBaixa;
         if (novaQuantidade < 0) {
+            // Em um sistema real, poderíamos lançar uma exceção mais específica aqui
+            // para dar um feedback melhor ao usuário.
             throw new IllegalStateException("Estoque insuficiente para o produto: " + produto.getNome());
         }
 
@@ -35,10 +37,10 @@ public class EstoqueService {
     public boolean isNomeAndTipoUnique(String nome, String tipo, Long id) {
         Optional<Produto> existingProduto;
         if (id == null) {
-            // se o produto é novo, verifica se existe algum produto com o mesmo nome e tipo
+            // New product, check if any product with same name and type exists
             existingProduto = produtoRepository.findByNomeIgnoreCaseAndTipoIgnoreCase(nome, tipo);
         } else {
-            // ao editar um produto já existente, verifica se existe outro produto com o mesmo nome e tipo
+            // Editing existing product, check if any *other* product with same name and type exists
             existingProduto = produtoRepository.findByNomeIgnoreCaseAndTipoIgnoreCaseAndIdNot(nome, tipo, id);
         }
         return existingProduto.isEmpty();
