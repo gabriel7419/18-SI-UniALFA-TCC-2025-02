@@ -7,6 +7,7 @@ import edu.unialfa.alberguepro.repository.UnidadeRepository;
 import edu.unialfa.alberguepro.repository.ProdutoSpecification;
 import edu.unialfa.alberguepro.service.EstoqueService;
 import edu.unialfa.alberguepro.service.RelatorioService;
+import edu.unialfa.alberguepro.repository.MovimentacaoEstoqueRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
