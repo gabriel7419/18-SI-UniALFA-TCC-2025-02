@@ -22,8 +22,8 @@ public class MovimentacaoEstoqueService {
 
     @Transactional
     public void registrarMovimentacao(Produto produto, MovimentacaoEstoque.TipoMovimentacao tipo,
-                                     Integer quantidadeMovimentada, Integer quantidadeAnterior,
-                                     Integer quantidadePosterior, String observacao) {
+        Integer quantidadeMovimentada, Integer quantidadeAnterior,
+        Integer quantidadePosterior, String observacao) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Usuario usuario = usuarioRepository.findByUsername(username)

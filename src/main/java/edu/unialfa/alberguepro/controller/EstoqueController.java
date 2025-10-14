@@ -69,8 +69,7 @@ public class EstoqueController {
         }
 
         Unidade unidade = null;
-        // ⬇️ CORREÇÃO: Mudança para evitar o erro de ID = 0
-        if (unidadeId != null && unidadeId > 0) {  // Mudou de != 0 para > 0
+        if (unidadeId != null && unidadeId > 0) {
             unidade = unidadeRepository.findById(unidadeId).orElse(null);
             if (unidade != null) {
                 spec = spec.and(ProdutoSpecification.comUnidade(unidade));
@@ -195,8 +194,6 @@ public class EstoqueController {
 
     @Autowired
     private MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
-
-    // ... (outras injeções de dependência)
 
     @GetMapping("/historico")
     public String verHistorico(Model model) {
