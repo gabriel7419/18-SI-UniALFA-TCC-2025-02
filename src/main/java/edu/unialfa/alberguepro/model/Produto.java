@@ -26,8 +26,6 @@ public class Produto {
 
     @ManyToOne
     @JoinColumn(name = "unidade_id")
-    // A validação @NotNull foi movida para o campo 'unidadeId', que é o campo recebido do formulário.
-    // A constraint do banco de dados em 'unidade_id' garante a integridade.
     private Unidade unidade;
 
     @NotNull(message = "A data de vencimento é obrigatória.")

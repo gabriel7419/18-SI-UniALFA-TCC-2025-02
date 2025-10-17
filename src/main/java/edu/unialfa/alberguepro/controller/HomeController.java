@@ -54,7 +54,7 @@ public class HomeController {
         long totalQuartos = Vaga.Quarto.values().length;
         long camasPorQuarto = Vaga.NumeroLeito.values().length;
         List<Object[]> occupiedBedsByRoom = vagaRepository.countOccupiedBedsByRoom();
-
+        
         long quartosCheios = occupiedBedsByRoom.stream()
             .filter(result -> (Long) result[1] >= camasPorQuarto)
             .count();

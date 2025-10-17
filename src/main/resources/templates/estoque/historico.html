@@ -9,7 +9,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Histórico de Movimentações</h3>
-                 <div class="card-tools">
+                <div class="card-tools">
                     <a th:href="@{/estoque}" class="btn btn-secondary">Voltar para o Estoque</a>
                 </div>
             </div>
@@ -17,7 +17,7 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Data/Hora</th>
+                            <th>Data e Hora</th>
                             <th>Produto</th>
                             <th>Tipo</th>
                             <th>Qtd. Movida</th>
@@ -33,10 +33,11 @@
                             <td th:text="${mov.produto != null ? mov.produto.nome : 'Produto Excluído'}"></td>
                             <td>
                                 <span th:switch="${mov.tipo.name()}" class="badge"
-                                      th:classappend="${mov.tipo.name() == 'ENTRADA' ? 'badge-success' : 
-                                                       (mov.tipo.name() == 'SAIDA' ? 'badge-warning' : 
-                                                        (mov.tipo.name() == 'AJUSTE_POSITIVO' ? 'badge-info' : 
-                                                         (mov.tipo.name() == 'AJUSTE_NEGATIVO' ? 'badge-secondary' : 'badge-danger')))}">
+                                    th:classappend=
+                                        "${mov.tipo.name() == 'ENTRADA' ? 'badge-success' : 
+                                        (mov.tipo.name() == 'SAIDA' ? 'badge-warning' : 
+                                        (mov.tipo.name() == 'AJUSTE_POSITIVO' ? 'badge-info' : 
+                                        (mov.tipo.name() == 'AJUSTE_NEGATIVO' ? 'badge-secondary' : 'badge-danger')))}">
                                     <span th:text="${mov.tipo.name().replace('_', ' ')}"></span>
                                 </span>
                             </td>

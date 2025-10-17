@@ -1,8 +1,6 @@
 package edu.unialfa.alberguepro.controller;
 
-import edu.unialfa.alberguepro.model.ControlePatrimonio;
 import edu.unialfa.alberguepro.model.Quarto;
-import edu.unialfa.alberguepro.repository.ControlePatrimonioRepository;
 
 import edu.unialfa.alberguepro.repository.QuartoRepository;
 import jakarta.validation.Valid;
