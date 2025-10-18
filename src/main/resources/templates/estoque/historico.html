@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
+<head>
+    <title>Histórico de Movimentações de Estoque</title>
+</head>
+<body>
+    <section>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Histórico de Movimentações</h3>
+                <div class="card-tools">
+                    <a th:href="@{/estoque}" class="btn btn-secondary">Voltar para o Estoque</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Data e Hora</th>
+                            <th>Produto</th>
+                            <th>Tipo</th>
+                            <th>Qtd. Movida</th>
+                            <th>Qtd. Anterior</th>
+                            <th>Qtd. Posterior</th>
+                            <th>Usuário</th>
+                            <th>Observação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="mov : ${movimentacoes}">
+                            <td th:text="${#temporals.format(mov.dataMovimentacao, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td th:text="${mov.produto != null ? mov.produto.nome : 'Produto Excluído'}"></td>
+                            <td>
+                                <span th:switch="${mov.tipo.name()}" class="badge"
+                                    th:classappend=
+                                        "${mov.tipo.name() == 'ENTRADA' ? 'badge-success' : 
+                                        (mov.tipo.name() == 'SAIDA' ? 'badge-warning' : 
+                                        (mov.tipo.name() == 'AJUSTE_POSITIVO' ? 'badge-info' : 
+                                        (mov.tipo.name() == 'AJUSTE_NEGATIVO' ? 'badge-secondary' : 'badge-danger')))}">
+                                    <span th:text="${mov.tipo.name().replace('_', ' ')}"></span>
+                                </span>
+                            </td>
+                            <td th:text="${mov.quantidadeMovimentada}"></td>
+                            <td th:text="${mov.quantidadeAnterior}"></td>
+                            <td th:text="${mov.quantidadePosterior}"></td>
+                            <td th:text="${mov.usuario != null ? mov.usuario.username : 'N/A'}"></td>
+                            <td th:text="${mov.observacao}"></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(movimentacoes)}">
+                            <td colspan="8" class="text-center">Nenhuma movimentação registrada.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <script>
+    </script>
+</body>
+</html>

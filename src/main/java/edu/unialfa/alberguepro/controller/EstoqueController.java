@@ -7,6 +7,7 @@ import edu.unialfa.alberguepro.repository.UnidadeRepository;
 import edu.unialfa.alberguepro.repository.ProdutoSpecification;
 import edu.unialfa.alberguepro.service.EstoqueService;
 import edu.unialfa.alberguepro.service.RelatorioService;
+import edu.unialfa.alberguepro.repository.MovimentacaoEstoqueRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/estoque")  // ⬅️ ADICIONE ESTA LINHA - Esta é a correção principal!
+@RequestMapping("/estoque")
 public class EstoqueController {
 
     @Autowired
@@ -52,11 +53,11 @@ public class EstoqueController {
         model.addAttribute("unidades", unidades);
     }
 
-    @GetMapping({"/", ""})  // ⬅️ Aceita tanto /estoque/ quanto /estoque
+    @GetMapping({"/", ""}) 
     public String listarProdutos(Model model,
-                                 @RequestParam(required = false) String nome,
-                                 @RequestParam(required = false) String tipo,
-                                 @RequestParam(required = false) Long unidadeId) {
+        @RequestParam(required = false) String nome,
+        @RequestParam(required = false) String tipo,
+        @RequestParam(required = false) Long unidadeId) {
         Specification<Produto> spec = Specification.where(null);
 
         if (nome != null && !nome.isEmpty()) {
@@ -68,8 +69,7 @@ public class EstoqueController {
         }
 
         Unidade unidade = null;
-        // ⬇️ CORREÇÃO: Mudança para evitar o erro de ID = 0
-        if (unidadeId != null && unidadeId > 0) {  // Mudou de != 0 para > 0
+        if (unidadeId != null && unidadeId > 0) {
             unidade = unidadeRepository.findById(unidadeId).orElse(null);
             if (unidade != null) {
                 spec = spec.and(ProdutoSpecification.comUnidade(unidade));
@@ -115,8 +115,9 @@ public class EstoqueController {
             return "estoque/form";
         }
         produto.setUnidade(unidadeOptional.get());
-        System.out.println("Data de Vencimento: " + produto.getDataDeVencimento());
-        produtoRepository.save(produto);
+        
+        estoqueService.salvar(produto); // Alterado para usar o serviço
+
         return "redirect:/estoque";
     }
 
@@ -134,8 +135,8 @@ public class EstoqueController {
 
     @GetMapping("/baixa")
     public String darBaixaForm(@RequestParam(value = "filtro", required = false) String filtro,
-                                 @RequestParam(value = "tipo", required = false) String tipo,
-                                 Model model) {
+        @RequestParam(value = "tipo", required = false) String tipo,
+        Model model) {
         List<Produto> produtos;
         if ((filtro != null && !filtro.isEmpty()) || (tipo != null && !tipo.isEmpty())) {
             produtos = produtoRepository.findByNomeContainingIgnoreCaseAndTipoContainingIgnoreCase(filtro, tipo);
@@ -156,7 +157,7 @@ public class EstoqueController {
 
     @PostMapping("/excluir/{id}")
     public String excluirProduto(@PathVariable("id") Long id) {
-        produtoRepository.deleteById(id);
+        estoqueService.excluir(id); // Alterado para usar o serviço
         return "redirect:/estoque";
     }
 
@@ -174,7 +175,7 @@ public class EstoqueController {
             spec = spec.and(ProdutoSpecification.comTipo(tipo));
         }
         Unidade unidade = null;
-        if (unidadeId != null && unidadeId > 0) {  // ⬅️ Correção aqui também
+        if (unidadeId != null && unidadeId > 0) { 
             unidade = unidadeRepository.findById(unidadeId).orElse(null);
             if (unidade != null) {
                 spec = spec.and(ProdutoSpecification.comUnidade(unidade));
@@ -191,6 +192,15 @@ public class EstoqueController {
                 .body(new InputStreamResource(bis));
     }
 
+    @Autowired
+    private MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
+
+    @GetMapping("/historico")
+    public String verHistorico(Model model) {
+        model.addAttribute("movimentacoes", movimentacaoEstoqueRepository.findAllByOrderByDataMovimentacaoDesc());
+        return "estoque/historico";
+    }
+
     @GetMapping("/relatorio/xlsx")
     public ResponseEntity<InputStreamResource> gerarRelatorioXlsx(
             @RequestParam(required = false) String nome,
@@ -205,7 +215,7 @@ public class EstoqueController {
             spec = spec.and(ProdutoSpecification.comTipo(tipo));
         }
         Unidade unidade = null;
-        if (unidadeId != null && unidadeId > 0) {  // ⬅️ Correção aqui também
+        if (unidadeId != null && unidadeId > 0) {
             unidade = unidadeRepository.findById(unidadeId).orElse(null);
             if (unidade != null) {
                 spec = spec.and(ProdutoSpecification.comUnidade(unidade));

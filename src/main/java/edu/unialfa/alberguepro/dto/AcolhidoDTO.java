@@ -1,7 +1,6 @@
 package edu.unialfa.alberguepro.dto;
 
 import edu.unialfa.alberguepro.model.CadastroAcolhido;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class AcolhidoDTO {
