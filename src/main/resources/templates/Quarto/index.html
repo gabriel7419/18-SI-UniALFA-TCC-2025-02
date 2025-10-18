@@ -1,22 +1,68 @@
 <!-- Tela de lista de quartos -->
 <!DOCTYPE html>
-<!-- Puxa o layout principal, passando o título e o conteúdo -->
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
 <head>
-    <!-- Título que vai aparecer na aba do navegador -->
     <title>Consultar Quartos</title>
 </head>
 <body>
-    <!-- Conteúdo principal da página -->
-    <section>
-        <!-- Botões de ação -->
-        <div class="mb-3">
-            <!-- Botão pra criar Quarto novo -->
-            <a th:href="@{/quarto/novo}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Novo Quarto
-            </a>
+<section>
+
+    <div class="mb-3">
+        <a th:href="@{/quarto/novo}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Novo Quarto
+        </a>
+    </div>
+
+    <!-- (Opcional) Formulário de busca -->
+    <form th:action="@{/quarto/pesquisar}" method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="filtro" class="form-control" placeholder="Buscar os quartos por número..." th:value="${filtro}">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
         </div>
-    </section>
+    </form>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Lista de Quartos</h3>
+        </div>
+        <div class="card-body">
+
+            <!-- CORRIGIDO: agora verifica 'quartos' -->
+            <div th:if="${#lists.isEmpty(quartos)}" class="alert alert-info">
+                Nenhum quarto cadastrado.
+            </div>
+
+            <!-- CORRIGIDO: tabela só aparece se tiver quartos -->
+            <table class="table table-bordered" th:if="${not #lists.isEmpty(quartos)}">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Número do Quarto</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="quarto : ${quartos}">
+                    <td th:text="${quarto.id}"></td>
+                    <td th:text="${quarto.numeroQuarto}"></td>
+                    <td>
+                        <a th:href="@{/quarto/remover/{id}(id=${quarto.id})}" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<script>
+
+</script>
 </body>
 </html>
