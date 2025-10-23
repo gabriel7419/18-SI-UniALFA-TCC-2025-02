@@ -1,76 +1,73 @@
 package edu.unialfa.alberguepro.controller;
 
-import edu.unialfa.alberguepro.model.Quarto;
-
+import edu.unialfa.alberguepro.model.ControlePatrimonio;
 import edu.unialfa.alberguepro.repository.QuartoRepository;
-import jakarta.validation.Valid;
+import edu.unialfa.alberguepro.model.Quarto;
+import edu.unialfa.alberguepro.service.QuartoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/quarto")
 public class QuartoController {
 
+
     @Autowired
     private QuartoRepository quartoRepository;
 
-    @GetMapping
-    public String listarQuartos(Model model) {
+    @Autowired
+    private QuartoService service;
+
+    @GetMapping("/novo")
+    public String iniciarCadastro(Model model) {
+        model.addAttribute("quarto", new Quarto());
+        return "quarto/form"; // Sua página Thymeleaf
+    }
+
+    @PostMapping("/salvar")
+    public String salvar(@ModelAttribute Quarto quarto, RedirectAttributes attributes) {
+
+        try {
+            service.salvar(quarto);
+            attributes.addFlashAttribute("mensagemSucesso", "Quarto salvo com sucesso!");
+            return "redirect:/quarto/listar";
+        } catch (IllegalArgumentException e) {
+            // Adiciona a mensagem de erro e redireciona para o formulário
+            attributes.addFlashAttribute("mensagemErro", e.getMessage());
+            // Se for novo, volta para a tela de cadastro, se for edição, volta para a lista
+            return "redirect:/quarto/novo";
+        }
+
+    }
+
+    @GetMapping("/listar")
+    public String listarquartos(Model model) {
         model.addAttribute("quartos", quartoRepository.findAll());
         return "quarto/index";
     }
 
-    @GetMapping("/novo")
-    public ModelAndView novoQuartoForm() {
-        ModelAndView mv = new ModelAndView("quarto/form");
-        mv.addObject("quartoForm", new Quarto());
-        return mv;
-    }
-
-    @PostMapping("/salvar")
-    public ModelAndView salvarQuarto(
-            @Valid @ModelAttribute("quartoForm") Quarto quarto,
-            BindingResult result) {
-
-        if (result.hasErrors()) {
-            // Retorna à mesma página com os erros de validação
-            return new ModelAndView("quarto/form");
-        }
-
-        // Salva o patrimônio no banco se não houver erros
-        quartoRepository.save(quarto);
-        return new ModelAndView("redirect:/quarto");
-    }
-
-
-    @GetMapping("/editar/{id}")
-    public String quartoForm(@PathVariable("id") Long id, Model model) {
-        Optional<Quarto> quarto = quartoRepository.findById(id);
-        if (quarto.isPresent()) {
-            model.addAttribute("quartoForm", quarto.get());
-            return "quarto/form";
-        } else {
-            return "redirect:/quarto";
-        }
+    @GetMapping("remover/{id}")
+    public String remover(@PathVariable Long id) {
+        service.deletarPorId(id);
+        return "redirect:/quarto/listar";
     }
 
     @GetMapping("/pesquisar")
     public String pesquisaForm(@RequestParam(value = "filtro", required = false) String filtro, Model model) {
-        List<Quarto> quartos;
+        List<Quarto> quarto;
         if (filtro != null && !filtro.isEmpty()) {
-            quartos = quartoRepository.findByQuartoContainingIgnoreCase(filtro);
+            quarto = quartoRepository.findByNumeroQuartoContainingIgnoreCase(filtro);
         } else {
-            quartos = quartoRepository.findAll();
+            quarto = quartoRepository.findAll();
         }
-        model.addAttribute("quartos", quartos);
+        model.addAttribute("quartos", quarto);
         model.addAttribute("filtro", filtro);
         return "/quarto/index";
     }
+
 }

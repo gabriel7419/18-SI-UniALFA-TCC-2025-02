@@ -1,47 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
 <head>
-  <title>Cadastro de Quartos</title>
+  <title>Cadastro de Quarto</title>
 </head>
 <body>
 <section>
   <div class="card card-primary">
     <div class="card-header">
-      <h3 class="card-title">Gestão de Quarto - Cadastrar</h3>
+      <h3 class="card-title">Gestão de Quartos - Cadastrar</h3>
     </div>
 
-    <form th:action="@{/quarto/salvar}" th:object="${quartoForm}" method="post">
+    <form th:action="@{/quarto/salvar}" th:object="${quarto}" method="post">
+
       <input type="hidden" th:field="*{id}" />
 
       <div class="card-body">
 
-        <!-- Quarto -->
         <div class="form-group">
-          <label for="quarto">Quarto</label>
-          <input type="text"
-                 th:classappend="${#fields.hasErrors('quarto')} ? 'is-invalid'"
-                 class="form-control" id="quarto" th:field="*{quarto}" placeholder="adicione um quarto">
-          <div class="invalid-feedback" th:if="${#fields.hasErrors('quarto')}" th:errors="*{quarto}"></div>
+          <label for="numeroQuarto" class="form-label">Número do Quarto:</label>
+          <input type="text" id="numeroQuarto" class="form-control" th:field="*{numeroQuarto}" required>
+          <div th:if="${mensagemErro}" th:text="${mensagemErro}" class="text-danger"></div>
         </div>
 
-        <!-- Leito -->
-        <div class="form-group">
-          <label for="leito">Leito</label>
-          <input type="text"
-                 th:classappend="${#fields.hasErrors('leito')} ? 'is-invalid'"
-                 class="form-control" id="leito" th:field="*{leito}" placeholder="adicione um leito">
-          <div class="invalid-feedback" th:if="${#fields.hasErrors('leito')}" th:errors="*{leito}"></div>
+        <div class="alert alert-secondary w-50">
+          Este quarto será criado com <strong>4 leitos</strong> (Leito 01, 02, 03 e 04) automaticamente.
         </div>
 
-      </div>
-
-      <div class="card-footer">
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a th:href="@{/quarto}" class="btn btn-secondary">Cancelar</a>
+        <div class="card-footer">
+          <button type="submit" class="btn btn-primary">Salvar</button>
+          <a th:href="@{/quarto/listar}" class="btn btn-secondary">Cancelar</a>
+        </div>
       </div>
     </form>
   </div>
 </section>
+<script>
+
+</script>
 </body>
 </html>
