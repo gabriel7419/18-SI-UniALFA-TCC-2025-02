@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface LeitoRepository extends JpaRepository<Leito, Long> {
 
-    List<Leito> findByQuartoIdOrderByNumeroLeitoAsc(Long quartoId);
+    List<Leito> findByQuartoId(Long quartoId);
 }

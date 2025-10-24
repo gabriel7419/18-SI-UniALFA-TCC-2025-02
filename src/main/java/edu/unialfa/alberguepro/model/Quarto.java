@@ -1,5 +1,6 @@
 package edu.unialfa.alberguepro.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class Quarto {
 
     private String numeroQuarto;
 
+    @JsonIgnoreProperties("quarto")
     @OneToMany(mappedBy = "quarto",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
