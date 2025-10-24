@@ -14,6 +14,10 @@ public class QuartoService {
     @Autowired
     private QuartoRepository quartoRepository;
 
+    public List<Quarto> listarTodos() {
+        return quartoRepository.findAll();
+    }
+
     public void salvar(Quarto quarto) throws IllegalArgumentException {
 
         String inputNumeroQuarto = quarto.getNumeroQuarto();

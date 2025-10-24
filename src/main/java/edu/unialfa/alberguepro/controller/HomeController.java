@@ -45,23 +45,23 @@ public class HomeController {
 
         // Leitos
         long leitosOcupados = vagaRepository.countByAcolhidoIsNotNull();
-        long totalLeitos = (long) Vaga.Quarto.values().length * Vaga.NumeroLeito.values().length;
+        //long totalLeitos = (long) Vaga.Quarto.values().length * Vaga.NumeroLeito.values().length;
         dashboardDTO.setLeitosOcupados(leitosOcupados);
-        dashboardDTO.setLeitosLivres(totalLeitos - leitosOcupados);
-        dashboardDTO.setTotalLeitos(totalLeitos);
+        //dashboardDTO.setLeitosLivres(totalLeitos - leitosOcupados);
+       // dashboardDTO.setTotalLeitos(totalLeitos);
 
         // Quartos
-        long totalQuartos = Vaga.Quarto.values().length;
-        long camasPorQuarto = Vaga.NumeroLeito.values().length;
+        //long totalQuartos = Vaga.Quarto.values().length;
+        //long camasPorQuarto = Vaga.NumeroLeito.values().length;
         List<Object[]> occupiedBedsByRoom = vagaRepository.countOccupiedBedsByRoom();
         
         long quartosCheios = occupiedBedsByRoom.stream()
-            .filter(result -> (Long) result[1] >= camasPorQuarto)
+          //  .filter(result -> (Long) result[1] >= camasPorQuarto)
             .count();
 
         dashboardDTO.setQuartosOcupados(quartosCheios);
-        dashboardDTO.setQuartosLivres(totalQuartos - quartosCheios);
-        dashboardDTO.setTotalQuartos(totalQuartos);
+        //dashboardDTO.setQuartosLivres(totalQuartos - quartosCheios);
+        //dashboardDTO.setTotalQuartos(totalQuartos);
 
         // Usuarios
         dashboardDTO.setTotalUsuarios(usuarioRepository.count());
