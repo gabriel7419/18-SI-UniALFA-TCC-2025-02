@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface VagaRepository extends JpaRepository<Vaga, Long>  {
-    long countByAcolhidoIsNotNull();
+    long countByAcolhidoIsNotNullAndDataSaidaIsNull();
     long countByAcolhidoIsNull();
 
     @Query("SELECT v.leito.quarto.numeroQuarto, COUNT(v) " +
             "FROM Vaga v " +
-            "WHERE v.leito IS NOT NULL AND v.dataSaida IS NULL " +
+            "WHERE v.acolhido IS NOT NULL AND v.dataSaida IS NULL " +
             "GROUP BY v.leito.quarto.numeroQuarto")
     List<Object[]> countOccupiedBedsByRoom();
 }

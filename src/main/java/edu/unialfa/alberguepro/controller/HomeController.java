@@ -34,34 +34,41 @@ public class HomeController {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Autowired
+    private QuartoRepository quartoRepository;
+
+    @Autowired
+    private LeitoRepository leitoRepository;
+
     @GetMapping("/")
     public String index(Model model,
                         @RequestParam(required = false, defaultValue = "0") int pageEstoque,
                         @RequestParam(required = false, defaultValue = "0") int pageLeitos) {
         DashboardDTO dashboardDTO = new DashboardDTO();
 
-        // Acolhidos
-        dashboardDTO.setTotalAcolhidos(cadastroAcolhidoRepository.countByDataSaidaIsNull());
+        // Acolhidos Ativos (com vagas ativas)
+        long totalAcolhidosAtivos = vagaRepository.countByAcolhidoIsNotNullAndDataSaidaIsNull();
+        dashboardDTO.setTotalAcolhidos(totalAcolhidosAtivos);
 
         // Leitos
-        long leitosOcupados = vagaRepository.countByAcolhidoIsNotNull();
-        //long totalLeitos = (long) Vaga.Quarto.values().length * Vaga.NumeroLeito.values().length;
+        long totalLeitos = leitoRepository.count();
+        long leitosOcupados = vagaRepository.countByAcolhidoIsNotNullAndDataSaidaIsNull();
+        long leitosLivres = totalLeitos - leitosOcupados;
+        
+        dashboardDTO.setTotalLeitos(totalLeitos);
         dashboardDTO.setLeitosOcupados(leitosOcupados);
-        //dashboardDTO.setLeitosLivres(totalLeitos - leitosOcupados);
-       // dashboardDTO.setTotalLeitos(totalLeitos);
+        dashboardDTO.setLeitosLivres(leitosLivres);
 
         // Quartos
-        //long totalQuartos = Vaga.Quarto.values().length;
-        //long camasPorQuarto = Vaga.NumeroLeito.values().length;
+        long totalQuartos = quartoRepository.count();
         List<Object[]> occupiedBedsByRoom = vagaRepository.countOccupiedBedsByRoom();
         
-        long quartosCheios = occupiedBedsByRoom.stream()
-          //  .filter(result -> (Long) result[1] >= camasPorQuarto)
-            .count();
+        long quartosOcupados = occupiedBedsByRoom.size();
+        long quartosLivres = totalQuartos - quartosOcupados;
 
-        dashboardDTO.setQuartosOcupados(quartosCheios);
-        //dashboardDTO.setQuartosLivres(totalQuartos - quartosCheios);
-        //dashboardDTO.setTotalQuartos(totalQuartos);
+        dashboardDTO.setTotalQuartos(totalQuartos);
+        dashboardDTO.setQuartosOcupados(quartosOcupados);
+        dashboardDTO.setQuartosLivres(quartosLivres);
 
         // Usuarios
         dashboardDTO.setTotalUsuarios(usuarioRepository.count());

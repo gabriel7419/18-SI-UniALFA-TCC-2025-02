@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList; // Importe este
 import java.util.List;
@@ -20,6 +21,7 @@ public class Quarto {
 
     private String numeroQuarto;
 
+    @ToString.Exclude
     @JsonIgnoreProperties("quarto")
     @OneToMany(mappedBy = "quarto",
             cascade = CascadeType.ALL,

@@ -26,7 +26,7 @@ public class QuartoController {
     @GetMapping("/novo")
     public String iniciarCadastro(Model model) {
         model.addAttribute("quarto", new Quarto());
-        return "quarto/form"; // Sua página Thymeleaf
+        return "Quarto/form"; // Sua página Thymeleaf
     }
 
     @PostMapping("/salvar")
@@ -48,7 +48,7 @@ public class QuartoController {
     @GetMapping("/listar")
     public String listarquartos(Model model) {
         model.addAttribute("quartos", quartoRepository.findAll());
-        return "quarto/index";
+        return "Quarto/index";
     }
 
     @GetMapping("remover/{id}")
@@ -67,7 +67,7 @@ public class QuartoController {
         }
         model.addAttribute("quartos", quarto);
         model.addAttribute("filtro", filtro);
-        return "/quarto/index";
+        return "Quarto/index";
     }
 
 }

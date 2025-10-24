@@ -113,8 +113,8 @@
                             </thead>
                             <tbody>
                             <tr th:each="leito : ${leitos.pageList}">
-                                <td th:text="${leito.quarto}"></td>
-                                <td th:text="${leito.numeroLeito}"></td>
+                                <td th:text="${leito.leito?.quarto?.numeroQuarto}"></td>
+                                <td th:text="${leito.leito?.numeroLeito}"></td>
                                 <td>
                                     <span th:if="${leito.acolhido != null}" class="badge bg-danger">Ocupado</span>
                                     <span th:if="${leito.acolhido == null}" class="badge bg-success">Livre</span>
