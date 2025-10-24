@@ -8,16 +8,9 @@
 <body>
     <!-- Conteúdo principal da página -->
     <section>
-        <!-- Botões de ação e Filtro -->
-        <div class="mb-3">
-            <a th:href="@{/estoque/novo}" class="btn btn-primary"><i class="fas fa-plus"></i> Novo Produto</a>
-            <a th:href="@{/estoque/baixa}" class="btn btn-info"><i class="fas fa-arrow-down"></i> Registrar Baixa</a>
-            <a th:href="@{/estoque/historico}" class="btn btn-secondary"><i class="fas fa-history"></i> Ver Histórico</a>
-        </div>
-
         <!-- Formulário de Filtro -->
-        <div class="card card-default">
-            <div class="card-header">
+        <div class="card card-primary">
+            <div class="card-header card-header-blue">
                 <h3 class="card-title">Filtros</h3>
             </div>
             <div class="card-body">
@@ -47,10 +40,27 @@
             </div>
         </div>
 
+        <!-- Botões de ação -->
+        <div class="mb-3">
+            <a th:href="@{/estoque/novo}" class="btn btn-primary"><i class="fas fa-plus"></i> Novo Produto</a>
+            <a th:href="@{/estoque/baixa}" class="btn btn-info"><i class="fas fa-arrow-down"></i> Registrar Baixa</a>
+            <a th:href="@{/estoque/historico}" class="btn btn-secondary"><i class="fas fa-history"></i> Ver Histórico</a>
+        </div>
+
         <!-- Tabela de produtos -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Lista de Produtos no Estoque</h3>
+        <div class="card card-primary">
+            <div class="card-header card-header-blue">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title mb-0">Lista de Produtos no Estoque</h3>
+                    <div class="card-tools">
+                        <a th:href="@{/estoque/relatorio/pdf(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-success" target="_blank">
+                            <i class="fas fa-file-pdf"></i> Gerar PDF
+                        </a>
+                        <a th:href="@{/estoque/relatorio/xlsx(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-success">
+                            <i class="fas fa-file-excel"></i> Gerar Excel
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <!-- Se não tiver produto, mostra essa mensagem -->
@@ -96,26 +106,18 @@
                 </table>
             </div>
         </div>
-        </div>
-        <!-- Botão de baixa aqui de novo pra quando houver mais produtos em estoque -->
-        <div class="mt-3">
-            <a th:href="@{/estoque/baixa}" class="btn btn-info">
+        <!-- Botões de baixa e relatórios alinhados à direita -->
+        <div class="mt-3 d-flex justify-content-end">
+            <a th:href="@{/estoque/baixa}" class="btn btn-info mr-2">
                 <i class="fas fa-arrow-down"></i> Registrar Baixa
             </a>
-        </div>
-
-        <!-- Botões de Relatório -->
-        <div class="mt-3">
             <a th:href="@{/estoque/relatorio/pdf(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-success" target="_blank">
                 <i class="fas fa-file-pdf"></i> Gerar PDF
             </a>
-            <a th:href="@{/estoque/relatorio/xlsx(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-success">
+            <a th:href="@{/estoque/relatorio/xlsx(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-success ml-2">
                 <i class="fas fa-file-excel"></i> Gerar Excel
             </a>
         </div>
-    </section>
-</body>
-</html>
     </section>
 <script>
 
