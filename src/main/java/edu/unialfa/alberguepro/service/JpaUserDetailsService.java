@@ -40,7 +40,7 @@ public class JpaUserDetailsService implements UserDetailsService {
         return User.builder()
                 .username(usuario.getUsername())
                 .password(usuario.getPassword()) // A senha já está criptografada no banco
-                .roles(usuario.getRole()) // Ex: "ADMIN", "USER"
+                .roles(usuario.getRole()) // Atuais: "ADMIN", "USER"
                 .disabled(!usuario.isAtivo())
                 .build();
     }

@@ -1,6 +1,5 @@
 package edu.unialfa.alberguepro.service;
 
-import edu.unialfa.alberguepro.model.CadastroAcolhido;
 import edu.unialfa.alberguepro.repository.CadastroAcolhidoRepository;
 import edu.unialfa.alberguepro.dto.AcolhidoDTO;
 import net.sf.jasperreports.engine.*;

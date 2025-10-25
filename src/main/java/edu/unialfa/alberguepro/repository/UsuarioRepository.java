@@ -10,6 +10,12 @@ import java.time.LocalDateTime;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByUsername(String username);
 
+    // Usado para validar a unicidade do nome de usuário (ignorando maiúsculas/minúsculas)
+    Optional<Usuario> findByUsernameIgnoreCase(String username);
+
+    // Usado para validar a unicidade ao editar (ignora o próprio ID do usuário)
+    Optional<Usuario> findByUsernameIgnoreCaseAndIdNot(String username, Long id);
+
     @Modifying
     @Query("update Usuario u set u.failedLoginAttempts = ?1 where u.username = ?2")
     void updateFailedLoginAttempts(int failedLoginAttempts, String username);

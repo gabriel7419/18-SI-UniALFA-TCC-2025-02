@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VagaService {
@@ -14,6 +15,7 @@ public class VagaService {
     private VagaRepository repository;
 
     public void salvar(Vaga vaga) {
+
         repository.save(vaga);
     }
 

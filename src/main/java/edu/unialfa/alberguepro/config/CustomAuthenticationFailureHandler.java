@@ -39,7 +39,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
                     usuarioRepository.updateFailedLoginAttempts(usuario.getFailedLoginAttempts(), username);
                 } else {
                     usuario.setAccountLockedUntil(LocalDateTime.now().plusMinutes(LOCK_TIME_MINUTES));
-                    usuario.setFailedLoginAttempts(0); // Reset attempts after locking
+                    usuario.setFailedLoginAttempts(0);
                     usuarioRepository.updateAccountLockedUntil(usuario.getAccountLockedUntil(), username);
                     usuarioRepository.updateFailedLoginAttempts(usuario.getFailedLoginAttempts(), username);
                     exception = new LockedException("Sua conta foi bloqueada devido a muitas tentativas de login falhas. Tente novamente em " + LOCK_TIME_MINUTES + " minutos.");

@@ -6,7 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import edu.unialfa.alberguepro.dto.UsuarioDTO;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -35,6 +40,18 @@ public class UsuarioService {
         }
 
         usuarioRepository.save(usuario);
+    }
+
+    public boolean isUsernameUnique(String username, Long id) {
+        Optional<Usuario> existingUser;
+        if (id == null) {
+            // Usuário novo: verifica se o username já existe
+            existingUser = usuarioRepository.findByUsernameIgnoreCase(username);
+        } else {
+            // Usuário existente: verifica se o username pertence a outro usuário
+            existingUser = usuarioRepository.findByUsernameIgnoreCaseAndIdNot(username, id);
+        }
+        return existingUser.isEmpty(); // Retorna true se estiver vazio (único)
     }
 
     public void excluir(Long id) {
@@ -67,5 +84,15 @@ public class UsuarioService {
 
         // Salva a alteração no banco de dados
         usuarioRepository.save(usuario);
+    }
+
+    public List<UsuarioDTO> findAllDTO() {
+        return usuarioRepository.findAll().stream()
+                .map(UsuarioDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public Optional<UsuarioDTO> findByIdDTO(Long id) {
+        return usuarioRepository.findById(id).map(UsuarioDTO::new);
     }
 }

@@ -34,34 +34,41 @@ public class HomeController {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Autowired
+    private QuartoRepository quartoRepository;
+
+    @Autowired
+    private LeitoRepository leitoRepository;
+
     @GetMapping("/")
     public String index(Model model,
                         @RequestParam(required = false, defaultValue = "0") int pageEstoque,
-                        @RequestParam(required = false, defaultValue = "0") int pageVagas) {
+                        @RequestParam(required = false, defaultValue = "0") int pageLeitos) {
         DashboardDTO dashboardDTO = new DashboardDTO();
 
-        // Acolhidos
-        dashboardDTO.setTotalAcolhidos(cadastroAcolhidoRepository.countByDataSaidaIsNull());
+        // Acolhidos Ativos (todos os acolhidos cadastrados no sistema)
+        long totalAcolhidosAtivos = cadastroAcolhidoRepository.count();
+        dashboardDTO.setTotalAcolhidos(totalAcolhidosAtivos);
 
-        // Vagas
-        long vagasOcupadas = vagaRepository.countByAcolhidoIsNotNull();
-        long totalVagas = vagaRepository.count();
-        dashboardDTO.setVagasOcupadas(vagasOcupadas);
-        dashboardDTO.setVagasLivres(totalVagas - vagasOcupadas);
-        dashboardDTO.setTotalVagas(totalVagas);
+        // Leitos
+        long totalLeitos = leitoRepository.count();
+        long leitosOcupados = vagaRepository.countByAcolhidoIsNotNullAndDataSaidaIsNull();
+        long leitosLivres = totalLeitos - leitosOcupados;
+        
+        dashboardDTO.setTotalLeitos(totalLeitos);
+        dashboardDTO.setLeitosOcupados(leitosOcupados);
+        dashboardDTO.setLeitosLivres(leitosLivres);
 
         // Quartos
-        long totalQuartos = Vaga.Quarto.values().length;
-        long camasPorQuarto = Vaga.NumeroLeito.values().length;
+        long totalQuartos = quartoRepository.count();
         List<Object[]> occupiedBedsByRoom = vagaRepository.countOccupiedBedsByRoom();
+        
+        long quartosOcupados = occupiedBedsByRoom.size();
+        long quartosLivres = totalQuartos - quartosOcupados;
 
-        long quartosCheios = occupiedBedsByRoom.stream()
-            .filter(result -> (Long) result[1] >= camasPorQuarto)
-            .count();
-
-        dashboardDTO.setQuartosOcupados(quartosCheios);
-        dashboardDTO.setQuartosLivres(totalQuartos - quartosCheios);
         dashboardDTO.setTotalQuartos(totalQuartos);
+        dashboardDTO.setQuartosOcupados(quartosOcupados);
+        dashboardDTO.setQuartosLivres(quartosLivres);
 
         // Usuarios
         dashboardDTO.setTotalUsuarios(usuarioRepository.count());
@@ -87,12 +94,12 @@ public class HomeController {
         pagedListEstoque.setPage(pageEstoque);
         model.addAttribute("produtosBaixoEstoque", pagedListEstoque);
 
-        // Paginação para Vagas
-        List<Vaga> vagas = vagaRepository.findAll();
-        PagedListHolder<Vaga> pagedListVagas = new PagedListHolder<>(vagas);
-        pagedListVagas.setPageSize(5);
-        pagedListVagas.setPage(pageVagas);
-        model.addAttribute("vagas", pagedListVagas);
+        // Paginação para Leitos
+        List<Vaga> leitos = vagaRepository.findAll();
+        PagedListHolder<Vaga> pagedListLeitos = new PagedListHolder<>(leitos);
+        pagedListLeitos.setPageSize(5);
+        pagedListLeitos.setPage(pageLeitos);
+        model.addAttribute("leitos", pagedListLeitos);
 
 
         return "index";

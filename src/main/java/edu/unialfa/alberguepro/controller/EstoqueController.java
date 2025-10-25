@@ -7,6 +7,7 @@ import edu.unialfa.alberguepro.repository.UnidadeRepository;
 import edu.unialfa.alberguepro.repository.ProdutoSpecification;
 import edu.unialfa.alberguepro.service.EstoqueService;
 import edu.unialfa.alberguepro.service.RelatorioService;
+import edu.unialfa.alberguepro.repository.MovimentacaoEstoqueRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -52,12 +53,12 @@ public class EstoqueController {
         model.addAttribute("unidades", unidades);
     }
 
-    @GetMapping({"/", ""})
+    @GetMapping({"/", ""}) 
     public String listarProdutos(Model model,
         @RequestParam(required = false) String nome,
         @RequestParam(required = false) String tipo,
         @RequestParam(required = false) Long unidadeId) {
-    Specification<Produto> spec = Specification.where(null);
+        Specification<Produto> spec = Specification.where(null);
 
         if (nome != null && !nome.isEmpty()) {
             spec = spec.and(ProdutoSpecification.comNome(nome));
@@ -93,7 +94,7 @@ public class EstoqueController {
 
     @PostMapping("/salvar")
     public String salvarProduto(@Valid Produto produto, BindingResult result, Model model) {
-        // validação de unicidade que requer acesso ao banco
+        // Validação de unicidade que requer acesso ao banco
         if (produto.getNome() != null && produto.getTipo() != null) {
             if (!estoqueService.isNomeAndTipoUnique(produto.getNome(), produto.getTipo(), produto.getId())) {
                 result.rejectValue("nome", "error.produto", "Já existe um produto com este nome e tipo.");
@@ -114,8 +115,9 @@ public class EstoqueController {
             return "estoque/form";
         }
         produto.setUnidade(unidadeOptional.get());
-        System.out.println("Data de Vencimento: " + produto.getDataDeVencimento());
-        produtoRepository.save(produto);
+        
+        estoqueService.salvar(produto); // Alterado para usar o serviço
+
         return "redirect:/estoque";
     }
 
@@ -133,8 +135,8 @@ public class EstoqueController {
 
     @GetMapping("/baixa")
     public String darBaixaForm(@RequestParam(value = "filtro", required = false) String filtro,
-            @RequestParam(value = "tipo", required = false) String tipo,
-            Model model) {
+        @RequestParam(value = "tipo", required = false) String tipo,
+        Model model) {
         List<Produto> produtos;
         if ((filtro != null && !filtro.isEmpty()) || (tipo != null && !tipo.isEmpty())) {
             produtos = produtoRepository.findByNomeContainingIgnoreCaseAndTipoContainingIgnoreCase(filtro, tipo);
@@ -155,7 +157,7 @@ public class EstoqueController {
 
     @PostMapping("/excluir/{id}")
     public String excluirProduto(@PathVariable("id") Long id) {
-        produtoRepository.deleteById(id);
+        estoqueService.excluir(id); // Alterado para usar o serviço
         return "redirect:/estoque";
     }
 
@@ -190,6 +192,15 @@ public class EstoqueController {
                 .body(new InputStreamResource(bis));
     }
 
+    @Autowired
+    private MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
+
+    @GetMapping("/historico")
+    public String verHistorico(Model model) {
+        model.addAttribute("movimentacoes", movimentacaoEstoqueRepository.findAllByOrderByDataMovimentacaoDesc());
+        return "estoque/historico";
+    }
+
     @GetMapping("/relatorio/xlsx")
     public ResponseEntity<InputStreamResource> gerarRelatorioXlsx(
             @RequestParam(required = false) String nome,
@@ -204,7 +215,7 @@ public class EstoqueController {
             spec = spec.and(ProdutoSpecification.comTipo(tipo));
         }
         Unidade unidade = null;
-        if (unidadeId != null && unidadeId > 0) { 
+        if (unidadeId != null && unidadeId > 0) {
             unidade = unidadeRepository.findById(unidadeId).orElse(null);
             if (unidade != null) {
                 spec = spec.and(ProdutoSpecification.comUnidade(unidade));

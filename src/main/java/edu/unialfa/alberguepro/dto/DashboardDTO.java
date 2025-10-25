@@ -5,9 +5,9 @@ import java.util.Map;
 public class DashboardDTO {
 
     private long totalAcolhidos;
-    private long vagasLivres;
-    private long vagasOcupadas;
-    private long totalVagas;
+    private long leitosLivres;
+    private long leitosOcupados;
+    private long totalLeitos;
     private long quartosLivres;
     private long quartosOcupados;
     private long totalQuartos;
@@ -25,28 +25,28 @@ public class DashboardDTO {
         this.totalAcolhidos = totalAcolhidos;
     }
 
-    public long getVagasLivres() {
-        return vagasLivres;
+    public long getLeitosLivres() {
+        return leitosLivres;
     }
 
-    public void setVagasLivres(long vagasLivres) {
-        this.vagasLivres = vagasLivres;
+    public void setLeitosLivres(long leitosLivres) {
+        this.leitosLivres = leitosLivres;
     }
 
-    public long getVagasOcupadas() {
-        return vagasOcupadas;
+    public long getLeitosOcupados() {
+        return leitosOcupados;
     }
 
-    public void setVagasOcupadas(long vagasOcupadas) {
-        this.vagasOcupadas = vagasOcupadas;
+    public void setLeitosOcupados(long leitosOcupados) {
+        this.leitosOcupados = leitosOcupados;
     }
 
-    public long getTotalVagas() {
-        return totalVagas;
+    public long getTotalLeitos() {
+        return totalLeitos;
     }
 
-    public void setTotalVagas(long totalVagas) {
-        this.totalVagas = totalVagas;
+    public void setTotalLeitos(long totalLeitos) {
+        this.totalLeitos = totalLeitos;
     }
 
     public long getQuartosLivres() {

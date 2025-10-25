@@ -25,27 +25,11 @@ public class Vaga {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataSaida;
 
-    @Enumerated(EnumType.STRING)
-    private NumeroLeito numeroLeito;
-
-    @Enumerated(EnumType.STRING)
-    private Quarto quarto;
+    @ManyToOne
+    @JoinColumn(name = "leito_id")
+    private Leito leito;
 
     @ManyToOne
     @JoinColumn(name = "acolhido_id")
     private CadastroAcolhido acolhido;
-
-    public enum Quarto {
-        Quarto1,
-        Quarto2,
-        Quarto3,
-        Quarto4
-    }
-
-    public enum NumeroLeito {
-        Leito1,
-        Leito2,
-        Leito3,
-        Leito4
-    }
 }

@@ -253,3 +253,14 @@ a:hover {
     font-weight: bold !important;
     color: #dc3545 !important;
 }
+
+/* Estilo para card-header azul */
+.card-header-blue {
+    background-color: var(--blue) !important;
+    color: var(--white) !important;
+    border-bottom: 1px solid var(--blue-dark) !important;
+}
+
+.card-header-blue .card-title {
+    color: var(--white) !important;
+}
