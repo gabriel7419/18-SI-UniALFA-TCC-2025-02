@@ -1,5 +1,6 @@
 package edu.unialfa.alberguepro.dto;
 
+import java.util.List;
 import java.util.Map;
 
 public class DashboardDTO {
@@ -14,6 +15,9 @@ public class DashboardDTO {
     private long totalUsuarios;
     private Map<String, Long> patrimonioPorStatus;
     private Map<String, Integer> estoqueBaixo;
+    private List<String> mesesEvolucao;
+    private List<Long> entradasEvolucao;
+    private List<Long> saidasEvolucao;
 
     // Getters and Setters
 
@@ -95,5 +99,29 @@ public class DashboardDTO {
 
     public void setEstoqueBaixo(Map<String, Integer> estoqueBaixo) {
         this.estoqueBaixo = estoqueBaixo;
+    }
+
+    public List<String> getMesesEvolucao() {
+        return mesesEvolucao;
+    }
+
+    public void setMesesEvolucao(List<String> mesesEvolucao) {
+        this.mesesEvolucao = mesesEvolucao;
+    }
+
+    public List<Long> getEntradasEvolucao() {
+        return entradasEvolucao;
+    }
+
+    public void setEntradasEvolucao(List<Long> entradasEvolucao) {
+        this.entradasEvolucao = entradasEvolucao;
+    }
+
+    public List<Long> getSaidasEvolucao() {
+        return saidasEvolucao;
+    }
+
+    public void setSaidasEvolucao(List<Long> saidasEvolucao) {
+        this.saidasEvolucao = saidasEvolucao;
     }
 }

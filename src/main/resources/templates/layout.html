@@ -199,9 +199,9 @@
     <!-- Onde o conteúdo das outras páginas aparece -->
     <div class="content-wrapper">
         <!-- Cabeçalho do conteúdo (com o título da página) -->
-        <div class="content-header">
+        <div class="content-header py-2">
             <div class="container-fluid">
-                <div class="row mb-2">
+                <div class="row mb-1">
                     <div class="col-sm-6">
                         <!-- O título da página é injetado aqui -->
                         <h1 class="m-0" th:text="${title}">Título da Página</h1>
@@ -210,7 +210,7 @@
             </div>
         </div>
         <!-- Seção do conteúdo principal -->
-        <section class="content">
+        <section class="content pb-2">
             <div class="container-fluid">
                 <!-- O conteúdo da página específica é substituído aqui -->
                 <div th:replace="${content}">

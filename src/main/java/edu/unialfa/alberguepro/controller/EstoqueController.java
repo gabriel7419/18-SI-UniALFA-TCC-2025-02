@@ -201,6 +201,30 @@ public class EstoqueController {
         return "estoque/historico";
     }
 
+    @GetMapping("/historico/relatorio/pdf")
+    public ResponseEntity<InputStreamResource> gerarRelatorioMovimentacaoPdf() throws JRException {
+        List<edu.unialfa.alberguepro.model.MovimentacaoEstoque> movimentacoes = movimentacaoEstoqueRepository.findAllByOrderByDataMovimentacaoDesc();
+        ByteArrayInputStream bis = relatorioService.gerarRelatorioMovimentacaoPdf(movimentacoes);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=movimentacao_estoque.pdf");
+
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
+    }
+
+    @GetMapping("/historico/relatorio/xlsx")
+    public ResponseEntity<InputStreamResource> gerarRelatorioMovimentacaoXlsx() throws IOException {
+        List<edu.unialfa.alberguepro.model.MovimentacaoEstoque> movimentacoes = movimentacaoEstoqueRepository.findAllByOrderByDataMovimentacaoDesc();
+        ByteArrayInputStream bis = relatorioService.gerarRelatorioMovimentacaoXlsx(movimentacoes);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=movimentacao_estoque.xlsx");
+
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new InputStreamResource(bis));
+    }
+
     @GetMapping("/relatorio/xlsx")
     public ResponseEntity<InputStreamResource> gerarRelatorioXlsx(
             @RequestParam(required = false) String nome,

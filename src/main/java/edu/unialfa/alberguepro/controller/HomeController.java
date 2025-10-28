@@ -83,6 +83,43 @@ public class HomeController {
                 .collect(Collectors.toMap(Produto::getNome, Produto::getQuantidade));
         dashboardDTO.setEstoqueBaixo(estoqueBaixo);
 
+        // Evolução de Acolhimentos - Últimos 6 meses
+        List<Object[]> entradas = vagaRepository.countEntradasUltimos6Meses();
+        List<Object[]> saidas = vagaRepository.countSaidasUltimos6Meses();
+        
+        List<String> meses = new java.util.ArrayList<>();
+        List<Long> entradasList = new java.util.ArrayList<>();
+        List<Long> saidasList = new java.util.ArrayList<>();
+        
+        // Preencher últimos 6 meses
+        java.time.LocalDate hoje = java.time.LocalDate.now();
+        for (int i = 5; i >= 0; i--) {
+            java.time.LocalDate data = hoje.minusMonths(i);
+            int mes = data.getMonthValue();
+            int ano = data.getYear();
+            
+            String nomeMes = data.getMonth().getDisplayName(java.time.format.TextStyle.SHORT, new java.util.Locale("pt", "BR"));
+            meses.add(nomeMes + "/" + String.valueOf(ano).substring(2));
+            
+            // Buscar entradas do mês
+            long qtdEntradas = entradas.stream()
+                .filter(e -> ((Number)e[0]).intValue() == mes && ((Number)e[1]).intValue() == ano)
+                .mapToLong(e -> ((Number)e[2]).longValue())
+                .sum();
+            entradasList.add(qtdEntradas);
+            
+            // Buscar saídas do mês
+            long qtdSaidas = saidas.stream()
+                .filter(s -> ((Number)s[0]).intValue() == mes && ((Number)s[1]).intValue() == ano)
+                .mapToLong(s -> ((Number)s[2]).longValue())
+                .sum();
+            saidasList.add(qtdSaidas);
+        }
+        
+        dashboardDTO.setMesesEvolucao(meses);
+        dashboardDTO.setEntradasEvolucao(entradasList);
+        dashboardDTO.setSaidasEvolucao(saidasList);
+
         model.addAttribute("dashboard", dashboardDTO);
         model.addAttribute("produtosBaixoEstoque", new PagedListHolder<>(produtosBaixoEstoque));
 

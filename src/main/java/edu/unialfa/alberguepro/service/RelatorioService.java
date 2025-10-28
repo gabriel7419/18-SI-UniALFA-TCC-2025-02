@@ -1,6 +1,7 @@
 package edu.unialfa.alberguepro.service;
 
 import edu.unialfa.alberguepro.model.Produto;
+import edu.unialfa.alberguepro.model.MovimentacaoEstoque;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.poi.ss.usermodel.Cell;
@@ -88,6 +89,72 @@ public class RelatorioService {
             }
 
             // Auto-ajuste das colunas
+            for (int i = 0; i < COLUNAS.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            workbook.write(out);
+            return new ByteArrayInputStream(out.toByteArray());
+        }
+    }
+
+    public ByteArrayInputStream gerarRelatorioMovimentacaoPdf(List<MovimentacaoEstoque> movimentacoes) throws JRException {
+        InputStream inputStream = getClass().getResourceAsStream("/relatorios/relatorio_movimentacao_estoque.jrxml");
+
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(movimentacoes);
+        JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, dataSource);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    public ByteArrayInputStream gerarRelatorioMovimentacaoXlsx(List<MovimentacaoEstoque> movimentacoes) throws IOException {
+        String[] COLUNAS = {"Data/Hora", "Produto", "Tipo", "Qtd. Movimentada", "Qtd. Anterior", "Qtd. Posterior", "Usuário", "Observação"};
+
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+            Sheet sheet = workbook.createSheet("Movimentações");
+
+            CellStyle headerCellStyle = workbook.createCellStyle();
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerCellStyle.setFont(headerFont);
+
+            Row headerRow = sheet.createRow(0);
+            for (int col = 0; col < COLUNAS.length; col++) {
+                Cell cell = headerRow.createCell(col);
+                cell.setCellValue(COLUNAS[col]);
+                cell.setCellStyle(headerCellStyle);
+            }
+
+            CellStyle dateCellStyle = workbook.createCellStyle();
+            CreationHelper createHelper = workbook.getCreationHelper();
+            dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy HH:mm"));
+
+            int rowIdx = 1;
+            for (MovimentacaoEstoque mov : movimentacoes) {
+                Row row = sheet.createRow(rowIdx++);
+
+                if (mov.getDataMovimentacao() != null) {
+                    Cell dateCell = row.createCell(0);
+                    Date date = Date.from(mov.getDataMovimentacao().atZone(ZoneId.systemDefault()).toInstant());
+                    dateCell.setCellValue(date);
+                    dateCell.setCellStyle(dateCellStyle);
+                } else {
+                    row.createCell(0).setCellValue("");
+                }
+                
+                row.createCell(1).setCellValue(mov.getProduto() != null ? mov.getProduto().getNome() : "Produto Excluído");
+                row.createCell(2).setCellValue(mov.getTipo().name());
+                row.createCell(3).setCellValue(mov.getQuantidadeMovimentada());
+                row.createCell(4).setCellValue(mov.getQuantidadeAnterior());
+                row.createCell(5).setCellValue(mov.getQuantidadePosterior());
+                row.createCell(6).setCellValue(mov.getUsuario() != null ? mov.getUsuario().getUsername() : "N/A");
+                row.createCell(7).setCellValue(mov.getObservacao() != null ? mov.getObservacao() : "");
+            }
+
             for (int i = 0; i < COLUNAS.length; i++) {
                 sheet.autoSizeColumn(i);
             }
