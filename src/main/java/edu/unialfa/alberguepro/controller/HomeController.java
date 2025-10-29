@@ -59,10 +59,8 @@ public class HomeController {
 
         // Quartos
         long totalQuartos = quartoRepository.count();
-        List<Object[]> occupiedBedsByRoom = vagaRepository.countOccupiedBedsByRoom();
-        
-        long quartosOcupados = occupiedBedsByRoom.size();
-        long quartosLivres = totalQuartos - quartosOcupados;
+        long quartosLivres = quartoRepository.countQuartosComLeitosLivres();
+        long quartosOcupados = quartoRepository.countQuartosTotalmenteOcupados();
 
         dashboardDTO.setTotalQuartos(totalQuartos);
         dashboardDTO.setQuartosOcupados(quartosOcupados);
