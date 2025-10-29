@@ -140,60 +140,73 @@
             display: none !important;
         }
         
-        /* Animação para o texto quando expandir - MAIS RÁPIDA */
-        body:not(.sidebar-collapse) .nav-sidebar .nav-link p {
-            opacity: 0;
-            animation: fadeInText 0.2s ease-in-out 0.2s forwards;
-        }
-        
-        body:not(.sidebar-collapse) .nav-sidebar .nav-link .right {
-            opacity: 0;
-            animation: fadeInText 0.2s ease-in-out 0.2s forwards;
-        }
-        
-        @keyframes fadeInText {
-            from {
-                opacity: 0;
-                transform: translateX(-5px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        /* Centralizar ícones quando colapsado */
+        /* Centralizar ícones quando colapsado - SEM ANIMAÇÕES */
         body.sidebar-collapse .nav-sidebar .nav-link {
             text-align: center !important;
             padding: 0.5rem !important;
+            justify-content: center !important;
+            display: flex !important;
+            position: static !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
         }
         
         body.sidebar-collapse .nav-sidebar .nav-link .nav-icon {
             margin-right: 0 !important;
+            margin-left: 0 !important;
+            display: inline-block !important;
+            width: auto !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+            position: static !important;
+        }
+        
+        /* Desabilitar TUDO no hover quando colapsado */
+        body.sidebar-collapse .nav-sidebar .nav-link:hover,
+        body.sidebar-collapse .nav-sidebar .nav-link:focus {
+            width: auto !important;
+            overflow: hidden !important;
+            position: static !important;
+            transform: none !important;
+        }
+        
+        body.sidebar-collapse .nav-sidebar .nav-link:hover .nav-icon,
+        body.sidebar-collapse .nav-sidebar .nav-link:focus .nav-icon {
+            transform: none !important;
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+            position: static !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            display: inline-block !important;
+            transition: none !important;
+        }
+        
+        /* Forçar sidebar a não expandir no hover */
+        body.sidebar-collapse .main-sidebar:hover {
+            width: 4.6rem !important;
         }
         
         /* Manter espaçamento correto dos ícones quando expandido */
         body:not(.sidebar-collapse) .nav-sidebar .nav-link {
             text-align: left !important;
             padding: 0.55rem 0.8rem !important;
+            display: flex !important;
+            align-items: center !important;
         }
         
         body:not(.sidebar-collapse) .nav-sidebar .nav-link .nav-icon {
-            margin-right: 0.6rem !important;
+            margin-right: 0.8rem !important;
             width: 1.4rem !important;
-            display: inline-block;
+            display: inline-block !important;
             text-align: center;
         }
         
         /* Esconder nome da marca quando colapsado */
         body.sidebar-collapse .brand-text {
             display: none !important;
-        }
-        
-        /* Animação para o nome da marca quando expandir - MAIS RÁPIDA */
-        body:not(.sidebar-collapse) .brand-text {
-            opacity: 0;
-            animation: fadeInText 0.2s ease-in-out 0.2s forwards;
         }
         
         /* Garantir transição suave */
@@ -315,7 +328,7 @@
     </nav>
 
     <!-- Menu lateral -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-no-expand sidebar-dark-primary elevation-4">
         <!-- Logo -->
         <a th:href="@{/}" class="brand-link">
             <span class="brand-text font-weight-light">AlberguePro</span>
@@ -510,6 +523,98 @@
 <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/webjars/AdminLTE/3.2.0/dist/js/adminlte.min.js}"></script>
+<!-- Redirecionar para página de consulta quando sidebar está colapsada -->
+<script>
+$(document).ready(function() {
+    // Função para adicionar redirecionamento direto quando colapsado
+    function setupCollapsedBehavior() {
+        if ($('body').hasClass('sidebar-collapse')) {
+            // Estoque -> Consultar
+            $('.nav-sidebar .nav-item').each(function() {
+                var $item = $(this);
+                var $link = $item.children('a.nav-link').first();
+                var $icon = $link.find('.nav-icon');
+                
+                // Verificar qual menu é baseado no ícone
+                if ($icon.hasClass('fa-box-open')) {
+                    // Estoque
+                    $link.off('click').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = '/estoque';
+                        return false;
+                    });
+                } else if ($icon.hasClass('fa-landmark')) {
+                    // Patrimônio
+                    $link.off('click').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = '/patrimonio';
+                        return false;
+                    });
+                } else if ($icon.hasClass('fa-users')) {
+                    // Acolhido
+                    $link.off('click').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = '/cadastroAcolhido/listar';
+                        return false;
+                    });
+                } else if ($icon.hasClass('fa-bed')) {
+                    // Vaga
+                    $link.off('click').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = '/vaga';
+                        return false;
+                    });
+                } else if ($icon.hasClass('fa-door-open')) {
+                    // Quarto
+                    $link.off('click').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = '/quarto';
+                        return false;
+                    });
+                }
+            });
+        }
+    }
+    
+    // Aplicar ao carregar
+    setupCollapsedBehavior();
+    
+    // Monitorar mudanças na sidebar
+    $('[data-widget="pushmenu"]').on('collapsed.lte.pushmenu', function() {
+        setupCollapsedBehavior();
+    });
+    
+    $('[data-widget="pushmenu"]').on('shown.lte.pushmenu', function() {
+        // Quando expandir, remover comportamento customizado
+        $('.nav-sidebar .nav-item > a.nav-link').off('click');
+    });
+});
+</script>
+<!-- Manter sidebar recolhida ao clicar fora -->
+<script>
+$(function() {
+  function keepCollapsed() {
+    if ($('body').hasClass('sidebar-collapse')) {
+      $('body').addClass('sidebar-collapse').removeClass('sidebar-open');
+    }
+  }
+  // Clique em qualquer área fora da sidebar ou do botão
+  $(document).on('click', function(e){
+    if ($(e.target).closest('.main-sidebar, [data-widget="pushmenu"]').length === 0) {
+      keepCollapsed();
+    }
+  });
+  // Clique direto em header, conteúdo ou footer
+  $('.main-header, .content-wrapper, .main-footer').on('click', keepCollapsed);
+  // Em resize manter recolhida
+  $(window).on('resize', keepCollapsed);
+});
+</script>
 <th:block th:replace="${script}"></th:block>
 <!-- ApexCharts -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
