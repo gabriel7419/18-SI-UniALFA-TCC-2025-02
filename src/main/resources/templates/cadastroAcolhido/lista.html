@@ -14,7 +14,7 @@
 
     <form th:action="@{/cadastroAcolhido/listar}" method="get" class="mb-3">
         <div class="input-group">
-            <input type="text" name="filtro" class="form-control" placeholder="Buscar acolhido por nome..." th:value="${filtro}">
+            <input type="text" name="filtro" class="form-control" placeholder="Buscar acolhido por nome...">
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="submit">
                     <i class="fas fa-search"></i> Buscar
@@ -38,8 +38,18 @@
                 </a>
             </div>
 
-            <div th:if="${#lists.isEmpty(acolhidos)}" class="alert alert-info">
-                Nenhum acolhido cadastrado.
+            <div th:if="${#lists.isEmpty(acolhidos)}">
+                <div th:if="${filtro != null and filtro.length() > 0}"
+                     id="searchFailedAlert"
+                     class="alert text-center mx-auto mb-4 p-3"
+                     style="max-width: 450px; background-color: rgba(255, 193, 7, 0.5); color: #856404; border: 1px solid #ffeeba; border-radius: 0.5rem; font-weight: 500;">
+                    <i class="fas fa-exclamation-triangle mr-2"></i> Nenhum acolhido encontrado com este nome.
+                    <p class="mt-2 mb-0" style="font-size: 0.8em;">Retornando à lista completa em <span id="countdown">3</span> segundos...</p>
+                </div>
+
+                <div th:unless="${filtro != null and filtro.length() > 0}" class="alert alert-info text-center">
+                    Nenhum acolhido cadastrado.
+                </div>
             </div>
 
             <table class="table table-bordered" th:if="${not #lists.isEmpty(acolhidos)}">
@@ -57,7 +67,7 @@
                     <td th:text="${acolhido.nome}">João da Silva</td>
                     <td th:text="${acolhido.idade}">35</td>
                     <td th:text="${acolhido.sexo}">Masculino</td>
-                    <td th:text="${#temporals.format(acolhido.dataIngresso, 'dd/MM/yyyy HH:mm')}">10/09/2025 14:00</td>
+                    <td th:text="${#temporals.format(acolhido.dataIngresso, 'dd/MM/yyyy')}">10/09/2025</td>
                     <td>
                         <a th:href="@{/cadastroAcolhido/editar/{id}(id=${acolhido.id})}" class="btn btn-warning btn-sm">
                             <i class="fas fa-edit"></i>
@@ -74,8 +84,35 @@
         </div>
     </div>
 </section>
-<script>
+<script th:inline="javascript">
+    const filtro = /*[[${filtro}]]*/ null;
+    const acolhidosVazios = /*[[${#lists.isEmpty(acolhidos)}]]*/ false;
 
+    const alertElement = document.getElementById('searchFailedAlert');
+
+    if (acolhidosVazios && filtro && filtro.length > 0 && alertElement) {
+
+        let seconds = 3;
+        const countdownElement = document.getElementById('countdown');
+
+        const updateCountdown = () => {
+            if (countdownElement) {
+                countdownElement.textContent = seconds;
+            }
+        };
+
+        const interval = setInterval(() => {
+            seconds--;
+            updateCountdown();
+
+            if (seconds <= 0) {
+                clearInterval(interval);
+                window.location.href = '/cadastroAcolhido/listar';
+            }
+        }, 1000);
+
+        updateCountdown();
+    }
 </script>
 </body>
 </html>

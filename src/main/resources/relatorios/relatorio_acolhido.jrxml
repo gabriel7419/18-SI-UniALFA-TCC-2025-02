@@ -12,16 +12,15 @@
 
     <field name="id" class="java.lang.Long"/>
     <field name="nome" class="java.lang.String"/>
-    <field name="dataNascimento" class="java.util.Date"/>
+    <field name="dataNascimento" class="java.time.LocalDate"/>
     <field name="idade" class="java.lang.Integer"/>
     <field name="sexo" class="java.lang.String"/>
     <field name="naturalidade" class="java.lang.String"/>
     <field name="rg" class="java.lang.String"/>
     <field name="cpf" class="java.lang.String"/>
-    <field name="dataIngresso" class="java.util.Date"/>
-    <field name="dataSaida" class="java.util.Date"/>
+    <field name="dataIngresso" class="java.time.LocalDate"/>
+    <field name="dataSaida" class="java.time.LocalDate"/>
 
-    <!-- Título -->
     <title>
         <band height="50">
             <staticText>
@@ -34,7 +33,6 @@
         </band>
     </title>
 
-    <!-- Cabeçalho -->
     <columnHeader>
         <band height="27">
             <staticText>
@@ -109,7 +107,6 @@
         </band>
     </columnHeader>
 
-    <!-- Linhas -->
     <detail>
         <band height="27">
             <textField>
@@ -130,7 +127,7 @@
                 <reportElement x="245" y="0" width="75" height="27"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement verticalAlignment="Middle" textAlignment="Center"/>
-                <textFieldExpression><![CDATA[$F{dataNascimento}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{dataNascimento} != null ? java.util.Date.from($F{dataNascimento}.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()) : null]]></textFieldExpression>
             </textField>
 
             <textField>
@@ -172,14 +169,14 @@
                 <reportElement x="660" y="0" width="75" height="27"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement verticalAlignment="Middle" textAlignment="Center"/>
-                <textFieldExpression><![CDATA[$F{dataIngresso}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{dataIngresso} != null ? java.util.Date.from($F{dataIngresso}.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()) : null]]></textFieldExpression>
             </textField>
 
             <textField pattern="dd/MM/yyyy">
                 <reportElement x="735" y="0" width="75" height="27"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement verticalAlignment="Middle" textAlignment="Center"/>
-                <textFieldExpression><![CDATA[$F{dataSaida}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{dataSaida} != null ? java.util.Date.from($F{dataSaida}.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()) : null]]></textFieldExpression>
             </textField>
         </band>
     </detail>

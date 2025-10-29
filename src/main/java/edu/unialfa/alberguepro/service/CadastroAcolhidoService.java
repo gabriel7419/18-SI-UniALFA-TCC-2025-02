@@ -25,7 +25,15 @@ public class CadastroAcolhidoService {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Acolhido não encontrado: " + id));
     }
 
+    public List<CadastroAcolhido> buscarPorNome(String nome) {
+        return repository.findByNomeContainingIgnoreCase(nome);
+    }
+
     public void deletarPorId(Long id) {
         repository.deleteById(id);
+    }
+
+    public boolean cpfJaExiste(String cpf) {
+        return repository.existsByCpf(cpf);
     }
 }

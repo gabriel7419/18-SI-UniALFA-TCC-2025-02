@@ -431,16 +431,17 @@
         </form>
     </div>
 </section>
-<script>
+<script th:inline="javascript">
     let currentStep = 1;
     const totalSteps = 6;
 
     function showStep(step) {
         document.querySelectorAll('.step').forEach(el => el.classList.add('d-none'));
-
         const currentStepElement = document.getElementById(`step${step}`);
         if (currentStepElement) {
             currentStepElement.classList.remove('d-none');
+            // Rola para o topo para que o usuário veja a mensagem de erro/o formulário
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
 
@@ -461,128 +462,149 @@
     function calcularIdade() {
         const dataNascInput = document.getElementById('dataNascimento');
         const idadeInput = document.getElementById('idade');
+        if (!dataNascInput || !idadeInput) return;
         const dataNascimento = new Date(dataNascInput.value);
-
         if (dataNascInput.value) {
             const hoje = new Date();
-
             let idade = hoje.getFullYear() - dataNascimento.getFullYear();
             const mes = hoje.getMonth() - dataNascimento.getMonth();
-
-            if (mes < 0 || (mes === 0 && hoje.getDate() < dataNascimento.getDate())) {
-                idade--;
-            }
-
+            if (mes < 0 || (mes === 0 && hoje.getDate() < dataNascimento.getDate())) idade--;
             idadeInput.value = idade;
         } else {
             idadeInput.value = '';
         }
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
-        showStep(currentStep);
-        calcularIdade();
-    });
-
     function toggleCamposCondicionais() {
-    const estadoCivil = document.getElementById('estadoCivil');
-    const divNomeConjuge = document.getElementById('divNomeConjuge');
-    if (estadoCivil && estadoCivil.value !== 'Solteiro') {
-        divNomeConjuge.style.display = 'block';
-    } else {
-        divNomeConjuge.style.display = 'none';
-        document.getElementById('nomeConjuge').value = '';
+        const estadoCivil = document.getElementById('estadoCivil');
+        const divNomeConjuge = document.getElementById('divNomeConjuge');
+        if (estadoCivil && divNomeConjuge) {
+            if (estadoCivil.value === 'Casado' || estadoCivil.value === 'UniaoEstavel') {
+                divNomeConjuge.style.display = 'block';
+            } else {
+                divNomeConjuge.style.display = 'none';
+                document.getElementById('nomeConjuge').value = '';
+            }
+        }
+
+        const simFilho = document.querySelector('input[name="filho"][value="Sim"]');
+        const divQuantidadeFilhos = document.getElementById('divQuantidadeFilhos');
+        if (divQuantidadeFilhos) {
+            if (simFilho && simFilho.checked) {
+                divQuantidadeFilhos.style.display = 'block';
+            } else {
+                divQuantidadeFilhos.style.display = 'none';
+                document.getElementById('quantidadeFilhos').value = '';
+            }
+        }
+
+        const beneficioSelect = document.getElementById('beneficioSocial');
+        const divQualBeneficio = document.getElementById('divQualBeneficio');
+        if (beneficioSelect && divQualBeneficio) {
+            if (beneficioSelect.value === 'Sim') {
+                divQualBeneficio.style.display = 'block';
+            } else {
+                divQualBeneficio.style.display = 'none';
+                document.getElementById('qualBeneficio').value = '';
+            }
+        }
+
+        const medicamentoSelect = document.getElementById('medicamentoControlado');
+        const divQualMedicamento = document.getElementById('divQualMedicamento');
+        if (medicamentoSelect && divQualMedicamento) {
+            if (medicamentoSelect.value === 'Sim') {
+                divQualMedicamento.style.display = 'block';
+            } else {
+                divQualMedicamento.style.display = 'none';
+                document.getElementById('qualMedicamento').value = '';
+            }
+        }
+
+        const usaDrogasSelect = document.getElementById('usaDrogas');
+        const divQualDroga = document.getElementById('divQualDroga');
+        if (usaDrogasSelect && divQualDroga) {
+            if (usaDrogasSelect.value === 'Sim') {
+                divQualDroga.style.display = 'block';
+            } else {
+                divQualDroga.style.display = 'none';
+                document.getElementById('qualDroga').value = '';
+            }
+        }
+
+        const possuiAlergiaSelect = document.getElementById('possuiAlergia');
+        const divQualAlergia = document.getElementById('divQualAlergia');
+        if (possuiAlergiaSelect && divQualAlergia) {
+            if (possuiAlergiaSelect.value === 'Sim') {
+                divQualAlergia.style.display = 'block';
+            } else {
+                divQualAlergia.style.display = 'none';
+                document.getElementById('qualAlergia').value = '';
+            }
+        }
+
+        const situacaoRua = document.getElementById('situacaoRua');
+        const divTempoRua = document.getElementById('divTempoRua');
+        if (situacaoRua && divTempoRua) {
+            if (situacaoRua.value === 'Sim') {
+                divTempoRua.style.display = 'block';
+            } else {
+                divTempoRua.style.display = 'none';
+                document.getElementById('tempoRua').value = '';
+            }
+        }
+
+        const vinculoFamiliar = document.getElementById('vinculoFamiliar');
+        const divVinculoFamiliarQuem = document.getElementById('divVinculoFamiliarQuem');
+        const divCidadeVinculoFamiliar = document.getElementById('divCidadeVinculoFamiliar');
+        if (vinculoFamiliar && divVinculoFamiliarQuem && divCidadeVinculoFamiliar) {
+            if (vinculoFamiliar.value === 'Sim') {
+                divVinculoFamiliarQuem.style.display = 'block';
+                divCidadeVinculoFamiliar.style.display = 'block';
+            } else {
+                divVinculoFamiliarQuem.style.display = 'none';
+                divCidadeVinculoFamiliar.style.display = 'none';
+                document.getElementById('vinculoFamiliarQuem').value = '';
+                document.getElementById('cidadeVinculoFamiliar').value = '';
+            }
+        }
+
+        const servicoAcolhimento = document.getElementById('servicoAcolhimento');
+        const divVezesAcolhido = document.getElementById('divVezesAcolhido');
+        if (servicoAcolhimento && divVezesAcolhido) {
+            if (servicoAcolhimento.value === 'Sim') {
+                divVezesAcolhido.style.display = 'block';
+            } else {
+                divVezesAcolhido.style.display = 'none';
+                document.getElementById('vezesAcolhido').value = '';
+            }
+        }
     }
 
-    const simFilho = document.querySelector('input[name="filho"][value="Sim"]');
-    const divQuantidadeFilhos = document.getElementById('divQuantidadeFilhos');
-    if (simFilho && simFilho.checked) {
-        divQuantidadeFilhos.style.display = 'block';
-    } else {
-        divQuantidadeFilhos.style.display = 'none';
-        document.getElementById('quantidadeFilhos').value = '';
-    }
 
-    const beneficioSelect = document.getElementById('beneficioSocial');
-    const divQualBeneficio = document.getElementById('divQualBeneficio');
-    if (beneficioSelect && beneficioSelect.value === 'Sim') {
-        divQualBeneficio.style.display = 'block';
-    } else {
-        divQualBeneficio.style.display = 'none';
-        document.getElementById('qualBeneficio').value = '';
-    }
+    document.addEventListener("DOMContentLoaded", function() {
+        const stepWithError = [[${stepWithError}]] || 1;
 
-    const medicamentoSelect = document.getElementById('medicamentoControlado');
-    const divQualMedicamento = document.getElementById('divQualMedicamento');
-    if (medicamentoSelect && medicamentoSelect.value === 'Sim') {
-        divQualMedicamento.style.display = 'block';
-    } else {
-        divQualMedicamento.style.display = 'none';
-        document.getElementById('qualMedicamento').value = '';
-    }
+        if (stepWithError > 0) {
+            currentStep = stepWithError;
+        }
 
-    const usaDrogasSelect = document.getElementById('usaDrogas');
-    const divQualDroga = document.getElementById('divQualDroga');
-    if (usaDrogasSelect && usaDrogasSelect.value === 'Sim') {
-        divQualDroga.style.display = 'block';
-    } else {
-        divQualDroga.style.display = 'none';
-        document.getElementById('qualDroga').value = '';
-    }
+        showStep(currentStep);
 
-    const possuiAlergiaSelect = document.getElementById('possuiAlergia');
-    const divQualAlergia = document.getElementById('divQualAlergia');
-    if (possuiAlergiaSelect && possuiAlergiaSelect.value === 'Sim') {
-        divQualAlergia.style.display = 'block';
-    } else {
-        divQualAlergia.style.display = 'none';
-        document.getElementById('qualAlergia').value = '';
-    }
+        calcularIdade();
+        toggleCamposCondicionais();
 
-    const situacaoRua = document.getElementById('situacaoRua');
-    const divTempoRua = document.getElementById('divTempoRua');
-    if (situacaoRua && situacaoRua.value === 'Sim') {
-        divTempoRua.style.display = 'block';
-    } else {
-        divTempoRua.style.display = 'none';
-        document.getElementById('tempoRua').value = '';
-    }
+        document.getElementById('dataNascimento')?.addEventListener('change', calcularIdade);
 
-    const vinculoFamiliar = document.getElementById('vinculoFamiliar');
-    const divVinculoFamiliarQuem = document.getElementById('divVinculoFamiliarQuem');
-    const divCidadeVinculoFamiliar = document.getElementById('divCidadeVinculoFamiliar');
-    if (vinculoFamiliar && vinculoFamiliar.value === 'Sim') {
-        divVinculoFamiliarQuem.style.display = 'block';
-        divCidadeVinculoFamiliar.style.display = 'block';
-    } else {
-        divVinculoFamiliarQuem.style.display = 'none';
-        divCidadeVinculoFamiliar.style.display = 'none';
-        document.getElementById('vinculoFamiliarQuem').value = '';
-        document.getElementById('cidadeVinculoFamiliar').value = '';
-    }
+        ['estadoCivil', 'beneficioSocial', 'medicamentoControlado', 'usaDrogas', 'possuiAlergia',
+         'situacaoRua', 'vinculoFamiliar', 'servicoAcolhimento'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('change', toggleCamposCondicionais);
+        });
 
-    const servicoAcolhimento = document.getElementById('servicoAcolhimento');
-    const divVezesAcolhido = document.getElementById('divVezesAcolhido');
-    if (servicoAcolhimento && servicoAcolhimento.value === 'Sim') {
-        divVezesAcolhido.style.display = 'block';
-    } else {
-        divVezesAcolhido.style.display = 'none';
-        document.getElementById('vezesAcolhido').value = '';
-    }
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    toggleCamposCondicionais();
-
-    document.querySelectorAll('input[name="filho"]').forEach(el => el.addEventListener('change', toggleCamposCondicionais));
-
-    ['estadoCivil','beneficioSocial','medicamentoControlado','usaDrogas','possuiAlergia',
-     'situacaoRua','vinculoFamiliar','servicoAcolhimento'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('change', toggleCamposCondicionais);
+        document.querySelectorAll('input[name="filho"]').forEach(el =>
+            el.addEventListener('change', toggleCamposCondicionais)
+        );
     });
-});
-
 </script>
 </body>
 </html>
