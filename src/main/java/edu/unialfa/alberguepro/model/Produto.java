@@ -1,10 +1,10 @@
 package edu.unialfa.alberguepro.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Produto {
@@ -13,11 +13,36 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "O tipo do produto é obrigatório.")
     private String tipo; // Alimento, Higiene, Limpeza
+
+    @NotBlank(message = "O nome do produto é obrigatório.")
+    @Size(min = 2, max = 100, message = "O nome deve ter entre 2 e 100 caracteres.")
     private String nome;
+
+    @NotNull(message = "A quantidade é obrigatória.")
+    @PositiveOrZero(message = "A quantidade não pode ser um número negativo.")
     private Integer quantidade;
-    private String unidade; // Ex: kg, pacote, litro
+
+    @ManyToOne
+    @JoinColumn(name = "unidade_id")
+    private Unidade unidade;
+
+    @NotNull(message = "A data de vencimento é obrigatória.")
+    @Future(message = "A data de vencimento deve ser uma data futura.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataDeVencimento;
+
+    @Transient
+    @NotNull(message = "A unidade de medida é obrigatória.")
+    private Long unidadeId;
+
+    @PostLoad
+    private void onLoad() {
+        if (this.unidade != null) {
+            this.unidadeId = this.unidade.getId();
+        }
+    }
 
     // Getters e Setters
     public Long getId() {
@@ -44,10 +69,10 @@ public class Produto {
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
-    public String getUnidade() {
+    public Unidade getUnidade() {
         return unidade;
     }
-    public void setUnidade(String unidade) {
+    public void setUnidade(Unidade unidade) {
         this.unidade = unidade;
     }
     public LocalDate getDataDeVencimento() {
@@ -55,5 +80,13 @@ public class Produto {
     }
     public void setDataDeVencimento(LocalDate dataDeVencimento) {
         this.dataDeVencimento = dataDeVencimento;
+    }
+
+    public Long getUnidadeId() {
+        return unidadeId;
+    }
+
+    public void setUnidadeId(Long unidadeId) {
+        this.unidadeId = unidadeId;
     }
 }

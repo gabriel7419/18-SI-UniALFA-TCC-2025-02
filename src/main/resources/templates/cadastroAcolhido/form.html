@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
+<head>
+    <title>Cadastrar Acolhido</title>
+</head>
+<body>
+<section>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Cadastro de Acolhido</h3>
+        </div>
+        <form th:action="@{/cadastroAcolhido/salvar}" th:object="${acolhido}" method="post" id="multiStepForm">
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="step" id="step1">
+                <div class="card-body">
+                    <h5>Dados Pessoais</h5>
+
+                    <div class="form-group">
+                        <label for="nome">Nome</label>
+                        <input type="text" class="form-control" id="nome" th:field="*{nome}">
+                        <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dataNascimento">Data de Nascimento</label>
+                        <input type="date" class="form-control" id="dataNascimento" th:field="*{dataNascimento}" onchange="calcularIdade()">
+                        <div th:if="${#fields.hasErrors('dataNascimento')}" th:errors="*{dataNascimento}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="idade">Idade</label>
+                        <input type="number" class="form-control" id="idade" th:field="*{idade}" readonly>
+                        <div th:if="${#fields.hasErrors('idade')}" th:errors="*{idade}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="naturalidade">Naturalidade</label>
+                        <input type="text" class="form-control" id="naturalidade" th:field="*{naturalidade}">
+                        <div th:if="${#fields.hasErrors('naturalidade')}" th:errors="*{naturalidade}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profissao">Profissão</label>
+                        <input type="text" class="form-control" id="profissao" th:field="*{profissao}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sexo</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" th:field="*{sexo}" value="Masculino">
+                            <label class="form-check-label">Masculino</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" th:field="*{sexo}" value="Feminino">
+                            <label class="form-check-label">Feminino</label>
+                        </div>
+                        <div th:if="${#fields.hasErrors('sexo')}" th:errors="*{sexo}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cor">Cor</label>
+                        <input type="text" class="form-control" id="cor" th:field="*{cor}">
+                        <div th:if="${#fields.hasErrors('cor')}" th:errors="*{cor}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rg">RG</label>
+                        <input type="text" class="form-control" id="rg" th:field="*{rg}">
+                        <div th:if="${#fields.hasErrors('rg')}" th:errors="*{rg}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cpf">CPF</label>
+                        <input type="text" class="form-control" id="cpf" th:field="*{cpf}">
+                        <div th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="certidaoNascimento">Certidão de Nascimento</label>
+                        <input type="text" class="form-control" id="certidaoNascimento" th:field="*{certidaoNascimento}">
+                        <div th:if="${#fields.hasErrors('certidaoNascimento')}" th:errors="*{certidaoNascimento}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="filiacao">Filiação</label>
+                        <input type="text" class="form-control" id="filiacao" th:field="*{filiacao}">
+                        <div th:if="${#fields.hasErrors('filiacao')}" th:errors="*{filiacao}" class="text-danger"></div>
+                    </div>
+
+                    <a th:href="@{/cadastroAcolhido/listar}" class="btn btn-secondary">Cancelar</a>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Próximo</button>
+                </div>
+            </div>
+
+            <div  class="step d-none" id="step2">
+                <div class="card-body">
+                    <h5>Estado Civil e Família</h5>
+
+                    <div class="form-group">
+                        <label for="estadoCivil">Estado Civil</label>
+                        <select id="estadoCivil" class="form-control" th:field="*{estadoCivil}">
+                            <option value="">Selecione...</option>
+                            <option th:each="ec : ${estadosCivil}"
+                                    th:value="${ec}"
+                                    th:text="${ec}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('estadoCivil')}" th:errors="*{estadoCivil}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group" id="divNomeConjuge" style="display:none;">
+                        <label for="nomeConjuge">Nome do Cônjuge</label>
+                        <input type="text" class="form-control" id="nomeConjuge" th:field="*{nomeConjuge}">
+                        <div th:if="${#fields.hasErrors('nomeConjuge')}" th:errors="*{nomeConjuge}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Possui filhos?</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" th:field="*{filho}" value="Sim">
+                            <label class="form-check-label">Sim</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" th:field="*{filho}" value="Nao">
+                            <label class="form-check-label">Não</label>
+                        </div>
+                        <div th:if="${#fields.hasErrors('filho')}" th:errors="*{filho}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group" id="divQuantidadeFilhos" style="display:none;">
+                        <label for="quantidadeFilhos">Quantidade de Filhos</label>
+                        <input type="number" class="form-control" id="quantidadeFilhos" th:field="*{quantidadeFilhos}">
+                        <div th:if="${#fields.hasErrors('quantidadeFilhos')}" th:errors="*{quantidadeFilhos}" class="text-danger"></div>
+                    </div>
+
+                    <a th:href="@{/cadastroAcolhido/listar}" class="btn btn-secondary">Cancelar</a>
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Voltar</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Próximo</button>
+                </div>
+            </div>
+
+            <div class="step d-none" id="step3">
+                <div class="card-body">
+                    <h5>Contato e Endereço</h5>
+
+                    <div class="form-group">
+                        <label for="endereco">Endereço</label>
+                        <input type="text" class="form-control" id="endereco" th:field="*{endereco}">
+                        <div th:if="${#fields.hasErrors('endereco')}" th:errors="*{endereco}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefoneFamiliar">Telefone Familiar</label>
+                        <input type="text" class="form-control" id="telefoneFamiliar" th:field="*{telefoneFamiliar}">
+                    </div>
+
+                    <a th:href="@{/cadastroAcolhido/listar}" class="btn btn-secondary">Cancelar</a>
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Voltar</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Próximo</button>
+                </div>
+            </div>
+
+            <div class="step d-none" id="step4">
+                <div class="card-body">
+                    <h5>Escolaridade e Renda</h5>
+
+                    <div class="form-group">
+                        <label for="escolaridade">Escolaridade</label>
+                        <select id="escolaridade" class="form-control" th:field="*{escolaridade}">
+                            <option value="">Selecione...</option>
+                            <option th:each="es : ${escolaridade}"
+                                    th:value="${es}"
+                                    th:text="${es}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('escolaridade')}" th:errors="*{escolaridade}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="renda">Possui Renda?</label>
+                        <select id="renda" class="form-control" th:field="*{renda}">
+                            <option value="">Selecione...</option>
+                            <option th:each="re : ${renda}"
+                                    th:value="${re}"
+                                    th:text="${re}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('renda')}" th:errors="*{renda}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="beneficioSocial">Recebe Benefício Social?</label>
+                        <select class="form-control" id="beneficioSocial" th:field="*{beneficioSocial}">
+                            <option value="">Selecione...</option>
+                            <option th:each="be : ${beneficioSocial}"
+                                    th:value="${be}"
+                                    th:text="${be}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('beneficioSocial')}" th:errors="*{beneficioSocial}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group" id="divQualBeneficio" style="display:none;">
+                        <label for="qualBeneficio">Qual Benefício</label>
+                        <input type="text" class="form-control" id="qualBeneficio" th:field="*{qualBeneficio}">
+                        <div th:if="${#fields.hasErrors('qualBeneficio')}" th:errors="*{qualBeneficio}" class="text-danger"></div>
+                    </div>
+
+                    <a th:href="@{/cadastroAcolhido/listar}" class="btn btn-secondary">Cancelar</a>
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Voltar</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Próximo</button>
+                </div>
+            </div>
+
+
+            <div class="step d-none" id="step5">
+                <div class="card-body">
+                    <h5>Saúde</h5>
+
+                    <div class="form-group">
+                        <label for="estadoSaude">Estado de Saúde</label>
+                        <select class="form-control" id="estadoSaude" th:field="*{estadoSaude}">
+                            <option value="">Selecione...</option>
+                            <option th:each="es : ${estadoSaude}"
+                                    th:value="${es}"
+                                    th:text="${es}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('estadoSaude')}" th:errors="*{estadoSaude}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="medicamentoControlado">Usa Medicamento Controlado?</label>
+                        <select class="form-control" id="medicamentoControlado" th:field="*{medicamentoControlado}">
+                            <option value="">Selecione...</option>
+                            <option th:each="mc : ${medicamentoControlado}"
+                                    th:value="${mc}"
+                                    th:text="${mc}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('medicamentoControlado')}" th:errors="*{medicamentoControlado}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group" id="divQualMedicamento" style="display:none;">
+                        <label for="qualMedicamento">Qual Medicamento</label>
+                        <input type="text" class="form-control" id="qualMedicamento" th:field="*{qualMedicamento}">
+                        <div th:if="${#fields.hasErrors('qualMedicamento')}" th:errors="*{qualMedicamento}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="doencaSexualmentetransmissivel">Doença Sexualmente Transmissível?</label>
+                        <select class="form-control" id="doencaSexualmentetransmissivel" th:field="*{doencaSexualmentetransmissivel}">
+                            <option value="">Selecione...</option>
+                            <option th:each="do : ${doencaSexualmentetransmissivel}"
+                                    th:value="${do}"
+                                    th:text="${do}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('doencaSexualmentetransmissivel')}" th:errors="*{doencaSexualmentetransmissivel}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="possuiAlergia">Possui Alergia?</label>
+                        <select class="form-control" id="possuiAlergia" th:field="*{possuiAlergia}">
+                            <option value="">Selecione...</option>
+                            <option th:each="pa : ${possuiAlergia}"
+                                    th:value="${pa}"
+                                    th:text="${pa}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('possuiAlergia')}" th:errors="*{possuiAlergia}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group" id="divQualAlergia" style="display:none;">
+                        <label for="qualAlergia">Qual Alergia</label>
+                        <input type="text" class="form-control" id="qualAlergia" th:field="*{qualAlergia}">
+                        <div th:if="${#fields.hasErrors('qualAlergia')}" th:errors="*{qualAlergia}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fumante">Fumante?</label>
+                        <select class="form-control" id="fumante" th:field="*{fumante}">
+                            <option value="">Selecione...</option>
+                            <option th:each="fu : ${fumante}"
+                                    th:value="${fu}"
+                                    th:text="${fu}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('fumante')}" th:errors="*{fumante}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bebidaAlcoolica">Usa Bebida Alcoólica?</label>
+                        <select class="form-control" id="bebidaAlcoolica" th:field="*{bebidaAlcoolica}">
+                            <option value="">Selecione...</option>
+                            <option th:each="be : ${bebidaAlcoolica}"
+                                    th:value="${be}"
+                                    th:text="${be}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('bebidaAlcoolica')}" th:errors="*{bebidaAlcoolica}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="usaDrogas">Usa Drogas?</label>
+                        <select class="form-control" id="usaDrogas" th:field="*{usaDrogas}">
+                            <option value="">Selecione...</option>
+                            <option th:each="dr : ${usaDrogas}"
+                                    th:value="${dr}"
+                                    th:text="${dr}">
+                            </option>
+                        </select>
+                        </select>
+                        <div th:if="${#fields.hasErrors('usaDrogas')}" th:errors="*{usaDrogas}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group" id="divQualDroga" style="display:none;">
+                        <label for="qualDroga">Qual Droga</label>
+                        <input type="text" class="form-control" id="qualDroga" th:field="*{qualDroga}">
+                        <div th:if="${#fields.hasErrors('qualDroga')}" th:errors="*{qualDroga}" class="text-danger"></div>
+                    </div>
+
+                    <a th:href="@{/cadastroAcolhido/listar}" class="btn btn-secondary">Cancelar</a>
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Voltar</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Próximo</button>
+                </div>
+            </div>
+
+            <div class="step d-none" id="step6">
+                <div class="card-body">
+                    <h5>Situação Social</h5>
+
+                    <div class="form-group">
+                        <label for="situacaoRua">Está em Situação de Rua?</label>
+                        <select class="form-control" id="situacaoRua" th:field="*{situacaoRua}">
+                            <option value="">Selecione...</option>
+                            <option th:each="sr : ${situacaoRua}"
+                                    th:value="${sr}"
+                                    th:text="${sr}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('situacaoRua')}" th:errors="*{situacaoRua}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group" id="divTempoRua" style="display:none;">
+                        <label for="tempoRua">Tempo de Rua</label>
+                        <input type="text" class="form-control" id="tempoRua" th:field="*{tempoRua}">
+                        <div th:if="${#fields.hasErrors('tempoRua')}" th:errors="*{tempoRua}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vinculoFamiliar">Possui Vínculo Familiar?</label>
+                        <select class="form-control" id="vinculoFamiliar" th:field="*{vinculoFamiliar}">
+                            <option value="">Selecione...</option>
+                            <option th:each="vf : ${vinculoFamiliar}"
+                                    th:value="${vf}"
+                                    th:text="${vf}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('vinculoFamiliar')}" th:errors="*{vinculoFamiliar}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group" id="divVinculoFamiliarQuem" style="display:none;">
+                        <label for="vinculoFamiliarQuem">Quem?</label>
+                        <input type="text" class="form-control" id="vinculoFamiliarQuem" th:field="*{vinculoFamiliarQuem}">
+                        <div th:if="${#fields.hasErrors('vinculoFamiliarQuem')}" th:errors="*{vinculoFamiliarQuem}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group" id="divCidadeVinculoFamiliar" style="display:none;">
+                        <label for="cidadeVinculoFamiliar">Cidade do Vínculo Familiar</label>
+                        <input type="text" class="form-control" id="cidadeVinculoFamiliar" th:field="*{cidadeVinculoFamiliar}">
+                        <div th:if="${#fields.hasErrors('cidadeVinculoFamiliar')}" th:errors="*{cidadeVinculoFamiliar}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="servicoAcolhimento">Já foi acolhido antes?</label>
+                        <select class="form-control" id="servicoAcolhimento" th:field="*{servicoAcolhimento}">
+                            <option value="">Selecione...</option>
+                            <option th:each="sa : ${servicoAcolhimento}"
+                                    th:value="${sa}"
+                                    th:text="${sa}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('servicoAcolhimento')}" th:errors="*{servicoAcolhimento}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group" id="divVezesAcolhido" style="display:none;">
+                        <label for="vezesAcolhido">Quantas vezes?</label>
+                        <input type="text" class="form-control" id="vezesAcolhido" th:field="*{vezesAcolhido}">
+                        <div th:if="${#fields.hasErrors('vezesAcolhido')}" th:errors="*{vezesAcolhido}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ultimaCidadeQueEsteve">Última Cidade que Esteve</label>
+                        <input type="text" class="form-control" id="ultimaCidadeQueEsteve" th:field="*{ultimaCidadeQueEsteve}">
+                        <div th:if="${#fields.hasErrors('ultimaCidadeQueEsteve')}" th:errors="*{ultimaCidadeQueEsteve}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tempoUltimaCidade">Tempo na Última Cidade</label>
+                        <input type="text" class="form-control" id="tempoUltimaCidade" th:field="*{tempoUltimaCidade}">
+                        <div th:if="${#fields.hasErrors('tempoUltimaCidade')}" th:errors="*{tempoUltimaCidade}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="objetivoAcolhimento">Objetivo do Acolhimento</label>
+                        <input type="text" class="form-control" id="objetivoAcolhimento" th:field="*{objetivoAcolhimento}">
+                        <div th:if="${#fields.hasErrors('objetivoAcolhimento')}" th:errors="*{objetivoAcolhimento}" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dataIngresso">Data de Ingresso</label>
+                        <input type="date" class="form-control" id="dataIngresso" th:field="*{dataIngresso}">
+                        <div th:if="${#fields.hasErrors('dataIngresso')}" th:errors="*{dataIngresso}" class="text-danger"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dataSaida">Data de Saída</label>
+                        <input type="date" class="form-control" id="dataSaida" th:field="*{dataSaida}">
+                        <div th:if="${#fields.hasErrors('dataSaida')}" th:errors="*{dataSaida}" class="text-danger"></div>
+                    </div>
+
+                    <div class="card-footer">
+                        <a th:href="@{/cadastroAcolhido/listar}" class="btn btn-secondary">Cancelar</a>
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()">Voltar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<script th:inline="javascript">
+    let currentStep = 1;
+    const totalSteps = 6;
+
+    function showStep(step) {
+        document.querySelectorAll('.step').forEach(el => el.classList.add('d-none'));
+        const currentStepElement = document.getElementById(`step${step}`);
+        if (currentStepElement) {
+            currentStepElement.classList.remove('d-none');
+            // Rola para o topo para que o usuário veja a mensagem de erro/o formulário
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    function nextStep() {
+        if (currentStep < totalSteps) {
+            currentStep++;
+            showStep(currentStep);
+        }
+    }
+
+    function prevStep() {
+        if (currentStep > 1) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    }
+
+    function calcularIdade() {
+        const dataNascInput = document.getElementById('dataNascimento');
+        const idadeInput = document.getElementById('idade');
+        if (!dataNascInput || !idadeInput) return;
+        const dataNascimento = new Date(dataNascInput.value);
+        if (dataNascInput.value) {
+            const hoje = new Date();
+            let idade = hoje.getFullYear() - dataNascimento.getFullYear();
+            const mes = hoje.getMonth() - dataNascimento.getMonth();
+            if (mes < 0 || (mes === 0 && hoje.getDate() < dataNascimento.getDate())) idade--;
+            idadeInput.value = idade;
+        } else {
+            idadeInput.value = '';
+        }
+    }
+
+    function toggleCamposCondicionais() {
+        const estadoCivil = document.getElementById('estadoCivil');
+        const divNomeConjuge = document.getElementById('divNomeConjuge');
+        if (estadoCivil && divNomeConjuge) {
+            if (estadoCivil.value === 'Casado' || estadoCivil.value === 'UniaoEstavel') {
+                divNomeConjuge.style.display = 'block';
+            } else {
+                divNomeConjuge.style.display = 'none';
+                document.getElementById('nomeConjuge').value = '';
+            }
+        }
+
+        const simFilho = document.querySelector('input[name="filho"][value="Sim"]');
+        const divQuantidadeFilhos = document.getElementById('divQuantidadeFilhos');
+        if (divQuantidadeFilhos) {
+            if (simFilho && simFilho.checked) {
+                divQuantidadeFilhos.style.display = 'block';
+            } else {
+                divQuantidadeFilhos.style.display = 'none';
+                document.getElementById('quantidadeFilhos').value = '';
+            }
+        }
+
+        const beneficioSelect = document.getElementById('beneficioSocial');
+        const divQualBeneficio = document.getElementById('divQualBeneficio');
+        if (beneficioSelect && divQualBeneficio) {
+            if (beneficioSelect.value === 'Sim') {
+                divQualBeneficio.style.display = 'block';
+            } else {
+                divQualBeneficio.style.display = 'none';
+                document.getElementById('qualBeneficio').value = '';
+            }
+        }
+
+        const medicamentoSelect = document.getElementById('medicamentoControlado');
+        const divQualMedicamento = document.getElementById('divQualMedicamento');
+        if (medicamentoSelect && divQualMedicamento) {
+            if (medicamentoSelect.value === 'Sim') {
+                divQualMedicamento.style.display = 'block';
+            } else {
+                divQualMedicamento.style.display = 'none';
+                document.getElementById('qualMedicamento').value = '';
+            }
+        }
+
+        const usaDrogasSelect = document.getElementById('usaDrogas');
+        const divQualDroga = document.getElementById('divQualDroga');
+        if (usaDrogasSelect && divQualDroga) {
+            if (usaDrogasSelect.value === 'Sim') {
+                divQualDroga.style.display = 'block';
+            } else {
+                divQualDroga.style.display = 'none';
+                document.getElementById('qualDroga').value = '';
+            }
+        }
+
+        const possuiAlergiaSelect = document.getElementById('possuiAlergia');
+        const divQualAlergia = document.getElementById('divQualAlergia');
+        if (possuiAlergiaSelect && divQualAlergia) {
+            if (possuiAlergiaSelect.value === 'Sim') {
+                divQualAlergia.style.display = 'block';
+            } else {
+                divQualAlergia.style.display = 'none';
+                document.getElementById('qualAlergia').value = '';
+            }
+        }
+
+        const situacaoRua = document.getElementById('situacaoRua');
+        const divTempoRua = document.getElementById('divTempoRua');
+        if (situacaoRua && divTempoRua) {
+            if (situacaoRua.value === 'Sim') {
+                divTempoRua.style.display = 'block';
+            } else {
+                divTempoRua.style.display = 'none';
+                document.getElementById('tempoRua').value = '';
+            }
+        }
+
+        const vinculoFamiliar = document.getElementById('vinculoFamiliar');
+        const divVinculoFamiliarQuem = document.getElementById('divVinculoFamiliarQuem');
+        const divCidadeVinculoFamiliar = document.getElementById('divCidadeVinculoFamiliar');
+        if (vinculoFamiliar && divVinculoFamiliarQuem && divCidadeVinculoFamiliar) {
+            if (vinculoFamiliar.value === 'Sim') {
+                divVinculoFamiliarQuem.style.display = 'block';
+                divCidadeVinculoFamiliar.style.display = 'block';
+            } else {
+                divVinculoFamiliarQuem.style.display = 'none';
+                divCidadeVinculoFamiliar.style.display = 'none';
+                document.getElementById('vinculoFamiliarQuem').value = '';
+                document.getElementById('cidadeVinculoFamiliar').value = '';
+            }
+        }
+
+        const servicoAcolhimento = document.getElementById('servicoAcolhimento');
+        const divVezesAcolhido = document.getElementById('divVezesAcolhido');
+        if (servicoAcolhimento && divVezesAcolhido) {
+            if (servicoAcolhimento.value === 'Sim') {
+                divVezesAcolhido.style.display = 'block';
+            } else {
+                divVezesAcolhido.style.display = 'none';
+                document.getElementById('vezesAcolhido').value = '';
+            }
+        }
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const stepWithError = [[${stepWithError}]] || 1;
+
+        if (stepWithError > 0) {
+            currentStep = stepWithError;
+        }
+
+        showStep(currentStep);
+
+        calcularIdade();
+        toggleCamposCondicionais();
+
+        document.getElementById('dataNascimento')?.addEventListener('change', calcularIdade);
+
+        ['estadoCivil', 'beneficioSocial', 'medicamentoControlado', 'usaDrogas', 'possuiAlergia',
+         'situacaoRua', 'vinculoFamiliar', 'servicoAcolhimento'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('change', toggleCamposCondicionais);
+        });
+
+        document.querySelectorAll('input[name="filho"]').forEach(el =>
+            el.addEventListener('change', toggleCamposCondicionais)
+        );
+    });
+</script>
+</body>
+</html>

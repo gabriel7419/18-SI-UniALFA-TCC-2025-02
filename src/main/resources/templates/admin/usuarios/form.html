@@ -1,39 +1,72 @@
+<!-- Formulário de usuário (novo ou edição) -->
 <!DOCTYPE html>
+<!-- Puxa o layout principal -->
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+    th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
 <head>
-    <title>Cadastro de Usuário - AlberguePro</title>
+    <title>Formulário de Usuário</title>
 </head>
 <body>
     <section>
         <div class="card card-primary">
-        <div class="card-header">
-            <h3 class="card-title">Administrar Usuários - Cadastro</h3>
-        </div>
-        <form th:action="@{/admin/usuarios/salvar}" th:object="${usuario}" method="post">
-            <input type="hidden" th:field="*{id}" />
+            <div class="card-header card-header-blue">
+                <h3 class="card-title" th:text="${usuario.id == null ? 'Novo Usuário' : 'Editar Usuário'}">Administrar Usuários - Cadastro</h3>
+            </div>
+            <!-- Formulário que manda os dados pra salvar -->
+            <!-- th:object liga o form ao objeto 'usuario' que veio do controller -->
+            <form th:action="@{/admin/usuarios/salvar}" th:object="${usuario}" method="post">
+                <!-- ID escondido, pra saber se é pra editar ou criar -->
+                <input type="hidden" th:field="*{id}" />
 
-            <div class="card-body">
-            <div class="form-group">
-                <label for="username">Usuário</label>
-                <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="Nome do usuário">
-            </div>
-            <div class="form-group">
-                <label for="password">Senha</label>
-                <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Deixe em branco para não alterar">
-            </div>
-            <div class="form-group">
-                <label for="role">Tipo</label>
-                <select class="form-control" id="role" th:field="*{role}">
-                    <option value="USER">Usuário</option>
-                    <option value="ADMIN">Admin</option>
-                </select>
-            </div>
-            <div class="card-footer">
-              <button type="submit" class="btn btn-primary">Salvar</button>
-              <a th:href="@{/admin/usuarios}" class="btn btn-secondary">Cancelar</a>
-            </div>
+                <div class="card-body">
+                    <!-- Campo de usuário -->
+                    <div class="form-group mb-3">
+                        <label for="username">Usuário</label>
+                        <input type="text" class="form-control" id="username" th:field="*{username}" 
+                               placeholder="Insira o nome de usuário."
+                               th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''">
+                        <div th:if="${#fields.hasErrors('username')}" class="invalid-feedback">
+                            <span th:each="err : ${#fields.errors('username')}" th:text="${err}"></span>
+                        </div>
+                    </div>
+                    <!-- Campo de senha -->
+                    <div class="form-group mb-3">
+                        <label for="password">Senha</label>
+                        <input type="password" class="form-control" id="password" th:field="*{password}" 
+                               th:placeholder="${usuario.id == null ? 'Insira uma senha segura.' : 'Deixe em branco para manter a senha atual.'}"
+                               th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''">
+                        <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">
+                            <span th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
+                        </div>
+                    </div>
+                    <!-- Seletor de tipo (role) -->
+                    <div class="form-group mb-3">
+                        <label>Tipo</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="roleUser" th:field="*{role}" value="USER"
+                                   th:classappend="${#fields.hasErrors('role')} ? 'is-invalid' : ''">
+                            <label class="form-check-label" for="roleUser">Usuário - Acesso Básico</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="roleAdmin" th:field="*{role}" value="ADMIN"
+                                   th:classappend="${#fields.hasErrors('role')} ? 'is-invalid' : ''">
+                            <label class="form-check-label" for="roleAdmin">Administrador - Acesso Completo</label>
+                        </div>
+                        <div th:if="${#fields.hasErrors('role')}" class="invalid-feedback d-block">
+                            <span th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Botões de Salvar e Cancelar -->
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <a th:href="@{/admin/usuarios}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
         </div>
     </section>
+<script>
+
+</script>
 </body>
 </html>

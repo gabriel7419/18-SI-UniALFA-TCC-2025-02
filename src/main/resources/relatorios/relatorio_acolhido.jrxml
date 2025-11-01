@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+                                  http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="relatorio_acolhidos" pageWidth="842" pageHeight="595" columnWidth="800"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d1f2e3a4-b5c6-7890-1234-abcdef123456">
+
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+
+    <queryString language="csv"><![CDATA[]]></queryString>
+
+    <field name="id" class="java.lang.Long"/>
+    <field name="nome" class="java.lang.String"/>
+    <field name="dataNascimento" class="java.time.LocalDate"/>
+    <field name="idade" class="java.lang.Integer"/>
+    <field name="sexo" class="java.lang.String"/>
+    <field name="naturalidade" class="java.lang.String"/>
+    <field name="rg" class="java.lang.String"/>
+    <field name="cpf" class="java.lang.String"/>
+    <field name="dataIngresso" class="java.time.LocalDate"/>
+    <field name="dataSaida" class="java.time.LocalDate"/>
+
+    <title>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="800" height="50"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="18" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Relatório de Acolhidos]]></text>
+            </staticText>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="27">
+            <staticText>
+                <reportElement x="0" y="0" width="35" height="27"/>
+                <box><pen lineWidth="1"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <text><![CDATA[ID]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="35" y="0" width="210" height="27"/>
+                <box><pen lineWidth="1"/></box>
+                <textElement textAlignment="Left" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <text><![CDATA[   Nome]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="245" y="0" width="75" height="27"/>
+                <box><pen lineWidth="1"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <text><![CDATA[Nascimento]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="320" y="0" width="35" height="27"/>
+                <box><pen lineWidth="1"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <text><![CDATA[Idade]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="355" y="0" width="55" height="27"/>
+                <box><pen lineWidth="1"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <text><![CDATA[Sexo]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="410" y="0" width="100" height="27"/>
+                <box><pen lineWidth="1"/></box>
+                <textElement textAlignment="Left" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <text><![CDATA[   Naturalidade]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="510" y="0" width="70" height="27"/>
+                <box><pen lineWidth="1"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <text><![CDATA[RG]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="580" y="0" width="80" height="27"/>
+                <box><pen lineWidth="1"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <text><![CDATA[CPF]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="660" y="0" width="75" height="27"/>
+                <box><pen lineWidth="1"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <text><![CDATA[Entrada]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="735" y="0" width="75" height="27"/>
+                <box><pen lineWidth="1"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <text><![CDATA[Saída]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="27">
+            <textField>
+                <reportElement x="0" y="0" width="35" height="27"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle" textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+            </textField>
+
+            <textField isStretchWithOverflow="true">
+                <reportElement x="35" y="0" width="210" height="27"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle" textAlignment="Left"/>
+                <textFieldExpression><![CDATA["   " + $F{nome}]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="dd/MM/yyyy">
+                <reportElement x="245" y="0" width="75" height="27"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle" textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{dataNascimento} != null ? java.util.Date.from($F{dataNascimento}.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()) : null]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="320" y="0" width="35" height="27"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle" textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{idade}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="355" y="0" width="55" height="27"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle" textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{sexo}]]></textFieldExpression>
+            </textField>
+
+            <textField isStretchWithOverflow="true">
+                <reportElement x="410" y="0" width="100" height="27"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle" textAlignment="Left"/>
+                <textFieldExpression><![CDATA["   " + $F{naturalidade}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="510" y="0" width="70" height="27"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle" textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{rg}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="580" y="0" width="80" height="27"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle" textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{cpf}]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="dd/MM/yyyy">
+                <reportElement x="660" y="0" width="75" height="27"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle" textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{dataIngresso} != null ? java.util.Date.from($F{dataIngresso}.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()) : null]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="dd/MM/yyyy">
+                <reportElement x="735" y="0" width="75" height="27"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle" textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{dataSaida} != null ? java.util.Date.from($F{dataSaida}.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()) : null]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+</jasperReport>

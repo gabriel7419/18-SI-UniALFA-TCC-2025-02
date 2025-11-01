@@ -1,48 +1,82 @@
+<!-- Tela de lista de usuários -->
 <!DOCTYPE html>
+<!-- Puxa o layout principal -->
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
 <head>
-    <title>Gerenciar Usuários - AlberguePro</title>
+    <title>Gerenciamento de Usuários</title>
 </head>
 <body>
     <section>
+        <!-- Mensagem de erro -->
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <!-- Botão pra criar usuário novo -->
         <div class="mb-3">
             <a th:href="@{/admin/usuarios/novo}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Novo Usuário
             </a>
         </div>
 
-        <div class="card">
-            <div class="card-header">
+        <!-- Tabela de usuários -->
+        <div class="card card-primary">
+            <div class="card-header card-header-blue">
                 <h3 class="card-title">Lista de Usuários</h3>
             </div>
             <div class="card-body">
+                <!-- Se não tiver usuário, mostra isso -->
                 <div th:if="${#lists.isEmpty(usuarios)}" class="alert alert-info">
                     Nenhum usuário cadastrado.
                 </div>
 
-                <table class="table table-bordered" th:if="${not #lists.isEmpty(usuarios)}">
+                <!-- Tabela só aparece se tiver usuário -->
+                <table class="table table-bordered table-hover" th:if="${not #lists.isEmpty(usuarios)}">
                     <thead>
                         <tr>
-                            <th>Código</th>
+                            <th>ID</th>
                             <th>Usuário</th>
                             <th>Tipo</th>
-                            <th>Ações</th>
+                            <th>Status</th>
+                            <th>Data de Criação</th>
+                            <th style="width: 150px;">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- Loop pra mostrar cada usuário -->
                         <tr th:each="usuario : ${usuarios}">
                             <td th:text="${usuario.id}">1</td>
                             <td th:text="${usuario.username}">Admin</td>
                             <td th:text="${usuario.role}">ADMIN</td>
                             <td>
-                                <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-warning btn-sm">
+                                <!-- Badge de status Ativo/Inativo -->
+                                <span th:if="${usuario.ativo}" class="badge bg-success">Ativo</span>
+                                <span th:unless="${usuario.ativo}" class="badge bg-danger">Inativo</span>
+                            </td>
+                            <td th:text="${usuario.dataCriacao != null ? #temporals.format(usuario.dataCriacao, 'dd/MM/yyyy HH:mm') : 'N/A'}">01/01/2025 10:00</td>
+                            <td>
+                                <!-- Botão de ativar/desativar -->
+                                <form th:action="@{/admin/usuarios/toggle/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">
+                                    <button type="submit"
+                                            th:classappend="${usuario.ativo ? 'btn-outline-success' : 'btn-outline-danger'}"
+                                            class="btn btn-sm"
+                                            style="width: 45px;"
+                                            th:title="${usuario.ativo ? 'Desativar' : 'Ativar'}">
+                                        <i th:classappend="${usuario.ativo ? 'fas fa-toggle-off' : 'fas fa-toggle-on'}"></i>
+                                    </button>
+                                </form>
+                                <!-- Botão de editar -->
+                                <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-warning btn-sm" title="Editar">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                
+                                <!-- Botão de excluir com confirmação -->
                                 <form th:action="@{/admin/usuarios/excluir/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">
                                     <button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Tem certeza que deseja excluir este usuário?');">
+                                            onclick="return confirm('Tem certeza que deseja excluir este usuário?');" title="Excluir">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -53,5 +87,8 @@
             </div>
         </div>
     </section>
+<script>
+
+</script>
 </body>
 </html>

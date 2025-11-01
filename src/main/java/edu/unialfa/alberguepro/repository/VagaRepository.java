@@ -1,0 +1,37 @@
+package edu.unialfa.alberguepro.repository;
+
+import edu.unialfa.alberguepro.model.Vaga;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface VagaRepository extends JpaRepository<Vaga, Long>  {
+    long countByAcolhidoIsNotNullAndDataSaidaIsNull();
+    long countByAcolhidoIsNull();
+
+    @Query("SELECT v.leito.quarto.numeroQuarto, COUNT(v) " +
+            "FROM Vaga v " +
+            "WHERE v.acolhido IS NOT NULL AND v.dataSaida IS NULL " +
+            "GROUP BY v.leito.quarto.numeroQuarto")
+    List<Object[]> countOccupiedBedsByRoom();
+
+    @Query("SELECT COUNT(DISTINCT v.acolhido.id) FROM Vaga v " +
+            "WHERE v.acolhido IS NOT NULL AND v.dataSaida IS NULL")
+    long countDistinctAcolhidosAtivos();
+
+    @Query(value = "SELECT MONTH(data_entrada) as mes, YEAR(data_entrada) as ano, COUNT(*) as qtd " +
+            "FROM vaga " +
+            "WHERE data_entrada >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) " +
+            "GROUP BY YEAR(data_entrada), MONTH(data_entrada) " +
+            "ORDER BY ano, mes", nativeQuery = true)
+    List<Object[]> countEntradasUltimos6Meses();
+
+    @Query(value = "SELECT MONTH(data_saida) as mes, YEAR(data_saida) as ano, COUNT(*) as qtd " +
+            "FROM vaga " +
+            "WHERE data_saida IS NOT NULL AND data_saida >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) " +
+            "GROUP BY YEAR(data_saida), MONTH(data_saida) " +
+            "ORDER BY ano, mes", nativeQuery = true)
+    List<Object[]> countSaidasUltimos6Meses();
+}

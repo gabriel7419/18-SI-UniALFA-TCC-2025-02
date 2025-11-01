@@ -1,0 +1,32 @@
+<!-- Página de erro genérica -->
+<!DOCTYPE html>
+<!-- Puxa o layout principal -->
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
+<head>
+</head>
+<body>
+<section>
+    <div class="error-page">
+        <h2 class="headline text-danger">Erro</h2>
+        <div class="error-content">
+            <h3><i class="fas fa-exclamation-triangle text-danger"></i> Oops! Algo deu errado.</h3>
+            <p>
+                Ocorreu um erro inesperado.
+                Por favor, tente novamente mais tarde ou volte para a página inicial.
+            </p>
+            <!-- Detalhes do erro-->
+            <p>
+                <b>Detalhes do erro (para desenvolvimento):</b>
+                <em th:text="${exception.message}">Mensagem do Erro</em>
+            </p>
+            <!-- Botão pra voltar pra home -->
+            <a th:href="@{/}" class="btn btn-primary">Voltar para a Página Inicial</a>
+        </div>
+    </div>
+</section>
+<script>
+
+</script>
+</body>
+</html>

@@ -1,26 +1,510 @@
+<!-- Página inicial (Dashboard) -->
 <!DOCTYPE html>
+<!-- Puxa o layout principal -->
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout (~{::title/text()}, ~{::section})}">
-<head>
-    <title>Dashboard - AlberguePro</title>
-</head>
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
 <body>
-    <section>
-        <div class="row">
-            <div class="col-lg-3 col-6">
+<section>
+    <!-- Linha de Caixas de Informação -->
+    <div class="row mb-2">
+        <!-- Acolhidos Ativos -->
+        <div class="col-lg-3 col-6 mb-2">
             <div class="small-box bg-info">
-              <div class="inner">
-                <h3>150</h3>
-
-                <p>Acolhidos</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-bag"></i>
-              </div>
-              <a href="#" class="small-box-footer">Mais info <i class="fas fa-arrow-circle-right"></i></a>
+                <div class="inner">
+                    <h3 th:text="${dashboard.totalAcolhidos}">0</h3>
+                    <p>Acolhidos Ativos</p>
+                </div>
+                <div class="icon"><i class="fas fa-users"></i></div>
             </div>
-          </div>
         </div>
-    </section>
+
+        <!-- Leitos -->
+        <div class="col-lg-3 col-6 mb-2">    
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3 th:text="${dashboard.leitosLivres} + ' / ' + ${dashboard.totalLeitos}">0 / 0</h3>
+                    <p>Leitos Livres</p>
+                </div>
+                <div class="icon"><i class="fas fa-bed"></i></div>
+            </div>
+        </div>
+
+        <!-- Quartos -->
+        <div class="col-lg-3 col-6 mb-2">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3 th:text="${dashboard.quartosLivres} + ' / ' + ${dashboard.totalQuartos}">0 / 0</h3>
+                    <p>Quartos Livres</p>
+                </div>
+                <div class="icon"><i class="fas fa-door-open"></i></div>
+            </div>
+        </div>
+
+        <!-- Total de Usuários -->
+        <div class="col-lg-3 col-6 mb-2">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3 th:text="${dashboard.totalUsuarios}">0</h3>
+                    <p>Usuários do Sistema</p>
+                </div>
+                <div class="icon"><i class="fas fa-user-shield"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Linha dos Gráficos -->
+    <div class="row mb-2">
+        <!-- Coluna 1 - Patrimônio e Estoque -->
+        <div class="col-lg-4 mb-2">
+            <!-- Gráfico de Patrimônio -->
+            <div class="card card-primary card-outline mb-2">
+                <div class="card-header">
+                    <h3 class="card-title">Patrimônio por Status</h3>
+                </div>
+                <div class="card-body">
+                    <div id="chartPatrimonio" style="height: 260px;"></div>
+                    <div th:if="${#maps.isEmpty(dashboard.patrimonioPorStatus)}" class="text-center p-3">
+                        <p class="text-muted">Nenhum patrimônio cadastrado</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico de Estoque Baixo -->
+            <div class="card card-danger card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">Estoque Baixo (Top 5)</h3>
+                </div>
+                <div class="card-body">
+                    <div id="chartEstoque" style="height: 260px;"></div>
+                    <div th:if="${produtosBaixoEstoque.source.isEmpty()}" class="text-center p-3">
+                        <p class="text-muted">Nenhum produto com estoque baixo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna 2 - Leitos -->
+        <div class="col-lg-4 mb-2">
+            <!-- Gráfico de Leitos -->
+            <div class="card card-info card-outline" style="height: calc(100% - 0.5rem);">
+                <div class="card-header">
+                    <h3 class="card-title">Situação dos Leitos</h3>
+                </div>
+                <div class="card-body">
+                    <div id="chartLeitos" style="height: 520px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna 3 - Evolução de Acolhimentos -->
+        <div class="col-lg-4 mb-2">
+            <!-- Gráfico de Evolução -->
+            <div class="card card-success card-outline" style="height: calc(100% - 0.5rem);">
+                <div class="card-header">
+                    <h3 class="card-title">Evolução de Acolhimentos (6 meses)</h3>
+                </div>
+                <div class="card-body">
+                    <div id="chartEvolucao" style="height: 520px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // Dados do Patrimônio
+        var patrimonioData = /*[[${dashboard.patrimonioPorStatus}]]*/ {};
+        
+        if (Object.keys(patrimonioData).length > 0) {
+            var patrimonioLabels = [];
+            var patrimonioValues = [];
+            var patrimonioColors = [];
+            
+            // Paleta completa de cores para status de patrimônio
+            var statusColors = {
+                'Em Uso': '#3498db',           // Azul suave
+                'Disponivel': '#2ecc71',       // Verde vibrante
+                'Em Manutencao': '#f39c12',    // Laranja/Amarelo
+                'Baixado': '#e74c3c',          // Vermelho
+            };
+            
+            // Cores de fallback caso status não esteja no mapa
+            var fallbackColors = ['#8e44ad', '#c0392b', '#27ae60', '#d35400', '#2980b9', '#f1c40f'];
+            var fallbackIndex = 0;
+            
+            for (var key in patrimonioData) {
+                patrimonioLabels.push(key);
+                patrimonioValues.push(patrimonioData[key]);
+                
+                // Usar cor definida ou fallback
+                if (statusColors[key]) {
+                    patrimonioColors.push(statusColors[key]);
+                } else {
+                    patrimonioColors.push(fallbackColors[fallbackIndex % fallbackColors.length]);
+                    fallbackIndex++;
+                }
+            }
+            
+            var optionsPatrimonio = {
+                series: patrimonioValues,
+                chart: {
+                    type: 'donut',
+                    height: 260,
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                    toolbar: {
+                        show: false
+                    }
+                },
+                labels: patrimonioLabels,
+                colors: patrimonioColors,
+                legend: {
+                    position: 'bottom',
+                    fontSize: '12px',
+                    fontWeight: 500,
+                    markers: {
+                        width: 10,
+                        height: 10,
+                        radius: 3
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function(val, opts) {
+                        return opts.w.config.series[opts.seriesIndex];
+                    },
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        colors: ['#fff']
+                    },
+                    dropShadow: {
+                        enabled: false
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '60%',
+                            labels: {
+                                show: true,
+                                name: {
+                                    show: true,
+                                    fontSize: '14px',
+                                    fontWeight: 600,
+                                    color: '#343a40'
+                                },
+                                value: {
+                                    show: true,
+                                    fontSize: '20px',
+                                    fontWeight: 700,
+                                    color: '#007bff'
+                                },
+                                total: {
+                                    show: true,
+                                    label: 'Total',
+                                    fontSize: '12px',
+                                    fontWeight: 600,
+                                    color: '#6c757d',
+                                    formatter: function (w) {
+                                        return w.globals.seriesTotals.reduce((a, b) => a + b, 0)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                tooltip: {
+                    theme: 'light',
+                    y: {
+                        formatter: function(val) {
+                            return val + " itens";
+                        }
+                    }
+                }
+            };
+            
+            var chartPatrimonio = new ApexCharts(document.querySelector("#chartPatrimonio"), optionsPatrimonio);
+            chartPatrimonio.render();
+        }
+        
+        // Dados dos Leitos
+        var leitosOcupados = /*[[${dashboard.leitosOcupados}]]*/ 0;
+        var leitosLivres = /*[[${dashboard.leitosLivres}]]*/ 0;
+        
+        var optionsLeitos = {
+            series: [{
+                name: 'Quantidade',
+                data: [leitosOcupados, leitosLivres]
+            }],
+            chart: {
+                type: 'bar',
+                height: 520,
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                    distributed: true,
+                    barHeight: '40%',
+                    dataLabels: {
+                        position: 'top'
+                    }
+                }
+            },
+            colors: ['#dc3545', '#28a745'],
+            dataLabels: {
+                enabled: true,
+                offsetX: 30,
+                style: {
+                    fontSize: '13px',
+                    fontWeight: 'bold',
+                    colors: ['#fff']
+                }
+            },
+            xaxis: {
+                categories: ['Ocupados', 'Livres'],
+                title: {
+                    text: 'Quantidade',
+                    style: {
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        color: '#343a40'
+                    }
+                },
+                labels: {
+                    style: {
+                        colors: '#6c757d',
+                        fontSize: '11px'
+                    }
+                }
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        colors: '#6c757d',
+                        fontSize: '12px',
+                        fontWeight: 500
+                    }
+                }
+            },
+            legend: {
+                show: false
+            },
+            tooltip: {
+                theme: 'light',
+                y: {
+                    formatter: function(val) {
+                        return val + " leitos";
+                    }
+                }
+            },
+            grid: {
+                borderColor: '#e9ecef',
+                strokeDashArray: 3
+            }
+        };
+        
+        var chartLeitos = new ApexCharts(document.querySelector("#chartLeitos"), optionsLeitos);
+        chartLeitos.render();
+        
+        // Dados do Estoque
+        var produtosEstoque = /*[[${produtosBaixoEstoque.source}]]*/ [];
+        
+        if (produtosEstoque.length > 0) {
+            // Pegar apenas os 5 primeiros produtos para economia de espaço
+            var top5Produtos = produtosEstoque.slice(0, 5);
+            var produtosNomes = [];
+            var produtosQuantidades = [];
+            
+            top5Produtos.forEach(function(produto) {
+                produtosNomes.push(produto.nome);
+                produtosQuantidades.push(produto.quantidade);
+            });
+            
+            var optionsEstoque = {
+                series: [{
+                    name: 'Quantidade',
+                    data: produtosQuantidades
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 260,
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                    toolbar: {
+                        show: false
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: true,
+                        barHeight: '60%',
+                        dataLabels: {
+                            position: 'top'
+                        }
+                    }
+                },
+                colors: ['#dc3545'],
+                dataLabels: {
+                    enabled: true,
+                    offsetX: 25,
+                    style: {
+                        fontSize: '11px',
+                        fontWeight: 'bold',
+                        colors: ['#fff']
+                    }
+                },
+                xaxis: {
+                    categories: produtosNomes,
+                    title: {
+                        text: 'Quantidade',
+                        style: {
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            color: '#343a40'
+                        }
+                    },
+                    labels: {
+                        style: {
+                            colors: '#6c757d',
+                            fontSize: '11px'
+                        }
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            colors: '#6c757d',
+                            fontSize: '11px'
+                        },
+                        maxWidth: 120
+                    }
+                },
+                tooltip: {
+                    theme: 'light',
+                    y: {
+                        formatter: function(val) {
+                            return val + " unidades";
+                        }
+                    }
+                },
+                grid: {
+                    borderColor: '#e9ecef',
+                    strokeDashArray: 3
+                }
+            };
+            
+            var chartEstoque = new ApexCharts(document.querySelector("#chartEstoque"), optionsEstoque);
+            chartEstoque.render();
+        }
+        
+        // Gráfico de Evolução de Acolhimentos
+        var mesesEvolucao = /*[[${dashboard.mesesEvolucao}]]*/ [];
+        var entradasEvolucao = /*[[${dashboard.entradasEvolucao}]]*/ [];
+        var saidasEvolucao = /*[[${dashboard.saidasEvolucao}]]*/ [];
+        
+        var optionsEvolucao = {
+            series: [{
+                name: 'Entradas',
+                data: entradasEvolucao
+            }, {
+                name: 'Saídas',
+                data: saidasEvolucao
+            }],
+            chart: {
+                type: 'line',
+                height: 520,
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                toolbar: {
+                    show: false
+                },
+                zoom: {
+                    enabled: false
+                }
+            },
+            colors: ['#28a745', '#dc3545'],
+            stroke: {
+                width: 3,
+                curve: 'smooth'
+            },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '11px',
+                    fontWeight: 'bold'
+                }
+            },
+            markers: {
+                size: 5,
+                strokeWidth: 2,
+                hover: {
+                    size: 7
+                }
+            },
+            xaxis: {
+                categories: mesesEvolucao,
+                title: {
+                    text: 'Período',
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        color: '#343a40'
+                    }
+                },
+                labels: {
+                    style: {
+                        colors: '#6c757d',
+                        fontSize: '11px'
+                    }
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Quantidade',
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        color: '#343a40'
+                    }
+                },
+                labels: {
+                    style: {
+                        colors: '#6c757d',
+                        fontSize: '11px'
+                    }
+                }
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'center',
+                fontSize: '12px',
+                fontWeight: 500,
+                markers: {
+                    width: 10,
+                    height: 10,
+                    radius: 3
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                y: {
+                    formatter: function(val) {
+                        return val + " acolhidos";
+                    }
+                }
+            },
+            grid: {
+                borderColor: '#e9ecef',
+                strokeDashArray: 3
+            }
+        };
+        
+        var chartEvolucao = new ApexCharts(document.querySelector("#chartEvolucao"), optionsEvolucao);
+        chartEvolucao.render();
+    });
+</script>
 </body>
 </html>

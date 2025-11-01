@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
+<head>
+    <title>Lista de Acolhidos</title>
+</head>
+<body>
+<section>
+    <div class="mb-3">
+        <a th:href="@{/cadastroAcolhido}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Novo Acolhido
+        </a>
+    </div>
+
+    <form th:action="@{/cadastroAcolhido/listar}" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="filtro" class="form-control" placeholder="Buscar acolhido por nome...">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Acolhidos Cadastrados</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="mb-3 d-flex justify-content-end">
+                <a th:href="@{/cadastroAcolhido/relatorio/pdf}" class="btn btn-danger mr-2" target="_blank">
+                    <i class="fas fa-file-pdf"></i> PDF
+                </a>
+                <a th:href="@{/cadastroAcolhido/relatorio/xlsx}" class="btn btn-success" target="_blank">
+                    <i class="fas fa-file-excel"></i> XLSX
+                </a>
+            </div>
+
+            <div th:if="${#lists.isEmpty(acolhidos)}">
+                <div th:if="${filtro != null and filtro.length() > 0}"
+                     id="searchFailedAlert"
+                     class="alert text-center mx-auto mb-4 p-3"
+                     style="max-width: 450px; background-color: rgba(255, 193, 7, 0.5); color: #856404; border: 1px solid #ffeeba; border-radius: 0.5rem; font-weight: 500;">
+                    <i class="fas fa-exclamation-triangle mr-2"></i> Nenhum acolhido encontrado com este nome.
+                    <p class="mt-2 mb-0" style="font-size: 0.8em;">Retornando à lista completa em <span id="countdown">3</span> segundos...</p>
+                </div>
+
+                <div th:unless="${filtro != null and filtro.length() > 0}" class="alert alert-info text-center">
+                    Nenhum acolhido cadastrado.
+                </div>
+            </div>
+
+            <table class="table table-bordered" th:if="${not #lists.isEmpty(acolhidos)}">
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Idade</th>
+                    <th>Sexo</th>
+                    <th>Data de Ingresso</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="acolhido : ${acolhidos}">
+                    <td th:text="${acolhido.nome}">João da Silva</td>
+                    <td th:text="${acolhido.idade}">35</td>
+                    <td th:text="${acolhido.sexo}">Masculino</td>
+                    <td th:text="${#temporals.format(acolhido.dataIngresso, 'dd/MM/yyyy')}">10/09/2025</td>
+                    <td>
+                        <a th:href="@{/cadastroAcolhido/editar/{id}(id=${acolhido.id})}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a th:href="@{/cadastroAcolhido/remover/{id}(id=${acolhido.id})}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Tem certeza que deseja remover o acolhido ' + '${acolhido.nome}' + '?');">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<script th:inline="javascript">
+    const filtro = /*[[${filtro}]]*/ null;
+    const acolhidosVazios = /*[[${#lists.isEmpty(acolhidos)}]]*/ false;
+
+    const alertElement = document.getElementById('searchFailedAlert');
+
+    if (acolhidosVazios && filtro && filtro.length > 0 && alertElement) {
+
+        let seconds = 3;
+        const countdownElement = document.getElementById('countdown');
+
+        const updateCountdown = () => {
+            if (countdownElement) {
+                countdownElement.textContent = seconds;
+            }
+        };
+
+        const interval = setInterval(() => {
+            seconds--;
+            updateCountdown();
+
+            if (seconds <= 0) {
+                clearInterval(interval);
+                window.location.href = '/cadastroAcolhido/listar';
+            }
+        }, 1000);
+
+        updateCountdown();
+    }
+</script>
+</body>
+</html>

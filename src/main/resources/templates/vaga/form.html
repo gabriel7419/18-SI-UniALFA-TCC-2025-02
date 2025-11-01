@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
+<head>
+    <title>Cadastro de Vaga</title>
+</head>
+<body>
+<section>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Gestão de Vagas - Cadastrar</h3>
+        </div>
+
+        <form th:action="@{/vaga/salvar}" th:object="${vaga}" method="post">
+
+            <input type="hidden" th:field="*{id}">
+
+            <div class="card-body">
+
+                <div class="form-group">
+                    <label>Acolhido</label>
+                    <select class="form-control" th:field="*{acolhido.id}" id="acolhidoSelect">
+                        <option value="">Selecione o Acolhido...</option>
+                        <option th:each="a : ${acolhidos}"
+                                th:value="${a.id}"
+                                th:text="${a.nome}">
+                        </option>
+                    </select>
+                    <div th:if="${#fields.hasErrors('acolhido.id')}" th:errors="*{acolhido.id}"
+                         class="text-danger"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="quarto">Quarto</label>
+                    <select class="form-control" id="quarto">
+                        <option value="">Selecione o Quarto...</option>
+                        <option th:each="q : ${quartos}"
+                                th:value="${q.id}"
+                                th:text="'Quarto ' + ${q.numeroQuarto}"
+                                th:selected="${quartoSelecionadoId != null and quartoSelecionadoId == q.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="leito">Leito</label>
+                    <select class="form-control" id="leito" th:field="*{leito.id}">
+                        <option value="">Selecione o Leito...</option>
+                    </select>
+                    <div th:if="${#fields.hasErrors('leito')}" th:errors="*{leito}" class="text-danger"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataEntrada">Data de Ingresso</label>
+                    <input type="date" class="form-control" id="dataEntrada" th:field="*{dataEntrada}" readonly>
+                    <div th:if="${#fields.hasErrors('dataEntrada')}" th:errors="*{dataEntrada}"
+                         class="text-danger"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataSaida">Data de Saída</label>
+                    <input type="date" class="form-control" id="dataSaida" th:field="*{dataSaida}" readonly>
+                    <div th:if="${#fields.hasErrors('dataSaida')}" th:errors="*{dataSaida}" class="text-danger"></div>
+                </div>
+
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <a th:href="@{/vaga/listar}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const quartoSelect = document.getElementById('quarto');
+        const leitoSelect = document.getElementById('leito');
+
+        // Função para carregar os leitos via AJAX
+        function carregarLeitos(quartoId, leitoSelecionadoId) {
+            // Limpa as opções atuais (exceto "Selecione...")
+            leitoSelect.innerHTML = '<option value="">Selecione o Leito...</option>';
+
+            if (quartoId) {
+                // Requisição AJAX para o endpoint que criamos no Controller
+                fetch('/vaga/leitos/' + quartoId)
+                    .then(response => response.json())
+                    .then(leitos => {
+                        leitos.forEach(leito => {
+                            const option = document.createElement('option');
+                            option.value = leito.id;
+                            option.textContent = 'Leito ' + leito.numeroLeito;
+
+                            // Mantém a seleção em caso de edição ou erro de validação
+                            if (leitoSelecionadoId && leito.id.toString() === leitoSelecionadoId) {
+                                option.selected = true;
+                            }
+                            leitoSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar leitos:', error);
+                        alert('Erro ao carregar os leitos do quarto.');
+                    });
+            }
+        }
+
+        // Variáveis Thymeleaf para o modo de edição
+        const leitoIdSalvo = leitoSelect.value;
+        const quartoIdSalvo = quartoSelect.value;
+
+        // 1. Lógica para a Edição: Se já há um quarto selecionado (vindo do Controller)
+        if (quartoIdSalvo) {
+            // Carrega os leitos do quarto que já está selecionado na abertura da página.
+            carregarLeitos(quartoIdSalvo, leitoIdSalvo);
+        }
+
+        // 2. Lógica para o Cadastro/Mudança: Adiciona o listener de mudança ao select do Quarto
+        quartoSelect.addEventListener('change', function() {
+            const selectedQuartoId = this.value;
+            // Zera o campo de Leito para evitar seleção incorreta
+            leitoSelect.value = "";
+
+            carregarLeitos(selectedQuartoId, null); // Null para não selecionar nada automaticamente
+        });
+
+    });
+
+    /*]]>*/
+
+const acolhidoSelect = document.getElementById('acolhidoSelect'); // Verifique se o ID está no SELECT
+const dataEntradaInput = document.getElementById('dataEntrada'); // ID do input de data de entrada
+const dataSaidaInput = document.getElementById('dataSaida');   // ID do input de data de saída
+
+const formatarDataParaInput = (dataObj) => {
+    if (!dataObj) return '';
+
+    const date = new Date(dataObj);
+
+    if (isNaN(date.getTime())) return '';
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Mês é 0-indexado
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+};
+
+if (acolhidoSelect) {
+    acolhidoSelect.addEventListener('change', function() {
+        const acolhidoId = this.value;
+
+        dataEntradaInput.value = '';
+        dataSaidaInput.value = '';
+
+        if (acolhidoId) {
+            fetch('/vaga/acolhido/datas/' + acolhidoId)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar as datas do acolhido.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data) {
+                        dataEntradaInput.value = data.dataIngresso;
+                        dataSaidaInput.value = data.dataSaida;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar datas:', error);
+                });
+        }
+    });
+}
+
+</script>
+</body>
+</html>

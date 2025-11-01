@@ -1,11 +1,12 @@
 package edu.unialfa.alberguepro.config;
 
-import edu.unialfa.alberguepro.service.JpaUserDetailsService; // IMPORTAR
-import org.springframework.beans.factory.annotation.Autowired; // IMPORTAR
+import edu.unialfa.alberguepro.service.JpaUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider; // IMPORTAR
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider; // IMPORTAR
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,10 +15,17 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableJpaRepositories(basePackages = "edu.unialfa.alberguepro.repository")
 public class SecurityConfig {
 
     @Autowired
     private JpaUserDetailsService jpaUserDetailsService;
+
+    @Autowired
+    private CustomAuthenticationFailureHandler authenticationFailureHandler;
+
+    @Autowired
+    private CustomAuthenticationSuccessListener authenticationSuccessListener;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -37,13 +45,14 @@ public class SecurityConfig {
         http
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/webjars/**", "/login").permitAll()
+                                                .requestMatchers("/webjars/**", "/login", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
+                        .successHandler(authenticationSuccessListener)
+                        .failureHandler(authenticationFailureHandler)
                         .permitAll()
                 )
                 .logout((logout) -> logout
