@@ -412,7 +412,7 @@
                     <!-- Item do menu: cadastroAcolhido (com sub-itens) -->
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-users"></i>
+                            <i class="nav-icon fas fa-id-card"></i>
                             <p>
                                 Gestão de Acolhido
                                 <i class="right fas fa-angle-left"></i>
@@ -463,7 +463,7 @@
                     <!-- Item do menu: Quarto (com sub-itens) -->
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-bed"></i>
+                            <i class="nav-icon fas fa-door-open"></i>
                             <p>
                                 Gestão de Quarto
                                 <i class="right fas fa-angle-left"></i>
@@ -489,7 +489,7 @@
                     <!-- Item do menu: Usuários -->
                     <li class="nav-item">
                         <a th:href="@{/admin/usuarios}" class="nav-link">
-                            <i class="fas fa-user-alt"></i>
+                            <i class="nav-icon fas fa-user-alt"></i>
                             <p>Gerenciar Usuários</p>
                         </a>
                     </li>
@@ -500,17 +500,6 @@
 
     <!-- Onde o conteúdo das outras páginas aparece -->
     <div class="content-wrapper">
-        <!-- Cabeçalho do conteúdo (com o título da página) -->
-        <div class="content-header py-2">
-            <div class="container-fluid">
-                <div class="row mb-1">
-                    <div class="col-sm-6">
-                        <!-- O título da página é injetado aqui -->
-                        <h1 class="m-0" th:text="${title}">Título da Página</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- Seção do conteúdo principal -->
         <section class="content pb-2">
             <div class="container-fluid">
