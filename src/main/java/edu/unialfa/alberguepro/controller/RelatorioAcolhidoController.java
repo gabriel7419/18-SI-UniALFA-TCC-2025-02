@@ -33,20 +33,4 @@ public class RelatorioAcolhidoController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(new InputStreamResource(bis));
     }
-
-
-
-    @GetMapping("/xlsx")
-    public ResponseEntity<InputStreamResource> gerarXlsx() throws IOException {
-        ByteArrayInputStream bis = service.gerarRelatorioXlsx();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=acolhidos.xlsx");
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.parseMediaType(
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .body(new InputStreamResource(bis));
-    }
 }
