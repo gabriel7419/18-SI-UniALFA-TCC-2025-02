@@ -40,8 +40,9 @@ public class ControlePatrimonioController {
             BindingResult result) {
 
         if (result.hasErrors()) {
-            // Retorna à mesma página com os erros de validação
-            return new ModelAndView("patrimonio/form");
+            ModelAndView mv = new ModelAndView("patrimonio/form");
+            mv.addObject("errorMessage", "Há problemas em um dos campos preenchidos, verifique e corrija.");
+            return mv;
         }
 
         // Salva o patrimônio no banco se não houver erros

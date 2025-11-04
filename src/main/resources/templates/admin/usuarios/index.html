@@ -10,12 +10,13 @@
     <section>
         <!-- Mensagem de erro -->
         <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i>
             <span th:text="${errorMessage}"></span>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-
+        
         <!-- Botão pra criar usuário novo -->
         <div class="mb-3">
             <a th:href="@{/admin/usuarios/novo}" class="btn btn-primary">
@@ -26,7 +27,14 @@
         <!-- Tabela de usuários -->
         <div class="card card-primary">
             <div class="card-header card-header-blue">
-                <h3 class="card-title">Lista de Usuários</h3>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title mb-0">Lista de Usuários</h3>
+                    <div class="card-tools">
+                        <a th:href="@{/relatorios/usuarios/pdf}" class="btn btn-danger" target="_blank">
+                            <i class="fas fa-file-pdf"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <!-- Se não tiver usuário, mostra isso -->
@@ -72,6 +80,9 @@
                                 <!-- Botão de editar -->
                                 <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-warning btn-sm" title="Editar">
                                     <i class="fas fa-edit"></i>
+                                </a>
+                                <a th:href="@{/admin/usuarios/alterar-senha/{id}(id=${usuario.id})}" class="btn btn-info btn-sm" title="Alterar senha">
+                                    <i class="fas fa-key"></i>
                                 </a>
                                 <!-- Botão de excluir com confirmação -->
                                 <form th:action="@{/admin/usuarios/excluir/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">

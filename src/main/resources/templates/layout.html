@@ -9,6 +9,333 @@
     <!-- CSS do AdminLTE e FontAwesome -->
     <link rel="stylesheet" th:href="@{/webjars/AdminLTE/3.2.0/dist/css/adminlte.min.css}">
     <link rel="stylesheet" th:href="@{/webjars/AdminLTE/3.2.0/plugins/fontawesome-free/css/all.min.css}">
+    <style>
+        /* Reduzir tamanhos para simular zoom 75% (menos agressivo que 67%) */
+        
+        /* Fonte base menor */
+        body, html {
+            font-size: 13px !important; /* padrão é 14px, agora 75% = ~13px */
+        }
+        
+        /* Ajustar títulos */
+        h1 { font-size: 2rem !important; }
+        h2 { font-size: 1.6rem !important; }
+        h3 { font-size: 1.4rem !important; }
+        h4 { font-size: 1.2rem !important; }
+        h5 { font-size: 1.05rem !important; }
+        h6 { font-size: 0.95rem !important; }
+        
+        /* Cards e boxes menores */
+        .card {
+            margin-bottom: 0.9rem !important;
+        }
+        
+        .card-header {
+            padding: 0.6rem 0.9rem !important;
+        }
+        
+        .card-body {
+            padding: 0.9rem !important;
+        }
+        
+        .card-title {
+            font-size: 1.05rem !important;
+            margin-bottom: 0 !important;
+        }
+        
+        /* Small boxes do dashboard */
+        .small-box {
+            height: auto !important;
+        }
+        
+        .small-box .inner {
+            padding: 0.7rem !important;
+        }
+        
+        .small-box h3 {
+            font-size: 2.2rem !important;
+        }
+        
+        .small-box p {
+            font-size: 0.95rem !important;
+        }
+        
+        .small-box .icon {
+            font-size: 4.5rem !important;
+        }
+        
+        /* Tabelas */
+        .table {
+            font-size: 0.9rem !important;
+        }
+        
+        .table th,
+        .table td {
+            padding: 0.45rem !important;
+        }
+        
+        /* Botões */
+        .btn {
+            padding: 0.35rem 0.7rem !important;
+            font-size: 0.9rem !important;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem !important;
+            font-size: 0.8rem !important;
+        }
+        
+        .btn-lg {
+            padding: 0.45rem 0.9rem !important;
+            font-size: 1.05rem !important;
+        }
+        
+        /* Formulários */
+        .form-control,
+        .form-select {
+            padding: 0.35rem 0.7rem !important;
+            font-size: 0.9rem !important;
+            height: auto !important;
+        }
+        
+        .form-group {
+            margin-bottom: 0.7rem !important;
+        }
+        
+        label {
+            font-size: 0.9rem !important;
+            margin-bottom: 0.25rem !important;
+        }
+        
+        /* Barra lateral - REDUZIDA */
+        .main-sidebar {
+            width: 220px !important; /* aumentado de 200px para 220px */
+        }
+        
+        /* Ajustar content-wrapper para compensar sidebar menor */
+        body:not(.sidebar-collapse) .content-wrapper,
+        body:not(.sidebar-collapse) .main-footer,
+        body:not(.sidebar-collapse) .main-header {
+            margin-left: 220px !important; /* aumentado de 200px para 220px */
+        }
+        
+        /* Quando sidebar está colapsado, usar valores padrão do AdminLTE */
+        body.sidebar-collapse .content-wrapper,
+        body.sidebar-collapse .main-footer,
+        body.sidebar-collapse .main-header {
+            margin-left: 4.6rem !important; /* valor padrão do AdminLTE */
+        }
+        
+        body.sidebar-collapse .main-sidebar {
+            width: 4.6rem !important; /* valor padrão colapsado */
+        }
+        
+        /* Esconder texto do menu quando colapsado */
+        body.sidebar-collapse .nav-sidebar .nav-link p {
+            display: none !important;
+        }
+        
+        /* Esconder setas quando colapsado */
+        body.sidebar-collapse .nav-sidebar .nav-link .right {
+            display: none !important;
+        }
+        
+        /* Centralizar ícones quando colapsado - SEM ANIMAÇÕES */
+        body.sidebar-collapse .nav-sidebar .nav-link {
+            text-align: center !important;
+            padding: 0.5rem !important;
+            justify-content: center !important;
+            display: flex !important;
+            position: static !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+        }
+        
+        body.sidebar-collapse .nav-sidebar .nav-link .nav-icon {
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+            display: inline-block !important;
+            width: auto !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+            position: static !important;
+        }
+        
+        /* Desabilitar TUDO no hover quando colapsado */
+        body.sidebar-collapse .nav-sidebar .nav-link:hover,
+        body.sidebar-collapse .nav-sidebar .nav-link:focus {
+            width: auto !important;
+            overflow: hidden !important;
+            position: static !important;
+            transform: none !important;
+        }
+        
+        body.sidebar-collapse .nav-sidebar .nav-link:hover .nav-icon,
+        body.sidebar-collapse .nav-sidebar .nav-link:focus .nav-icon {
+            transform: none !important;
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+            position: static !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            display: inline-block !important;
+            transition: none !important;
+        }
+        
+        /* Forçar sidebar a não expandir no hover */
+        body.sidebar-collapse .main-sidebar:hover {
+            width: 4.6rem !important;
+        }
+        
+        /* Manter espaçamento correto dos ícones quando expandido */
+        body:not(.sidebar-collapse) .nav-sidebar .nav-link {
+            text-align: left !important;
+            padding: 0.55rem 0.8rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+        }
+        
+        body:not(.sidebar-collapse) .nav-sidebar .nav-link .nav-icon {
+            margin-right: 0.8rem !important;
+            width: 1.4rem !important;
+            display: inline-block !important;
+            text-align: center;
+        }
+        
+        /* Esconder nome da marca quando colapsado */
+        body.sidebar-collapse .brand-text {
+            display: none !important;
+        }
+        
+        /* Garantir transição suave */
+        .main-sidebar,
+        .content-wrapper,
+        .main-header,
+        .main-footer {
+            transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out !important;
+        }
+        
+        /* Menu lateral */
+        .nav-sidebar .nav-link {
+            padding: 0.55rem 0.8rem !important;
+            font-size: 1.05rem !important;
+        }
+        
+        .nav-sidebar .nav-link .nav-icon {
+            font-size: 1.15rem !important;
+            margin-right: 0.6rem !important;
+            width: 1.4rem !important;
+        }
+        
+        /* Setas de dropdown - FORÇAR VISIBILIDADE COM ESPECIFICIDADE MÁXIMA */
+        body:not(.sidebar-collapse) .nav-sidebar .nav-item .nav-link .right,
+        body:not(.sidebar-collapse) .nav-sidebar .nav-item .nav-link p .right,
+        body:not(.sidebar-collapse) .sidebar .nav-sidebar .nav-link .right,
+        body:not(.sidebar-collapse) [data-widget="treeview"] .nav-link .right {
+            font-size: 1rem !important;
+            transition: transform 0.3s ease !important;
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            color: rgba(255, 255, 255, 0.8) !important;
+            margin-left: auto !important;
+        }
+        
+        /* Quando o menu está aberto - rotacionar seta */
+        body:not(.sidebar-collapse) .nav-item.menu-open > .nav-link .right,
+        body:not(.sidebar-collapse) .nav-item.menu-open > .nav-link p .right {
+            transform: rotate(-90deg) !important;
+        }
+        
+        /* Garantir que o link use flexbox */
+        body:not(.sidebar-collapse) .nav-sidebar .nav-link {
+            display: flex !important;
+            align-items: center !important;
+        }
+        
+        /* Garantir que o parágrafo ocupe espaço disponível */
+        body:not(.sidebar-collapse) .nav-sidebar .nav-link p {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+            margin: 0 !important;
+        }
+        
+        .brand-link {
+            padding: 0.8rem 1rem !important;
+            font-size: 1.35rem !important; /* aumentado de 1.25rem para 1.35rem */
+            font-weight: 500 !important;
+        }
+        
+        /* Navbar superior */
+        .main-header {
+            padding: 0 0.9rem !important;
+        }
+        
+        .navbar-nav .nav-link {
+            padding: 0.35rem 0.7rem !important;
+        }
+        
+        /* Footer */
+        .main-footer {
+            padding: 0.7rem !important;
+            font-size: 0.85rem !important;
+        }
+        
+        /* Content wrapper */
+        .content-header {
+            padding: 0.7rem 0 !important;
+        }
+        
+        .content {
+            padding-top: 0.5rem !important;
+        }
+        
+        /* Badges */
+        .badge {
+            padding: 0.25rem 0.45rem !important;
+            font-size: 0.8rem !important;
+        }
+        
+        /* Alerts */
+        .alert {
+            padding: 0.6rem 0.9rem !important;
+            font-size: 0.9rem !important;
+        }
+        
+        /* Input groups */
+        .input-group-text {
+            padding: 0.35rem 0.7rem !important;
+            font-size: 0.9rem !important;
+        }
+        
+        /* Ajuste para submenu (treeview) */
+        .nav-treeview > .nav-item > .nav-link {
+            padding-left: 2.4rem !important;
+            font-size: 0.98rem !important; /* aumentado de 0.9rem para 0.98rem */
+        }
+        
+        .nav-treeview > .nav-item > .nav-link .nav-icon {
+            font-size: 0.9rem !important;
+        }
+        
+        /* Gráficos - ajustar altura */
+        [id^="chart"] {
+            height: auto !important;
+        }
+        /* Toasts */
+        .toast-container { position: fixed; top: 1rem; right: 1rem; z-index: 1060; width: 320px; }
+        .toast-msg { display:flex; align-items:center; gap:.5rem; padding:.6rem .9rem; margin-bottom:.5rem; border-radius:.25rem; box-shadow:0 4px 12px rgba(0,0,0,.15); color:#fff; opacity:.98; }
+        .toast-msg.success { background:#28a745; }
+        .toast-msg.error { background:#dc3545; }
+        .toast-msg.info { background:#17a2b8; }
+        .toast-msg.warning { background:#ffc107; color:#212529; }
+        .toast-msg .close { background:transparent; border:0; color:inherit; font-size:1.1rem; line-height:1; margin-left:auto; }
+    </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -34,7 +361,7 @@
     </nav>
 
     <!-- Menu lateral -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-no-expand sidebar-dark-primary elevation-4">
         <!-- Logo -->
         <a th:href="@{/}" class="brand-link">
             <span class="brand-text font-weight-light">AlberguePro</span>
@@ -110,7 +437,7 @@
                     <!-- Item do menu: cadastroAcolhido (com sub-itens) -->
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-users"></i>
+                            <i class="nav-icon fas fa-id-card"></i>
                             <p>
                                 Gestão de Acolhido
                                 <i class="right fas fa-angle-left"></i>
@@ -161,7 +488,7 @@
                     <!-- Item do menu: Quarto (com sub-itens) -->
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-bed"></i>
+                            <i class="nav-icon fas fa-door-open"></i>
                             <p>
                                 Gestão de Quarto
                                 <i class="right fas fa-angle-left"></i>
@@ -187,7 +514,7 @@
                     <!-- Item do menu: Usuários -->
                     <li class="nav-item">
                         <a th:href="@{/admin/usuarios}" class="nav-link">
-                            <i class="nav-icon fas fa-users"></i>
+                            <i class="nav-icon fas fa-user-alt"></i>
                             <p>Gerenciar Usuários</p>
                         </a>
                     </li>
@@ -198,17 +525,6 @@
 
     <!-- Onde o conteúdo das outras páginas aparece -->
     <div class="content-wrapper">
-        <!-- Cabeçalho do conteúdo (com o título da página) -->
-        <div class="content-header py-2">
-            <div class="container-fluid">
-                <div class="row mb-1">
-                    <div class="col-sm-6">
-                        <!-- O título da página é injetado aqui -->
-                        <h1 class="m-0" th:text="${title}">Título da Página</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- Seção do conteúdo principal -->
         <section class="content pb-2">
             <div class="container-fluid">
@@ -229,6 +545,98 @@
 <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/webjars/AdminLTE/3.2.0/dist/js/adminlte.min.js}"></script>
+<!-- Redirecionar para página de consulta quando sidebar está colapsada -->
+<script>
+$(document).ready(function() {
+    // Função para adicionar redirecionamento direto quando colapsado
+    function setupCollapsedBehavior() {
+        if ($('body').hasClass('sidebar-collapse')) {
+            // Estoque -> Consultar
+            $('.nav-sidebar .nav-item').each(function() {
+                var $item = $(this);
+                var $link = $item.children('a.nav-link').first();
+                var $icon = $link.find('.nav-icon');
+                
+                // Verificar qual menu é baseado no ícone
+                if ($icon.hasClass('fa-box-open')) {
+                    // Estoque
+                    $link.off('click').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = '/estoque';
+                        return false;
+                    });
+                } else if ($icon.hasClass('fa-landmark')) {
+                    // Patrimônio
+                    $link.off('click').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = '/patrimonio';
+                        return false;
+                    });
+                } else if ($icon.hasClass('fa-users')) {
+                    // Acolhido
+                    $link.off('click').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = '/cadastroAcolhido/listar';
+                        return false;
+                    });
+                } else if ($icon.hasClass('fa-bed')) {
+                    // Vaga
+                    $link.off('click').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = '/vaga';
+                        return false;
+                    });
+                } else if ($icon.hasClass('fa-door-open')) {
+                    // Quarto
+                    $link.off('click').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = '/quarto';
+                        return false;
+                    });
+                }
+            });
+        }
+    }
+    
+    // Aplicar ao carregar
+    setupCollapsedBehavior();
+    
+    // Monitorar mudanças na sidebar
+    $('[data-widget="pushmenu"]').on('collapsed.lte.pushmenu', function() {
+        setupCollapsedBehavior();
+    });
+    
+    $('[data-widget="pushmenu"]').on('shown.lte.pushmenu', function() {
+        // Quando expandir, remover comportamento customizado
+        $('.nav-sidebar .nav-item > a.nav-link').off('click');
+    });
+});
+</script>
+<!-- Manter sidebar recolhida ao clicar fora -->
+<script>
+$(function() {
+  function keepCollapsed() {
+    if ($('body').hasClass('sidebar-collapse')) {
+      $('body').addClass('sidebar-collapse').removeClass('sidebar-open');
+    }
+  }
+  // Clique em qualquer área fora da sidebar ou do botão
+  $(document).on('click', function(e){
+    if ($(e.target).closest('.main-sidebar, [data-widget="pushmenu"]').length === 0) {
+      keepCollapsed();
+    }
+  });
+  // Clique direto em header, conteúdo ou footer
+  $('.main-header, .content-wrapper, .main-footer').on('click', keepCollapsed);
+  // Em resize manter recolhida
+  $(window).on('resize', keepCollapsed);
+});
+</script>
 <th:block th:replace="${script}"></th:block>
 <!-- ApexCharts -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>

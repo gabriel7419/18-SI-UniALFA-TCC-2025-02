@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -53,7 +52,7 @@ public class VagaController {
     }
 
     @PostMapping("salvar")
-    public String salvar(@ModelAttribute("vaga") Vaga vaga, BindingResult result, Model model, RedirectAttributes attributes) {
+    public String salvar(@ModelAttribute("vaga") Vaga vaga, BindingResult result, Model model) {
 
         if (vaga.getAcolhido() == null || vaga.getAcolhido().getId() == null) {
             result.rejectValue("acolhido.id", "campo.obrigatorio", "O acolhido é obrigatório.");
@@ -65,14 +64,7 @@ public class VagaController {
 
         if (result.hasErrors()) {
             addCommonAttributes(model);
-
-            if (vaga.getLeito() != null && vaga.getLeito().getId() != null) {
-                Leito leitoSelecionado = leitoService.buscarPorId(vaga.getLeito().getId());
-                if (leitoSelecionado != null && leitoSelecionado.getQuarto() != null) {
-                    model.addAttribute("quartoSelecionadoId", leitoSelecionado.getQuarto().getId());
-                }
-            }
-
+            model.addAttribute("errorMessage", "Há problemas em um dos campos preenchidos, verifique e corrija.");
             return "vaga/form";
         }
 
@@ -91,16 +83,8 @@ public class VagaController {
             vaga.setLeito(full);
         }
 
-        try {
-            service.salvar(vaga);
-            attributes.addFlashAttribute("mensagemSucesso", "Vaga cadastrada com sucesso!");
-            return "redirect:/vaga/listar";
-
-        } catch (IllegalArgumentException e) {
-            attributes.addFlashAttribute("mensagemErro", e.getMessage());
-
-            return "redirect:/vaga";
-        }
+        service.salvar(vaga);
+        return "redirect:/vaga/listar";
     }
 
     @GetMapping("/leitos/{quartoId}")

@@ -41,11 +41,10 @@ public class QuartoController {
 
         try {
             service.salvar(quarto);
-            attributes.addFlashAttribute("mensagemSucesso", "Quarto salvo com sucesso!");
+            attributes.addFlashAttribute("successMessage", "Quarto salvo com sucesso!");
             return "redirect:/quarto/listar";
         } catch (IllegalArgumentException e) {
-            // Adiciona a mensagem de erro e redireciona para o formulário
-            attributes.addFlashAttribute("mensagemErro", e.getMessage());
+            attributes.addFlashAttribute("errorMessage", e.getMessage());
             // Se for novo, volta para a tela de cadastro, se for edição, volta para a lista
             return "redirect:/quarto/novo";
         }

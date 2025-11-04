@@ -56,9 +56,6 @@
                         <a th:href="@{/estoque/relatorio/pdf(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-danger" target="_blank">
                             <i class="fas fa-file-pdf"></i>
                         </a>
-                        <a th:href="@{/estoque/relatorio/xlsx(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-success">
-                            <i class="fas fa-file-excel"></i>
-                        </a>
                     </div>
                 </div>
             </div>
