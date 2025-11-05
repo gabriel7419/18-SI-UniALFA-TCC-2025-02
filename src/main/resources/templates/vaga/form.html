@@ -96,6 +96,9 @@
     document.addEventListener('DOMContentLoaded', function() {
         const quartoSelect = document.getElementById('quarto');
         const leitoSelect = document.getElementById('leito');
+        
+        // Pega o ID da vaga em modo de edição (se existir)
+        const vagaId = /*[[${vaga.id}]]*/ null;
 
         // Função para carregar os leitos via AJAX
         function carregarLeitos(quartoId, leitoSelecionadoId) {
@@ -103,8 +106,14 @@
             leitoSelect.innerHTML = '<option value="">Selecione o Leito...</option>';
 
             if (quartoId) {
+                // Monta a URL com o parâmetro vagaId se estiver em modo edição
+                let url = '/vaga/leitos/' + quartoId;
+                if (vagaId) {
+                    url += '?vagaId=' + vagaId;
+                }
+                
                 // Requisição AJAX para o endpoint que criamos no Controller
-                fetch('/vaga/leitos/' + quartoId)
+                fetch(url)
                     .then(response => response.json())
                     .then(leitos => {
                         leitos.forEach(leito => {

@@ -37,7 +37,8 @@ public class ControlePatrimonioController {
     @PostMapping("/salvar")
     public ModelAndView salvarPatrimonio(
             @Valid @ModelAttribute("patrimonio") ControlePatrimonio controlePatrimonio,
-            BindingResult result) {
+            BindingResult result,
+            org.springframework.web.servlet.mvc.support.RedirectAttributes attributes) {
 
         if (result.hasErrors()) {
             ModelAndView mv = new ModelAndView("patrimonio/form");
@@ -45,8 +46,12 @@ public class ControlePatrimonioController {
             return mv;
         }
 
-        // Salva o patrimônio no banco se não houver erros
-        controlePatrimonioRepository.save(controlePatrimonio);
+        try {
+            controlePatrimonioRepository.save(controlePatrimonio);
+            attributes.addFlashAttribute("successMessage", "Patrimônio salvo com sucesso!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("errorMessage", "Erro ao salvar patrimônio: " + e.getMessage());
+        }
         return new ModelAndView("redirect:/patrimonio");
     }
 

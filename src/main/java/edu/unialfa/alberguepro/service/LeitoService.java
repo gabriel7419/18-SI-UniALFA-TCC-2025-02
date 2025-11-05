@@ -24,5 +24,9 @@ public class LeitoService {
     public List<Leito> buscarPorQuartoId(Long quartoId) {
         return repository.findByQuartoId(quartoId);
     }
+    
+    public List<Leito> buscarLeitosDisponiveisPorQuartoId(Long quartoId) {
+        return repository.findLeitosDisponiveisByQuartoId(quartoId);
+    }
 
 }

@@ -81,8 +81,13 @@ public class QuartoController {
     }
 
     @GetMapping("remover/{id}")
-    public String remover(@PathVariable Long id) {
-        service.deletarPorId(id);
+    public String remover(@PathVariable Long id, RedirectAttributes attributes) {
+        try {
+            service.deletarPorId(id);
+            attributes.addFlashAttribute("successMessage", "Quarto removido com sucesso!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("errorMessage", "Erro ao remover o quarto: " + e.getMessage());
+        }
         return "redirect:/quarto/listar";
     }
 

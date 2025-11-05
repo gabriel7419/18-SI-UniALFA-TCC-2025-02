@@ -11,18 +11,22 @@ import java.util.Optional;
 public interface VagaRepository extends JpaRepository<Vaga, Long>  {
     long countByAcolhidoIsNotNullAndDataSaidaIsNull();
     long countByAcolhidoIsNull();
+    
+    @Query("SELECT COUNT(v) FROM Vaga v WHERE v.acolhido IS NOT NULL AND " +
+           "(v.dataSaida IS NULL OR v.dataSaida >= CURRENT_DATE)")
+    long countLeitosOcupados();
 
     @Query("SELECT COUNT(v) " +
             "FROM Vaga v " +
             "WHERE v.leito.quarto.id = :quartoId " +
             "  AND v.acolhido IS NOT NULL " +
-            "  AND CURRENT_DATE BETWEEN v.dataEntrada AND v.dataSaida")
+            "  AND (v.dataSaida IS NULL OR v.dataSaida >= CURRENT_DATE)")
     Long countActiveVagasByQuartoId(@Param("quartoId") Long quartoId);
 
     @Query("SELECT v.leito.quarto.numeroQuarto, COUNT(v) " +
             "FROM Vaga v " +
             "WHERE v.acolhido IS NOT NULL " +
-            "  AND CURRENT_DATE BETWEEN v.dataEntrada AND v.dataSaida " +
+            "  AND (v.dataSaida IS NULL OR v.dataSaida >= CURRENT_DATE) " +
             "GROUP BY v.leito.quarto.numeroQuarto")
     List<Object[]> countOccupiedBedsByRoom();
 

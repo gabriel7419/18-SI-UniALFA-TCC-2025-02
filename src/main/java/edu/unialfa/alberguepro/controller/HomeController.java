@@ -50,7 +50,7 @@ public class HomeController {
 
         // Leitos
         long totalLeitos = leitoRepository.count();
-        long leitosOcupados = vagaRepository.countByAcolhidoIsNotNullAndDataSaidaIsNull();
+        long leitosOcupados = vagaRepository.countLeitosOcupados();
         long leitosLivres = totalLeitos - leitosOcupados;
         
         dashboardDTO.setTotalLeitos(totalLeitos);
