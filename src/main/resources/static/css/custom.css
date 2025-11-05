@@ -490,6 +490,21 @@ a:hover {
     width: 100%;
 }
 
+/* Header azul para tabelas */
+.table thead.thead-blue th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: #ffffff !important;
+    border-bottom: none !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    font-size: 0.85rem !important;
+}
+
+.table thead.thead-blue th::after {
+    display: none !important;
+}
+
 .table tbody tr {
     transition: all 0.3s ease;
     background: rgba(255, 255, 255, 0.5);

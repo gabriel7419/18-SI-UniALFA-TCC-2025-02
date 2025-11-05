@@ -44,7 +44,7 @@
     </form>
 
     <div class="card">
-        <div class="card-header">
+        <div class="card-header card-header-blue">
             <h3 class="card-title">Lista de Quartos</h3>
         </div>
         <div class="card-body">
@@ -56,7 +56,7 @@
 
             <!-- CORRIGIDO: tabela só aparece se tiver quartos -->
             <table class="table table-bordered" th:if="${not #lists.isEmpty(quartos)}">
-                <thead>
+                <thead class="thead-blue">
                 <tr>
                     <th>ID</th>
                     <th>Número do Quarto</th> <th>Ocupação (Ocupados/Total)</th> <th>Ações</th>
