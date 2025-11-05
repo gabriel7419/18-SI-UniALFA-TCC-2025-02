@@ -45,4 +45,31 @@ public class RelatorioService {
 
         return new ByteArrayInputStream(out.toByteArray());
     }
+    
+    public ByteArrayInputStream gerarRelatorioMovimentacaoPdf(List<MovimentacaoEstoque> movimentacoes) throws JRException {
+        InputStream inputStream = getClass().getResourceAsStream("/relatorios/relatorio_movimentacao_estoque.jrxml");
+
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(movimentacoes);
+        JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+        
+        java.util.Map<String, Object> parameters = new java.util.HashMap<>();
+        parameters.put("TOTAL_MOVIMENTACOES", movimentacoes.size());
+        
+        // Obter data/hora atual no fuso horário GMT-3 (America/Sao_Paulo)
+        java.time.ZoneId saoPauloZone = java.time.ZoneId.of("America/Sao_Paulo");
+        java.time.ZonedDateTime agora = java.time.ZonedDateTime.now(saoPauloZone);
+        parameters.put("DATA_EMISSAO", java.util.Date.from(agora.toInstant()));
+        
+        // Configurar timezone do relatório
+        parameters.put("REPORT_TIME_ZONE", java.util.TimeZone.getTimeZone(saoPauloZone));
+        
+        parameters.put("USUARIO_EMISSOR", org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName());
+        
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
 }

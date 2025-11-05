@@ -26,7 +26,7 @@
     <field name="dataSaida" class="java.time.LocalDate"/>
 
     <title>
-        <band height="80">
+        <band height="100">
             <!-- Área reservada para o logo (será adicionado depois) -->
             <staticText>
                 <reportElement x="0" y="10" width="100" height="60" uuid="c1d2e3f4-a5b6-7890-3333-444455556666"/>
@@ -41,7 +41,7 @@
             
             <!-- Nome do Sistema -->
             <staticText>
-                <reportElement x="110" y="10" width="690" height="25" uuid="d1e2f3a4-b5c6-7890-3333-444455556666"/>
+                <reportElement x="110" y="10" width="690" height="30" uuid="d1e2f3a4-b5c6-7890-3333-444455556666"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="20" isBold="true"/>
                 </textElement>
@@ -50,7 +50,7 @@
             
             <!-- Nome do Relatório -->
             <staticText>
-                <reportElement x="110" y="40" width="690" height="30" uuid="e1f2a3b4-c5d6-7890-3333-444455556666"/>
+                <reportElement x="110" y="45" width="690" height="25" uuid="e1f2a3b4-c5d6-7890-3333-444455556666"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="16" isBold="true"/>
                 </textElement>
@@ -59,7 +59,7 @@
             
             <!-- Linha separadora -->
             <line>
-                <reportElement x="0" y="75" width="800" height="1" uuid="f1a2b3c4-d5e6-7890-3333-444455556666"/>
+                <reportElement x="0" y="80" width="800" height="1" uuid="f1a2b3c4-d5e6-7890-3333-444455556666"/>
                 <graphicElement>
                     <pen lineWidth="2.0" lineColor="#000000"/>
                 </graphicElement>
@@ -68,74 +68,116 @@
     </title>
 
     <columnHeader>
-        <band height="27">
+        <band height="30">
             <staticText>
-                <reportElement x="0" y="0" width="35" height="27"/>
-                <box><pen lineWidth="1"/></box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <reportElement mode="Opaque" x="0" y="0" width="35" height="30" backcolor="#D3D3D3" uuid="col-header-id-001"/>
+                <box>
+                    <pen lineWidth="0.5" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true" size="10"/>
+                </textElement>
                 <text><![CDATA[ID]]></text>
             </staticText>
 
             <staticText>
-                <reportElement x="35" y="0" width="210" height="27"/>
-                <box><pen lineWidth="1"/></box>
-                <textElement textAlignment="Left" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
-                <text><![CDATA[   Nome]]></text>
+                <reportElement mode="Opaque" x="35" y="0" width="210" height="30" backcolor="#D3D3D3" uuid="col-header-nome-001"/>
+                <box>
+                    <pen lineWidth="0.5" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font isBold="true" size="10"/>
+                    <paragraph leftIndent="5"/>
+                </textElement>
+                <text><![CDATA[Nome]]></text>
             </staticText>
 
             <staticText>
-                <reportElement x="245" y="0" width="75" height="27"/>
-                <box><pen lineWidth="1"/></box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <reportElement mode="Opaque" x="245" y="0" width="75" height="30" backcolor="#D3D3D3" uuid="col-header-nasc-001"/>
+                <box>
+                    <pen lineWidth="0.5" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true" size="10"/>
+                </textElement>
                 <text><![CDATA[Nascimento]]></text>
             </staticText>
 
             <staticText>
-                <reportElement x="320" y="0" width="35" height="27"/>
-                <box><pen lineWidth="1"/></box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <reportElement mode="Opaque" x="320" y="0" width="35" height="30" backcolor="#D3D3D3" uuid="col-header-idade-001"/>
+                <box>
+                    <pen lineWidth="0.5" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true" size="10"/>
+                </textElement>
                 <text><![CDATA[Idade]]></text>
             </staticText>
 
             <staticText>
-                <reportElement x="355" y="0" width="55" height="27"/>
-                <box><pen lineWidth="1"/></box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <reportElement mode="Opaque" x="355" y="0" width="55" height="30" backcolor="#D3D3D3" uuid="col-header-sexo-001"/>
+                <box>
+                    <pen lineWidth="0.5" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true" size="10"/>
+                </textElement>
                 <text><![CDATA[Sexo]]></text>
             </staticText>
 
             <staticText>
-                <reportElement x="410" y="0" width="100" height="27"/>
-                <box><pen lineWidth="1"/></box>
-                <textElement textAlignment="Left" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
-                <text><![CDATA[   Naturalidade]]></text>
+                <reportElement mode="Opaque" x="410" y="0" width="100" height="30" backcolor="#D3D3D3" uuid="col-header-nat-001"/>
+                <box>
+                    <pen lineWidth="0.5" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font isBold="true" size="10"/>
+                    <paragraph leftIndent="5"/>
+                </textElement>
+                <text><![CDATA[Naturalidade]]></text>
             </staticText>
 
             <staticText>
-                <reportElement x="510" y="0" width="70" height="27"/>
-                <box><pen lineWidth="1"/></box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <reportElement mode="Opaque" x="510" y="0" width="70" height="30" backcolor="#D3D3D3" uuid="col-header-rg-001"/>
+                <box>
+                    <pen lineWidth="0.5" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true" size="10"/>
+                </textElement>
                 <text><![CDATA[RG]]></text>
             </staticText>
 
             <staticText>
-                <reportElement x="580" y="0" width="80" height="27"/>
-                <box><pen lineWidth="1"/></box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <reportElement mode="Opaque" x="580" y="0" width="80" height="30" backcolor="#D3D3D3" uuid="col-header-cpf-001"/>
+                <box>
+                    <pen lineWidth="0.5" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true" size="10"/>
+                </textElement>
                 <text><![CDATA[CPF]]></text>
             </staticText>
 
             <staticText>
-                <reportElement x="660" y="0" width="75" height="27"/>
-                <box><pen lineWidth="1"/></box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <reportElement mode="Opaque" x="660" y="0" width="75" height="30" backcolor="#D3D3D3" uuid="col-header-ent-001"/>
+                <box>
+                    <pen lineWidth="0.5" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true" size="10"/>
+                </textElement>
                 <text><![CDATA[Entrada]]></text>
             </staticText>
 
             <staticText>
-                <reportElement x="735" y="0" width="75" height="27"/>
-                <box><pen lineWidth="1"/></box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="10"/></textElement>
+                <reportElement mode="Opaque" x="735" y="0" width="75" height="30" backcolor="#D3D3D3" uuid="col-header-saida-001"/>
+                <box>
+                    <pen lineWidth="0.5" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true" size="10"/>
+                </textElement>
                 <text><![CDATA[Saída]]></text>
             </staticText>
         </band>
