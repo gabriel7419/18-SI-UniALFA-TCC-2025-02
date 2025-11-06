@@ -31,6 +31,7 @@ public class Produto {
     @Column(name = "nao_perecivel", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean naoPerecivel = false;
 
+    @Column(name = "data_de_vencimento", nullable = true)
     @Future(message = "A data de vencimento deve ser uma data futura.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataDeVencimento;
