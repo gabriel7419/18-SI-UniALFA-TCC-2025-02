@@ -2,11 +2,11 @@
    ESTILO SIMPLES E LEVE - ALBERGUE PRO
    ======================================== */
 
-/* Header azul para tabelas */
+/* Header branco para tabelas */
 .table thead.thead-blue th {
-    background-color: #007bff !important;
-    color: #ffffff !important;
-    border-bottom: 2px solid #0056b3 !important;
+    background-color: #ffffff !important;
+    color: #212529 !important;
+    border-bottom: 2px solid #dee2e6 !important;
     font-weight: 600 !important;
 }
 

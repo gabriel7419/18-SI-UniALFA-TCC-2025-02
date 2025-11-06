@@ -14,7 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+
 import java.util.List;
 
 @Controller
@@ -53,7 +53,7 @@ public class VagaController {
 
     @PostMapping("salvar")
     public String salvar(@ModelAttribute("vaga") Vaga vaga, BindingResult result, Model model, 
-                         org.springframework.web.servlet.mvc.support.RedirectAttributes attributes) {
+    org.springframework.web.servlet.mvc.support.RedirectAttributes attributes) {
 
         if (vaga.getAcolhido() == null || vaga.getAcolhido().getId() == null) {
             result.rejectValue("acolhido.id", "campo.obrigatorio", "O acolhido é obrigatório.");

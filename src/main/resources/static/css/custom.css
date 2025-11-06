@@ -465,13 +465,13 @@ a:hover {
 }
 
 .table thead th {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    background: #ffffff;
     color: var(--dark);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-size: 0.85rem;
-    border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+    border-bottom: 2px solid #dee2e6;
     position: relative;
 }
 
@@ -490,11 +490,11 @@ a:hover {
     width: 100%;
 }
 
-/* Header azul para tabelas */
+/* Header branco para tabelas */
 .table thead.thead-blue th {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-    color: #ffffff !important;
-    border-bottom: none !important;
+    background: #ffffff !important;
+    color: #212529 !important;
+    border-bottom: 2px solid #dee2e6 !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;

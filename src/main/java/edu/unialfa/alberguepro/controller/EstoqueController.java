@@ -101,6 +101,13 @@ public class EstoqueController {
             }
         }
 
+        // Validação customizada: data de vencimento obrigatória se não for produto não perecível
+        if (produto.getNaoPerecivel() == null || !produto.getNaoPerecivel()) {
+            if (produto.getDataDeVencimento() == null) {
+                result.rejectValue("dataDeVencimento", "error.produto", "A data de vencimento é obrigatória para produtos perecíveis.");
+            }
+        }
+
         // Verifica todos os erros de validação
         if (result.hasErrors()) {
             carregarUnidades(model);

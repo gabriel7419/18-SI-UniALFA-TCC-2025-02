@@ -7,7 +7,16 @@
 </head>
 <body>
 <section>
-    <!-- Mensagem de erro -->
+    <!-- Banner de erro customizado (inicialmente oculto) -->
+    <div id="errorBanner" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span id="errorBannerMessage"></span>
+        <button type="button" class="close" onclick="closeBanner('errorBanner')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <!-- Mensagem de erro do servidor -->
     <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
         <i class="fas fa-exclamation-triangle"></i>
         <span th:text="${errorMessage}"></span>
@@ -69,14 +78,15 @@
                     <td th:text="${produto.unidade.nome}">kg</td>
                     <td>
                         <!-- Form pra dar baixa em cada produto -->
-                        <form th:action="@{/estoque/dar-baixa}" method="post" class="form-inline">
+                        <form th:action="@{/estoque/dar-baixa}" method="post" class="form-inline baixa-form" 
+                              th:data-produto-nome="${produto.nome}" 
+                              th:data-quantidade-max="${produto.quantidade}">
                             <!-- ID do produto escondido -->
                             <input type="hidden" name="produtoId" th:value="${produto.id}" />
                             <div class="input-group">
                                 <!-- Campo pra por a quantidade da baixa -->
-                                <!-- min="1" não deixa por menos de 1 -->
-                                <!-- th:max não deixa tirar mais do que tem -->
-                                <input type="number" name="quantidade" class="form-control" placeholder="0" min="1" th:max="${produto.quantidade}" required>
+                                <input type="number" name="quantidade" class="form-control quantidade-input" 
+                                       placeholder="0" min="1" th:max="${produto.quantidade}">
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-success">Salvar</button>
                                 </div>
@@ -90,7 +100,75 @@
     </div>
 </section>
 <script>
+    // Função para fechar o banner
+    function closeBanner(bannerId) {
+        document.getElementById(bannerId).style.display = 'none';
+    }
 
+    // Função para mostrar banner de erro
+    function showErrorBanner(message) {
+        const banner = document.getElementById('errorBanner');
+        const messageSpan = document.getElementById('errorBannerMessage');
+        messageSpan.textContent = message;
+        banner.style.display = 'block';
+        
+        // Scroll suave até o topo
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Auto-fechar após 5 segundos
+        setTimeout(() => {
+            banner.style.display = 'none';
+        }, 5000);
+    }
+
+    // Validação customizada para os formulários de baixa
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('.baixa-form');
+        
+        forms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const input = form.querySelector('.quantidade-input');
+                const quantidade = parseInt(input.value);
+                const quantidadeMax = parseInt(form.getAttribute('data-quantidade-max'));
+                const produtoNome = form.getAttribute('data-produto-nome');
+                
+                // Verificar se o campo está vazio
+                if (!input.value || input.value === '') {
+                    e.preventDefault();
+                    showErrorBanner('Por favor, informe a quantidade para baixa do produto "' + produtoNome + '".');
+                    input.focus();
+                    return false;
+                }
+                
+                // Verificar se é um número válido
+                if (isNaN(quantidade) || quantidade <= 0) {
+                    e.preventDefault();
+                    showErrorBanner('A quantidade deve ser um número maior que zero para o produto "' + produtoNome + '".');
+                    input.focus();
+                    return false;
+                }
+                
+                // Verificar se não excede a quantidade disponível
+                if (quantidade > quantidadeMax) {
+                    e.preventDefault();
+                    showErrorBanner('A quantidade informada (' + quantidade + ') excede a quantidade disponível (' + quantidadeMax + ') do produto "' + produtoNome + '".');
+                    input.focus();
+                    return false;
+                }
+            });
+        });
+
+        // Auto-fechar mensagens de sucesso/erro do servidor após 5 segundos
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.alert:not(#errorBanner)');
+            alerts.forEach(alert => {
+                if (alert.classList.contains('show')) {
+                    alert.classList.remove('show');
+                    setTimeout(() => alert.remove(), 300);
+                }
+            });
+        }, 5000);
+    });
 </script>
 </body>
 </html>

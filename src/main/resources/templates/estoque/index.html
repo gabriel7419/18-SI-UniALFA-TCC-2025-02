@@ -90,8 +90,11 @@
                                 <span th:if="${produto.quantidade == 0}" class="badge bg-danger">Esgotado</span>
                             </td>
                             <td th:text="${produto.unidade.nome}">kg</td>
-                            <!-- Formata a data pra o padrão brasileiro -->
-                            <td th:text="${#temporals.format(produto.dataDeVencimento, 'dd/MM/yyyy')}">15/10/2025</td>
+                            <!-- Formata a data pra o padrão brasileiro ou mostra "Não Perecível" -->
+                            <td>
+                                <span th:if="${produto.naoPerecivel == true or produto.dataDeVencimento == null}" class="badge badge-info">Não Perecível</span>
+                                <span th:if="${produto.naoPerecivel != true and produto.dataDeVencimento != null}" th:text="${#temporals.format(produto.dataDeVencimento, 'dd/MM/yyyy')}">15/10/2025</span>
+                            </td>
                             <td>
                                 <!-- Botão pra editar o produto -->
                                 <a th:href="@{/estoque/editar/{id}(id=${produto.id})}" class="btn btn-warning btn-sm">
@@ -110,9 +113,6 @@
             </a>
             <a th:href="@{/estoque/relatorio/pdf(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-danger" target="_blank">
                 <i class="fas fa-file-pdf"></i>
-            </a>
-            <a th:href="@{/estoque/relatorio/xlsx(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-success">
-                <i class="fas fa-file-excel"></i>
             </a>
         </div>
     </section>
