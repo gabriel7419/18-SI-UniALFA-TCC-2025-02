@@ -24,18 +24,19 @@
     </form>
 
     <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Acolhidos Cadastrados</h3>
+        <div class="card-header card-header-blue">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0">Acolhidos Cadastrados</h3>
+                <div class="card-tools">
+                    <a th:href="@{/cadastroAcolhido/relatorio/pdf}" class="btn btn-danger" target="_blank">
+                        <i class="fas fa-file-pdf"></i>
+                    </a>
+                </div>
+            </div>
         </div>
 
         <div class="card-body">
             <div class="mb-3 d-flex justify-content-end">
-                <a th:href="@{/cadastroAcolhido/relatorio/pdf}" class="btn btn-danger mr-2" target="_blank">
-                    <i class="fas fa-file-pdf"></i> PDF
-                </a>
-                <a th:href="@{/cadastroAcolhido/relatorio/xlsx}" class="btn btn-success" target="_blank">
-                    <i class="fas fa-file-excel"></i> XLSX
-                </a>
             </div>
 
             <div th:if="${#lists.isEmpty(acolhidos)}">
@@ -53,7 +54,7 @@
             </div>
 
             <table class="table table-bordered" th:if="${not #lists.isEmpty(acolhidos)}">
-                <thead>
+                <thead class="thead-blue">
                 <tr>
                     <th>Nome</th>
                     <th>Idade</th>

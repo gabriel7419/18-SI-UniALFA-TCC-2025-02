@@ -1,0 +1,50 @@
+/* ========================================
+   ESTILO SIMPLES E LEVE - ALBERGUE PRO
+   ======================================== */
+
+/* Header branco para tabelas */
+.table thead.thead-blue th {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+    border-bottom: 2px solid #dee2e6 !important;
+    font-weight: 600 !important;
+}
+
+/* Card header azul */
+.card-header-blue {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+    border-bottom: 1px solid #0056b3 !important;
+}
+
+.card-header-blue .card-title {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* Badges de status */
+.badge-em-uso { 
+    background-color: #17a2b8 !important;
+    color: #ffffff !important;
+}
+
+.badge-disponivel { 
+    background-color: #28a745 !important;
+    color: #ffffff !important;
+}
+
+.badge-manutencao { 
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.badge-baixado { 
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+/* Estoque baixo */
+.estoque-baixo {
+    font-weight: 700 !important;
+    color: #dc3545 !important;
+}

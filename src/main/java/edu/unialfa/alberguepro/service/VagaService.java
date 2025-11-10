@@ -16,6 +16,31 @@ public class VagaService {
 
     public void salvar(Vaga vaga) {
 
+        Long quartoId = null;
+        String numeroQuarto = "Desconhecido";
+
+        if (vaga.getLeito() != null && vaga.getLeito().getQuarto() != null) {
+            quartoId = vaga.getLeito().getQuarto().getId();
+            numeroQuarto = vaga.getLeito().getQuarto().getNumeroQuarto();
+        } else {
+            throw new IllegalArgumentException("Erro de sistema: A vaga deve estar associada a um Quarto válido.");
+        }
+
+        final int MAX_VAGAS = 4;
+
+        if (quartoId != null) {
+
+            // Conta as vagas ativas
+            Long vagasAtivas = repository.countActiveVagasByQuartoId(quartoId);
+
+            // Valida o limite
+            if (vagasAtivas >= MAX_VAGAS) {
+                throw new IllegalArgumentException("Limite de vagas atingido! O Quarto "
+                        + numeroQuarto
+                        + " já possui o máximo de " + MAX_VAGAS + " acolhidos ativos.");
+            }
+        }
+
         repository.save(vaga);
     }
 

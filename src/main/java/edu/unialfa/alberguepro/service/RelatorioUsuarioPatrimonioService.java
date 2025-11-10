@@ -1,9 +1,13 @@
 package edu.unialfa.alberguepro.service;
 
-import edu.unialfa.alberguepro.model.Produto;
-import edu.unialfa.alberguepro.model.MovimentacaoEstoque;
+import edu.unialfa.alberguepro.model.Usuario;
+import edu.unialfa.alberguepro.model.ControlePatrimonio;
+import edu.unialfa.alberguepro.repository.UsuarioRepository;
+import edu.unialfa.alberguepro.repository.ControlePatrimonioRepository;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -12,21 +16,30 @@ import java.io.InputStream;
 import java.util.List;
 
 @Service
-public class RelatorioService {
+public class RelatorioUsuarioPatrimonioService {
 
-    public ByteArrayInputStream gerarRelatorioPdf(List<Produto> produtos) throws JRException {
-        InputStream inputStream = getClass().getResourceAsStream("/relatorios/relatorio_estoque.jrxml");
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private ControlePatrimonioRepository patrimonioRepository;
 
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(produtos);
+    public ByteArrayInputStream gerarRelatorioUsuarioPdf() throws JRException {
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        
+        InputStream inputStream = getClass().getResourceAsStream("/relatorios/relatorio_usuario.jrxml");
+        if (inputStream == null) throw new RuntimeException("Arquivo JRXML não encontrado!");
+
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(usuarios);
         JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
         
         // Calcular estatísticas
-        int totalItens = produtos.size();
-        long itensEsgotados = produtos.stream().filter(p -> p.getQuantidade() == 0).count();
+        int totalUsuarios = usuarios.size();
+        long usuariosAtivos = usuarios.stream().filter(Usuario::isAtivo).count();
         
         java.util.Map<String, Object> parameters = new java.util.HashMap<>();
-        parameters.put("TOTAL_ITENS", totalItens);
-        parameters.put("ITENS_ESGOTADOS", (int)itensEsgotados);
+        parameters.put("TOTAL_USUARIOS", totalUsuarios);
+        parameters.put("USUARIOS_ATIVOS", (int)usuariosAtivos);
         
         // Obter data/hora atual no fuso horário GMT-3 (America/Sao_Paulo)
         java.time.ZoneId saoPauloZone = java.time.ZoneId.of("America/Sao_Paulo");
@@ -36,7 +49,7 @@ public class RelatorioService {
         // Configurar timezone do relatório
         parameters.put("REPORT_TIME_ZONE", java.util.TimeZone.getTimeZone(saoPauloZone));
         
-        parameters.put("USUARIO_EMISSOR", org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName());
+        parameters.put("USUARIO_EMISSOR", SecurityContextHolder.getContext().getAuthentication().getName());
         
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
@@ -46,14 +59,15 @@ public class RelatorioService {
         return new ByteArrayInputStream(out.toByteArray());
     }
     
-    public ByteArrayInputStream gerarRelatorioMovimentacaoPdf(List<MovimentacaoEstoque> movimentacoes) throws JRException {
-        InputStream inputStream = getClass().getResourceAsStream("/relatorios/relatorio_movimentacao_estoque.jrxml");
+    public ByteArrayInputStream gerarRelatorioPatrimonioPdf(List<ControlePatrimonio> patrimonios) throws JRException {
+        InputStream inputStream = getClass().getResourceAsStream("/relatorios/relatorio_patrimonio.jrxml");
+        if (inputStream == null) throw new RuntimeException("Arquivo JRXML não encontrado!");
 
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(movimentacoes);
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(patrimonios);
         JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
         
         java.util.Map<String, Object> parameters = new java.util.HashMap<>();
-        parameters.put("TOTAL_MOVIMENTACOES", movimentacoes.size());
+        parameters.put("TOTAL_PATRIMONIOS", patrimonios.size());
         
         // Obter data/hora atual no fuso horário GMT-3 (America/Sao_Paulo)
         java.time.ZoneId saoPauloZone = java.time.ZoneId.of("America/Sao_Paulo");
@@ -63,7 +77,7 @@ public class RelatorioService {
         // Configurar timezone do relatório
         parameters.put("REPORT_TIME_ZONE", java.util.TimeZone.getTimeZone(saoPauloZone));
         
-        parameters.put("USUARIO_EMISSOR", org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName());
+        parameters.put("USUARIO_EMISSOR", SecurityContextHolder.getContext().getAuthentication().getName());
         
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 

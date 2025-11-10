@@ -6,6 +6,24 @@
 </head>
 <body>
 <section>
+    <!-- Mensagem de erro -->
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    
+    <!-- Mensagem de sucesso -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
     <div class="mb-3">
         <a th:href="@{/vaga}" class="btn btn-primary">
             <i class="fas fa-plus"></i> Nova Vaga
@@ -25,7 +43,7 @@
     </form>
 
     <div class="card">
-        <div class="card-header">
+        <div class="card-header card-header-blue">
             <h3 class="card-title">Vagas Cadastradas</h3>
         </div>
 
@@ -35,7 +53,7 @@
             </div>
 
             <table class="table table-bordered" th:if="${not #lists.isEmpty(vagas)}">
-                <thead>
+                <thead class="thead-blue">
                 <tr>
                     <th>Acolhido</th>
                     <th>Data de Ingresso</th>
@@ -61,7 +79,9 @@
                         <a th:href="@{/vaga/editar/{id}(id=${vaga.id})}" class="btn btn-warning btn-sm">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a th:href="@{/vaga/remover/{id}(id=${vaga.id})}" class="btn btn-danger btn-sm">
+                        <a th:href="@{/vaga/remover/{id}(id=${vaga.id})}" 
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Tem certeza que deseja remover esta vaga?');">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>

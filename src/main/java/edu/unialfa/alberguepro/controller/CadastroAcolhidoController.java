@@ -254,7 +254,7 @@ public class CadastroAcolhidoController {
             int stepWithError = determinarStepComErro(result);
 
             model.addAttribute("stepWithError", stepWithError);
-
+            model.addAttribute("errorMessage", "Há problemas em um dos campos preenchidos, verifique e corrija.");
             carregarListas(model);
             return "cadastroAcolhido/form";
         }

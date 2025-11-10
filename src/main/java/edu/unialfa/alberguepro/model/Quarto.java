@@ -2,12 +2,12 @@ package edu.unialfa.alberguepro.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList; // Importe este
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -19,6 +19,7 @@ public class Quarto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "O número do quarto é obrigatório.")
     private String numeroQuarto;
 
     @ToString.Exclude
@@ -26,7 +27,7 @@ public class Quarto {
     @OneToMany(mappedBy = "quarto",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            fetch = FetchType.LAZY)
+            fetch = FetchType.EAGER)
 
     private List<Leito> leitos = new ArrayList<>();
 

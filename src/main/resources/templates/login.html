@@ -88,16 +88,17 @@
     <p class="login-box-msg">Faça o login para iniciar a sua sessão</p>
 
 <form th:action="@{/login}" method="post" novalidate>
-        <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div th:if="${param.error != null and param.error[0] != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="fas fa-exclamation-triangle"></i>
             <strong>Erro ao fazer login!</strong>
             <p th:if="${session.errorMessage != null}" 
                th:text="${session.errorMessage}" class="mb-0"></p>
+            <p th:if="${session.errorMessage == null}" class="mb-0">Usuário ou senha incorretos.</p>
             <button type="button" class="close" data-dismiss="alert" aria-label="Fechar">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <div th:if="${param.logout != null and param.logout[0] != null}" class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="fas fa-check-circle"></i>
             <strong>Logout realizado!</strong>
             <p class="mb-0">Você foi desconectado com sucesso.</p>

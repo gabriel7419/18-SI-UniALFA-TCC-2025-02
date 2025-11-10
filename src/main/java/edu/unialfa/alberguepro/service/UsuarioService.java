@@ -2,6 +2,8 @@ package edu.unialfa.alberguepro.service;
 
 import edu.unialfa.alberguepro.model.Usuario;
 import edu.unialfa.alberguepro.repository.UsuarioRepository;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,6 +11,9 @@ import org.springframework.stereotype.Service;
 import edu.unialfa.alberguepro.dto.UsuarioDTO;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,7 +40,10 @@ public class UsuarioService {
                 });
             }
         } else {
-            // Se é um usuário novo, apenas criptografa a senha
+            // Se é um usuário novo, valida e criptografa a senha
+            if (usuario.getPassword() == null || usuario.getPassword().length() < 8) {
+                throw new IllegalArgumentException("A senha deve ter no mínimo 8 caracteres.");
+            }
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         }
 
@@ -94,5 +102,29 @@ public class UsuarioService {
 
     public Optional<UsuarioDTO> findByIdDTO(Long id) {
         return usuarioRepository.findById(id).map(UsuarioDTO::new);
+    }
+
+    public void alterarSenha(Long id, String senhaAtual, String novaSenha) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Usuário não encontrado: " + id));
+
+        String usernameLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                .stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        boolean isSelf = usuario.getUsername().equals(usernameLogado);
+
+        // Exige senha atual se o próprio usuário estiver alterando ou se não for admin
+        boolean mustValidateCurrent = isSelf || !isAdmin;
+        if (mustValidateCurrent) {
+            if (senhaAtual == null || !passwordEncoder.matches(senhaAtual, usuario.getPassword())) {
+                throw new IllegalArgumentException("Senha atual incorreta.");
+            }
+        }
+
+        if (novaSenha == null || novaSenha.length() < 8) {
+            throw new IllegalArgumentException("A nova senha deve ter no mínimo 8 caracteres.");
+        }
+        usuario.setPassword(passwordEncoder.encode(novaSenha));
+        usuarioRepository.save(usuario);
     }
 }

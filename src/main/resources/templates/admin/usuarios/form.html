@@ -8,6 +8,24 @@
 </head>
 <body>
     <section>
+        <!-- Mensagem de erro -->
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        
+        <!-- Mensagem de sucesso -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i>
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
         <div class="card card-primary">
             <div class="card-header card-header-blue">
                 <h3 class="card-title" th:text="${usuario.id == null ? 'Novo Usuário' : 'Editar Usuário'}">Administrar Usuários - Cadastro</h3>
@@ -22,22 +40,34 @@
                     <!-- Campo de usuário -->
                     <div class="form-group mb-3">
                         <label for="username">Usuário</label>
-                        <input type="text" class="form-control" id="username" th:field="*{username}" 
+                        <input type="text" class="form-control" id="username" th:field="*{username}"
                                placeholder="Insira o nome de usuário."
+                               minlength="4" maxlength="50" pattern="^[A-Za-z0-9_.]+$" autocomplete="username" spellcheck="false"
                                th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''">
                         <div th:if="${#fields.hasErrors('username')}" class="invalid-feedback">
                             <span th:each="err : ${#fields.errors('username')}" th:text="${err}"></span>
                         </div>
                     </div>
                     <!-- Campo de senha -->
-                    <div class="form-group mb-3">
+                    <div class="form-group mb-3" th:if="${usuario.id == null}">
                         <label for="password">Senha</label>
-                        <input type="password" class="form-control" id="password" th:field="*{password}" 
+                        <input type="password" class="form-control" id="password" th:field="*{password}" autocomplete="new-password" minlength="8"
                                th:placeholder="${usuario.id == null ? 'Insira uma senha segura.' : 'Deixe em branco para manter a senha atual.'}"
                                th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''">
                         <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">
                             <span th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
                         </div>
+                        <div id="password-strength" class="mt-1" style="display: none;" aria-live="polite">
+                            <div class="progress" style="height: 6px;">
+                                <div id="passwordStrengthBar" class="progress-bar bg-danger" style="width: 0%"></div>
+                            </div>
+                            <small id="passwordStrengthText" class="form-text text-muted"></small>
+                        </div>
+                    </div>
+                    <div class="alert alert-info d-flex align-items-center" th:if="${usuario.id != null}">
+                        <i class="fas fa-key mr-2"></i>
+                        <span>Para alterar a senha deste usuário, use a opção abaixo.</span>
+                        <a th:href="@{/admin/usuarios/alterar-senha/{id}(id=${usuario.id})}" class="btn btn-outline-primary btn-sm ml-3">Alterar senha</a>
                     </div>
                     <!-- Seletor de tipo (role) -->
                     <div class="form-group mb-3">
@@ -66,7 +96,95 @@
         </div>
     </section>
 <script>
+(function() {
+  function loadZxcvbn(cb) {
+    if (typeof zxcvbn !== 'undefined') { cb(); return; }
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js';
+    s.async = true;
+    s.onload = cb;
+    document.head.appendChild(s);
+  }
 
+  function updateStrength(pwd, els) {
+    if (!els) return;
+    var box = els.box, bar = els.bar, text = els.text;
+    if (!pwd) { box.style.display = 'none'; bar.style.width = '0%'; bar.className = 'progress-bar bg-danger'; text.textContent = ''; return; }
+    box.style.display = 'block';
+    var res = (typeof zxcvbn !== 'undefined') ? zxcvbn(pwd) : { score: 0, feedback: {} };
+    var score = Math.max(0, Math.min(4, res.score || 0));
+    var perc = [5,25,50,75,100][score];
+    var labels = ['Muito fraca','Fraca','Média','Forte','Excelente'];
+    var classes = ['bg-danger','bg-danger','bg-warning','bg-success','bg-success'];
+    bar.style.width = perc + '%';
+    bar.className = 'progress-bar ' + classes[score];
+    var msg = labels[score];
+    if (res.feedback && res.feedback.warning) { msg += ' — ' + res.feedback.warning; }
+    text.textContent = msg;
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var input = document.getElementById('password');
+    var form = document.querySelector('form');
+    var submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+    var idField = document.querySelector('input[name="id"]');
+    var isNew = !idField || (idField.value || '').trim() === '';
+    var minScore = 3; // Forte ou superior
+    var minLength = 8;
+    var els = {
+      box: document.getElementById('password-strength'),
+      bar: document.getElementById('passwordStrengthBar'),
+      text: document.getElementById('passwordStrengthText')
+    };
+    if (!input) return;
+
+    function meetsPolicy(score, pwd) {
+      if (!isNew && (!pwd || pwd.length === 0)) return true; // edição mantendo senha
+      return score >= minScore;
+    }
+    function applyPolicy(score, pwd) {
+      var okLen = pwd.length >= minLength;
+      var ok = okLen && meetsPolicy(score, pwd);
+      if (submitBtn) submitBtn.disabled = !ok;
+      if (!ok) {
+        input.classList.add('is-invalid');
+        if (els) {
+          var msgs = [];
+          if (!okLen) msgs.push('mín. 8 caracteres');
+          if (!meetsPolicy(score, pwd)) msgs.push('Forte ou Excelente');
+          els.text.textContent = 'Requer: ' + msgs.join(' e ');
+        }
+      } else {
+        input.classList.remove('is-invalid');
+      }
+      return ok;
+    }
+
+    input.addEventListener('input', function(){
+      var pwd = this.value;
+      var score = (typeof zxcvbn !== 'undefined') ? zxcvbn(pwd).score : 0;
+      updateStrength(pwd, els);
+      applyPolicy(score, pwd);
+    });
+    loadZxcvbn(function(){
+      var pwd = input.value;
+      updateStrength(pwd, els);
+      var score = (typeof zxcvbn !== 'undefined') ? zxcvbn(pwd).score : 0;
+      applyPolicy(score, pwd);
+    });
+
+    if (form) {
+      form.addEventListener('submit', function(e){
+        var pwd = input.value;
+        var score = (typeof zxcvbn !== 'undefined') ? zxcvbn(pwd).score : 0;
+        if (!meetsPolicy(score, pwd)) {
+          e.preventDefault();
+          input.focus();
+        }
+      });
+    }
+  });
+})();
 </script>
 </body>
 </html>

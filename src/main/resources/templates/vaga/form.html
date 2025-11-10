@@ -6,8 +6,27 @@
 </head>
 <body>
 <section>
+    <!-- Mensagem de erro -->
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    
+    <!-- Mensagem de sucesso -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
     <div class="card card-primary">
-        <div class="card-header">
+        <div class="card-header card-header-blue">
             <h3 class="card-title">Gestão de Vagas - Cadastrar</h3>
         </div>
 
@@ -19,7 +38,8 @@
 
                 <div class="form-group">
                     <label>Acolhido</label>
-                    <select class="form-control" th:field="*{acolhido.id}" id="acolhidoSelect">
+                    <select class="form-control" th:field="*{acolhido.id}" id="acolhidoSelect"
+                            th:classappend="${#fields.hasErrors('acolhido.id')} ? 'is-invalid' : ''">
                         <option value="">Selecione o Acolhido...</option>
                         <option th:each="a : ${acolhidos}"
                                 th:value="${a.id}"
@@ -27,7 +47,7 @@
                         </option>
                     </select>
                     <div th:if="${#fields.hasErrors('acolhido.id')}" th:errors="*{acolhido.id}"
-                         class="text-danger"></div>
+                         class="invalid-feedback"></div>
                 </div>
 
                 <div class="form-group">
@@ -44,29 +64,33 @@
 
                 <div class="form-group">
                     <label for="leito">Leito</label>
-                    <select class="form-control" id="leito" th:field="*{leito.id}">
+                    <select class="form-control" id="leito" th:field="*{leito.id}"
+                            th:classappend="${#fields.hasErrors('leito')} ? 'is-invalid' : ''">
                         <option value="">Selecione o Leito...</option>
                     </select>
-                    <div th:if="${#fields.hasErrors('leito')}" th:errors="*{leito}" class="text-danger"></div>
+                    <div th:if="${#fields.hasErrors('leito')}" th:errors="*{leito}" class="invalid-feedback"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="dataEntrada">Data de Ingresso</label>
-                    <input type="date" class="form-control" id="dataEntrada" th:field="*{dataEntrada}" readonly>
+                    <input type="date" class="form-control" id="dataEntrada" th:field="*{dataEntrada}" readonly
+                           th:classappend="${#fields.hasErrors('dataEntrada')} ? 'is-invalid' : ''">
                     <div th:if="${#fields.hasErrors('dataEntrada')}" th:errors="*{dataEntrada}"
-                         class="text-danger"></div>
+                         class="invalid-feedback"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="dataSaida">Data de Saída</label>
-                    <input type="date" class="form-control" id="dataSaida" th:field="*{dataSaida}" readonly>
-                    <div th:if="${#fields.hasErrors('dataSaida')}" th:errors="*{dataSaida}" class="text-danger"></div>
+                    <input type="date" class="form-control" id="dataSaida" th:field="*{dataSaida}" readonly
+                           th:classappend="${#fields.hasErrors('dataSaida')} ? 'is-invalid' : ''">
+                    <div th:if="${#fields.hasErrors('dataSaida')}" th:errors="*{dataSaida}" class="invalid-feedback"></div>
                 </div>
 
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                    <a th:href="@{/vaga/listar}" class="btn btn-secondary">Cancelar</a>
-                </div>
+            </div>
+            
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <a th:href="@{/vaga/listar}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>
@@ -77,6 +101,9 @@
     document.addEventListener('DOMContentLoaded', function() {
         const quartoSelect = document.getElementById('quarto');
         const leitoSelect = document.getElementById('leito');
+        
+        // Pega o ID da vaga em modo de edição (se existir)
+        const vagaId = /*[[${vaga.id}]]*/ null;
 
         // Função para carregar os leitos via AJAX
         function carregarLeitos(quartoId, leitoSelecionadoId) {
@@ -84,8 +111,14 @@
             leitoSelect.innerHTML = '<option value="">Selecione o Leito...</option>';
 
             if (quartoId) {
+                // Monta a URL com o parâmetro vagaId se estiver em modo edição
+                let url = '/vaga/leitos/' + quartoId;
+                if (vagaId) {
+                    url += '?vagaId=' + vagaId;
+                }
+                
                 // Requisição AJAX para o endpoint que criamos no Controller
-                fetch('/vaga/leitos/' + quartoId)
+                fetch(url)
                     .then(response => response.json())
                     .then(leitos => {
                         leitos.forEach(leito => {

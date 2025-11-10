@@ -7,6 +7,23 @@
 </head>
 <body>
 <section>
+    <!-- Mensagem de erro -->
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    
+    <!-- Mensagem de sucesso -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 
     <div class="mb-3">
         <a th:href="@{/quarto/novo}" class="btn btn-primary">
@@ -27,7 +44,7 @@
     </form>
 
     <div class="card">
-        <div class="card-header">
+        <div class="card-header card-header-blue">
             <h3 class="card-title">Lista de Quartos</h3>
         </div>
         <div class="card-body">
@@ -39,19 +56,30 @@
 
             <!-- CORRIGIDO: tabela só aparece se tiver quartos -->
             <table class="table table-bordered" th:if="${not #lists.isEmpty(quartos)}">
-                <thead>
+                <thead class="thead-blue">
                 <tr>
                     <th>ID</th>
-                    <th>Número do Quarto</th>
-                    <th>Ações</th>
+                    <th>Número do Quarto</th> <th>Ocupação (Ocupados/Total)</th> <th>Ações</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="quarto : ${quartos}">
                     <td th:text="${quarto.id}"></td>
+
                     <td th:text="${quarto.numeroQuarto}"></td>
+
                     <td>
-                        <a th:href="@{/quarto/remover/{id}(id=${quarto.id})}" class="btn btn-danger btn-sm">
+                <span class="badge badge-info"
+                      th:with="ocupados=${leitosOcupadosPorQuarto[quarto.numeroQuarto] ?: 0},
+                               total=${#lists.size(quarto.leitos)}"
+                      th:text="${ocupados} + '/' + ${total}">
+                </span>
+                    </td>
+
+                    <td>
+                        <a th:href="@{/quarto/remover/{id}(id=${quarto.id})}" 
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Tem certeza que deseja remover este quarto e todos os seus leitos?');">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>

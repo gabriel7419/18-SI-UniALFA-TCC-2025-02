@@ -1,11 +1,8 @@
-# usa a imagem base do openjdk 21
-FROM openjdk:21-jdk-slim
+# usa a imagem base do Amazon Corretto 21 - openjdk foi descontinuado
+FROM amazoncorretto:21
 
 # Instala pacotes de fontes para o JasperReports
-RUN apt-get update && apt-get install -y \
-    fontconfig \
-    fonts-dejavu-core \
-    && rm -rf /var/lib/apt/lists/*
+RUN yum install -y fontconfig dejavu-sans-fonts && yum clean all
 
 # define o argumento para o arquivo jar
 ARG JAR_FILE=target/*.jar
