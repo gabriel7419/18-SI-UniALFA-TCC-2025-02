@@ -25,7 +25,7 @@ public class RelatorioUsuarioPatrimonioController {
         ByteArrayInputStream bis = service.gerarRelatorioUsuarioPdf();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=usuarios.pdf");
+        headers.add("Content-Disposition", "inline; filename=usuarios.pdf");
 
         return ResponseEntity.ok()
                 .headers(headers)
@@ -38,7 +38,7 @@ public class RelatorioUsuarioPatrimonioController {
         ByteArrayInputStream bis = service.gerarRelatorioPatrimonioPdf();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=patrimonio.pdf");
+        headers.add("Content-Disposition", "inline; filename=patrimonio.pdf");
 
         return ResponseEntity.ok()
                 .headers(headers)

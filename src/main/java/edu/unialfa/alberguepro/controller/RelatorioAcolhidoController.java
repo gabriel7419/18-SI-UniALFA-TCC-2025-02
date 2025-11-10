@@ -26,7 +26,7 @@ public class RelatorioAcolhidoController {
         ByteArrayInputStream bis = service.gerarRelatorioPdf();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=acolhidos.pdf");
+        headers.add("Content-Disposition", "inline; filename=acolhidos.pdf");
 
         return ResponseEntity.ok()
                 .headers(headers)
