@@ -5,9 +5,11 @@ import edu.unialfa.alberguepro.repository.QuartoRepository;
 import edu.unialfa.alberguepro.model.Quarto;
 import edu.unialfa.alberguepro.repository.VagaRepository;
 import edu.unialfa.alberguepro.service.QuartoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
@@ -37,16 +39,21 @@ public class QuartoController {
     }
 
     @PostMapping("/salvar")
-    public String salvar(@ModelAttribute Quarto quarto, RedirectAttributes attributes) {
+    public String salvar(@Valid @ModelAttribute Quarto quarto, BindingResult result, RedirectAttributes attributes, Model model) {
+
+        // Validação de preenchimento obrigatório via Bean Validation
+        if (result.hasErrors()) {
+            model.addAttribute("errorMessage", "Há problemas em um dos campos preenchidos, verifique e corrija.");
+            return "Quarto/form";
+        }
 
         try {
             service.salvar(quarto);
             attributes.addFlashAttribute("successMessage", "Quarto salvo com sucesso!");
             return "redirect:/quarto/listar";
         } catch (IllegalArgumentException e) {
-            attributes.addFlashAttribute("errorMessage", e.getMessage());
-            // Se for novo, volta para a tela de cadastro, se for edição, volta para a lista
-            return "redirect:/quarto/novo";
+            model.addAttribute("errorMessage", e.getMessage());
+            return "Quarto/form";
         }
 
     }

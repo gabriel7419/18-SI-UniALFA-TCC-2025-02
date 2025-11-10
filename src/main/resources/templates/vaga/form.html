@@ -26,7 +26,7 @@
     </div>
 
     <div class="card card-primary">
-        <div class="card-header">
+        <div class="card-header card-header-blue">
             <h3 class="card-title">Gestão de Vagas - Cadastrar</h3>
         </div>
 
@@ -38,7 +38,8 @@
 
                 <div class="form-group">
                     <label>Acolhido</label>
-                    <select class="form-control" th:field="*{acolhido.id}" id="acolhidoSelect">
+                    <select class="form-control" th:field="*{acolhido.id}" id="acolhidoSelect"
+                            th:classappend="${#fields.hasErrors('acolhido.id')} ? 'is-invalid' : ''">
                         <option value="">Selecione o Acolhido...</option>
                         <option th:each="a : ${acolhidos}"
                                 th:value="${a.id}"
@@ -46,7 +47,7 @@
                         </option>
                     </select>
                     <div th:if="${#fields.hasErrors('acolhido.id')}" th:errors="*{acolhido.id}"
-                         class="text-danger"></div>
+                         class="invalid-feedback"></div>
                 </div>
 
                 <div class="form-group">
@@ -63,29 +64,33 @@
 
                 <div class="form-group">
                     <label for="leito">Leito</label>
-                    <select class="form-control" id="leito" th:field="*{leito.id}">
+                    <select class="form-control" id="leito" th:field="*{leito.id}"
+                            th:classappend="${#fields.hasErrors('leito')} ? 'is-invalid' : ''">
                         <option value="">Selecione o Leito...</option>
                     </select>
-                    <div th:if="${#fields.hasErrors('leito')}" th:errors="*{leito}" class="text-danger"></div>
+                    <div th:if="${#fields.hasErrors('leito')}" th:errors="*{leito}" class="invalid-feedback"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="dataEntrada">Data de Ingresso</label>
-                    <input type="date" class="form-control" id="dataEntrada" th:field="*{dataEntrada}" readonly>
+                    <input type="date" class="form-control" id="dataEntrada" th:field="*{dataEntrada}" readonly
+                           th:classappend="${#fields.hasErrors('dataEntrada')} ? 'is-invalid' : ''">
                     <div th:if="${#fields.hasErrors('dataEntrada')}" th:errors="*{dataEntrada}"
-                         class="text-danger"></div>
+                         class="invalid-feedback"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="dataSaida">Data de Saída</label>
-                    <input type="date" class="form-control" id="dataSaida" th:field="*{dataSaida}" readonly>
-                    <div th:if="${#fields.hasErrors('dataSaida')}" th:errors="*{dataSaida}" class="text-danger"></div>
+                    <input type="date" class="form-control" id="dataSaida" th:field="*{dataSaida}" readonly
+                           th:classappend="${#fields.hasErrors('dataSaida')} ? 'is-invalid' : ''">
+                    <div th:if="${#fields.hasErrors('dataSaida')}" th:errors="*{dataSaida}" class="invalid-feedback"></div>
                 </div>
 
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                    <a th:href="@{/vaga/listar}" class="btn btn-secondary">Cancelar</a>
-                </div>
+            </div>
+            
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <a th:href="@{/vaga/listar}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>

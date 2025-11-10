@@ -212,14 +212,55 @@ public class EstoqueController {
     private MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
 
     @GetMapping("/historico")
-    public String verHistorico(Model model) {
-        model.addAttribute("movimentacoes", movimentacaoEstoqueRepository.findAllByOrderByDataMovimentacaoDesc());
+    public String verHistorico(Model model,
+        @RequestParam(required = false) String nomeProduto,
+        @RequestParam(required = false) String tipo) {
+        
+        Specification<edu.unialfa.alberguepro.model.MovimentacaoEstoque> spec = Specification.where(null);
+
+        if (nomeProduto != null && !nomeProduto.isEmpty()) {
+            spec = spec.and(edu.unialfa.alberguepro.repository.MovimentacaoEstoqueSpecification.comProdutoNome(nomeProduto));
+        }
+
+        if (tipo != null && !tipo.isEmpty()) {
+            try {
+                edu.unialfa.alberguepro.model.MovimentacaoEstoque.TipoMovimentacao tipoEnum = 
+                    edu.unialfa.alberguepro.model.MovimentacaoEstoque.TipoMovimentacao.valueOf(tipo);
+                spec = spec.and(edu.unialfa.alberguepro.repository.MovimentacaoEstoqueSpecification.comTipo(tipoEnum));
+            } catch (IllegalArgumentException e) {
+                // Ignora tipo inválido
+            }
+        }
+
+        model.addAttribute("movimentacoes", movimentacaoEstoqueRepository.findAll(spec, org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "dataMovimentacao")));
+        model.addAttribute("nomeProduto", nomeProduto);
+        model.addAttribute("tipo", tipo);
+        
         return "estoque/historico";
     }
 
     @GetMapping("/historico/relatorio/pdf")
-    public ResponseEntity<InputStreamResource> gerarRelatorioMovimentacaoPdf() throws JRException {
-        List<edu.unialfa.alberguepro.model.MovimentacaoEstoque> movimentacoes = movimentacaoEstoqueRepository.findAllByOrderByDataMovimentacaoDesc();
+    public ResponseEntity<InputStreamResource> gerarRelatorioMovimentacaoPdf(
+            @RequestParam(required = false) String nomeProduto,
+            @RequestParam(required = false) String tipo) throws JRException {
+        
+        Specification<edu.unialfa.alberguepro.model.MovimentacaoEstoque> spec = Specification.where(null);
+
+        if (nomeProduto != null && !nomeProduto.isEmpty()) {
+            spec = spec.and(edu.unialfa.alberguepro.repository.MovimentacaoEstoqueSpecification.comProdutoNome(nomeProduto));
+        }
+
+        if (tipo != null && !tipo.isEmpty()) {
+            try {
+                edu.unialfa.alberguepro.model.MovimentacaoEstoque.TipoMovimentacao tipoEnum = 
+                    edu.unialfa.alberguepro.model.MovimentacaoEstoque.TipoMovimentacao.valueOf(tipo);
+                spec = spec.and(edu.unialfa.alberguepro.repository.MovimentacaoEstoqueSpecification.comTipo(tipoEnum));
+            } catch (IllegalArgumentException e) {
+                // Ignora tipo inválido
+            }
+        }
+
+        List<edu.unialfa.alberguepro.model.MovimentacaoEstoque> movimentacoes = movimentacaoEstoqueRepository.findAll(spec, org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "dataMovimentacao"));
         ByteArrayInputStream bis = relatorioService.gerarRelatorioMovimentacaoPdf(movimentacoes);
 
         HttpHeaders headers = new HttpHeaders();

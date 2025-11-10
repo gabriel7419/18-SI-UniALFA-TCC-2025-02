@@ -59,9 +59,7 @@ public class RelatorioUsuarioPatrimonioService {
         return new ByteArrayInputStream(out.toByteArray());
     }
     
-    public ByteArrayInputStream gerarRelatorioPatrimonioPdf() throws JRException {
-        List<ControlePatrimonio> patrimonios = patrimonioRepository.findAll();
-        
+    public ByteArrayInputStream gerarRelatorioPatrimonioPdf(List<ControlePatrimonio> patrimonios) throws JRException {
         InputStream inputStream = getClass().getResourceAsStream("/relatorios/relatorio_patrimonio.jrxml");
         if (inputStream == null) throw new RuntimeException("Arquivo JRXML não encontrado!");
 
