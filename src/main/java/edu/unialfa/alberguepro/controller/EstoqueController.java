@@ -208,6 +208,38 @@ public class EstoqueController {
                 .body(new InputStreamResource(bis));
     }
 
+    @GetMapping("/relatorio/excel")
+    public ResponseEntity<InputStreamResource> gerarRelatorioExcel(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) Long unidadeId) throws Exception {
+
+        Specification<Produto> spec = Specification.where(null);
+        if (nome != null && !nome.isEmpty()) {
+            spec = spec.and(ProdutoSpecification.comNome(nome));
+        }
+        if (tipo != null && !tipo.isEmpty()) {
+            spec = spec.and(ProdutoSpecification.comTipo(tipo));
+        }
+        Unidade unidade = null;
+        if (unidadeId != null && unidadeId > 0) { 
+            unidade = unidadeRepository.findById(unidadeId).orElse(null);
+            if (unidade != null) {
+                spec = spec.and(ProdutoSpecification.comUnidade(unidade));
+            }
+        }
+
+        List<Produto> produtos = produtoRepository.findAll(spec);
+        ByteArrayInputStream bis = relatorioService.gerarRelatorioExcel(produtos);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=estoque.xlsx");
+
+        return ResponseEntity.ok().headers(headers)
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new InputStreamResource(bis));
+    }
+
     @Autowired
     private MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
 
@@ -267,6 +299,38 @@ public class EstoqueController {
         headers.add("Content-Disposition", "inline; filename=movimentacao_estoque.pdf");
 
         return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
+    }
+
+    @GetMapping("/historico/relatorio/excel")
+    public ResponseEntity<InputStreamResource> gerarRelatorioMovimentacaoExcel(
+            @RequestParam(required = false) String nomeProduto,
+            @RequestParam(required = false) String tipo) throws Exception {
+        
+        Specification<edu.unialfa.alberguepro.model.MovimentacaoEstoque> spec = Specification.where(null);
+
+        if (nomeProduto != null && !nomeProduto.isEmpty()) {
+            spec = spec.and(edu.unialfa.alberguepro.repository.MovimentacaoEstoqueSpecification.comProdutoNome(nomeProduto));
+        }
+
+        if (tipo != null && !tipo.isEmpty()) {
+            try {
+                edu.unialfa.alberguepro.model.MovimentacaoEstoque.TipoMovimentacao tipoEnum = 
+                    edu.unialfa.alberguepro.model.MovimentacaoEstoque.TipoMovimentacao.valueOf(tipo);
+                spec = spec.and(edu.unialfa.alberguepro.repository.MovimentacaoEstoqueSpecification.comTipo(tipoEnum));
+            } catch (IllegalArgumentException e) {
+                // Ignora tipo inválido
+            }
+        }
+
+        List<edu.unialfa.alberguepro.model.MovimentacaoEstoque> movimentacoes = movimentacaoEstoqueRepository.findAll(spec, org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "dataMovimentacao"));
+        ByteArrayInputStream bis = relatorioService.gerarRelatorioMovimentacaoExcel(movimentacoes);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=movimentacao_estoque.xlsx");
+
+        return ResponseEntity.ok().headers(headers)
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
                 .body(new InputStreamResource(bis));
     }
 }

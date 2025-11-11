@@ -59,13 +59,16 @@
                         <a th:href="@{/estoque/historico/relatorio/pdf(nomeProduto=${nomeProduto}, tipo=${tipo})}" class="btn btn-danger" target="_blank">
                             <i class="fas fa-file-pdf"></i> Gerar PDF
                         </a>
+                        <a th:href="@{/estoque/historico/relatorio/excel(nomeProduto=${nomeProduto}, tipo=${tipo})}" class="btn btn-success">
+                            <i class="fas fa-file-excel"></i> Gerar Excel
+                        </a>
                         <a th:href="@{/estoque}" class="btn btn-warning" style="color: black;">Voltar para o Estoque</a>
                     </div>
                 </div>
             </div>
             <div class="card-body">
                 <table class="table table-bordered table-striped">
-                    <thead>
+                    <thead class="thead-blue">
                         <tr>
                             <th>Data e Hora</th>
                             <th>Produto</th>
