@@ -1,7 +1,7 @@
 steps:
   # 1. Build do Maven
   - name: 'maven:3-amazoncorretto-21'
-    entrypoing: 'mvn'
+    entrypoint: 'mvn'
     args:
       - 'clean'
       - 'install'
