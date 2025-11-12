@@ -27,6 +27,10 @@ jobs:
         workload_identity_provider: 'projects/742704518873/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
         service_account: 'github-deploy-sa@sonic-earth-475722-i6.iam.gserviceaccount.com'
 
+    # Configura o GCloudSDK
+    - name: Configurar Google Cloud SDK
+      uses: 'google-github-actions/setup-gcloud@v2'
+
     # Envia o arquivo cloudbuild.yaml para o Google executar
     - name: Executar Cloud Build
       run: |-
