@@ -1,2 +1,6 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+# Se houver um conflito de merge no application.properties,
+# sempre mantenha a versão "nossa" (ours), ou seja, a da branch de deploy.
+/src/main/resources/application.properties merge=ours
