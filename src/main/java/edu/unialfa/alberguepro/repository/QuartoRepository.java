@@ -16,12 +16,14 @@ public interface QuartoRepository extends JpaRepository<Quarto, Long> {
     Quarto findByNumeroQuartoAndIdNot(String numeroQuarto, Long id);
 
     @Query("SELECT COUNT(DISTINCT q.id) FROM Quarto q " +
-           "JOIN q.leitos l " +
            "WHERE NOT EXISTS (" +
-           "  SELECT 1 FROM Vaga v " +
-           "  WHERE v.leito = l " +
-           "  AND v.acolhido IS NOT NULL " +
-           "  AND v.dataSaida IS NULL)")
+           "  SELECT 1 FROM Leito l " +
+           "  WHERE l.quarto = q " +
+           "  AND EXISTS (" +
+           "    SELECT 1 FROM Vaga v " +
+           "    WHERE v.leito = l " +
+           "    AND v.acolhido IS NOT NULL " +
+           "    AND v.dataSaida IS NULL))")
     long countQuartosComLeitosLivres();
 
     @Query("SELECT COUNT(DISTINCT q.id) FROM Quarto q " +
