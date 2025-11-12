@@ -3,7 +3,7 @@ name: Deploy no Cloud Build
 on:
   push:
     branches:
-      - main # Ou a branch que você usa
+      - deploy-cloud # Ou a branch que você usa
 
 jobs:
   build-e-deploy:
