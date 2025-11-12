@@ -8,21 +8,21 @@ steps:
       - '-U'
       
   # 2. Build da Imagem Docker
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'us.gcr.io/google-appengine/cloud-build-builders/docker'
     args:
       - 'build'
       - '-t'
       - 'us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest'
       - '.'
       
-  # 3. Push da Imagem para o Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
+  # 3. Push da Imagem
+  - name: 'us.gcr.io/google-appengine/cloud-build-builders/docker'
     args:
       - 'push'
       - 'us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest'
       
-  # 4. Deploy no Google Cloud Run
-  - name: 'gcr.io/google/cloud-sdk'
+  # 4. Deploy no Cloud Run
+  - name: 'us.gcr.io/google-appengine/cloud-build-builders/gcloud'
     entrypoint: 'gcloud'
     args:
       - 'run'
@@ -32,9 +32,7 @@ steps:
       - '--region=us-central1'
       - '--platform=managed'
 
-# Imagem final a ser registrada
 images:
   - 'us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest'
 
-# Tempo limite para a build
 timeout: 900s
