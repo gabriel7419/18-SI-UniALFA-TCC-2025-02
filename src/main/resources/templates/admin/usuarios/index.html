@@ -85,7 +85,18 @@
                                 <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-warning btn-sm" title="Editar">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a th:href="@{/admin/usuarios/alterar-senha/{id}(id=${usuario.id})}" class="btn btn-info btn-sm" title="Alterar senha">
+                                <!-- Botão de alterar senha - desabilitado se for outro admin -->
+                                <a th:if="${isAdmin && usuario.role == 'ADMIN' && usuario.username != usernameLogado}" 
+                                   href="javascript:void(0);" 
+                                   class="btn btn-info btn-sm disabled" 
+                                   style="opacity: 0.5; cursor: not-allowed;"
+                                   title="Não é permitido alterar senha de outro administrador">
+                                    <i class="fas fa-key"></i>
+                                </a>
+                                <a th:if="${!(isAdmin && usuario.role == 'ADMIN' && usuario.username != usernameLogado)}" 
+                                   th:href="@{/admin/usuarios/alterar-senha/{id}(id=${usuario.id})}" 
+                                   class="btn btn-info btn-sm" 
+                                   title="Alterar senha">
                                     <i class="fas fa-key"></i>
                                 </a>
                                 <!-- Botão de excluir com confirmação -->

@@ -46,6 +46,15 @@ public class UsuarioController {
     @GetMapping
     public String listarUsuarios(Model model) {
         model.addAttribute("usuarios", usuarioService.findAllDTO());
+        
+        // Adicionar informação do usuário logado
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String usernameLogado = auth.getName();
+        boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        
+        model.addAttribute("usernameLogado", usernameLogado);
+        model.addAttribute("isAdmin", isAdmin);
+        
         return "admin/usuarios/index"; // -> templates/admin/usuarios/index.html
     }
 
