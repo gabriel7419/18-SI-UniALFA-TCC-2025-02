@@ -327,6 +327,65 @@
         [id^="chart"] {
             height: auto !important;
         }
+        
+        /* ===== RESPONSIVIDADE MOBILE ===== */
+        @media (max-width: 768px) {
+            /* Remover margens fixas do content-wrapper em mobile */
+            body:not(.sidebar-collapse) .content-wrapper,
+            body:not(.sidebar-collapse) .main-footer,
+            body:not(.sidebar-collapse) .main-header {
+                margin-left: 0 !important;
+            }
+            
+            body.sidebar-collapse .content-wrapper,
+            body.sidebar-collapse .main-footer,
+            body.sidebar-collapse .main-header {
+                margin-left: 0 !important;
+            }
+            
+            /* Sidebar oculta por padrão em mobile */
+            .main-sidebar {
+                margin-left: -220px !important;
+            }
+            
+            /* Quando sidebar está aberta em mobile */
+            body:not(.sidebar-collapse) .main-sidebar {
+                margin-left: 0 !important;
+            }
+            
+            /* Responsividade para tabelas */
+            .table-responsive {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Melhorar legibilidade de small-boxes em mobile */
+            .small-box .inner h3 {
+                font-size: 1.8rem !important;
+            }
+            
+            .small-box .inner p {
+                font-size: 0.85rem !important;
+            }
+            
+            /* Ajustar botões em mobile */
+            .btn {
+                padding: 0.4rem 0.8rem !important;
+                font-size: 0.85rem !important;
+            }
+            
+            /* Cards mais compactos */
+            .card-body {
+                padding: 0.75rem !important;
+            }
+            
+            .card-header {
+                padding: 0.5rem 0.75rem !important;
+            }
+        }
+        
         /* Toasts */
         .toast-container { position: fixed; top: 1rem; right: 1rem; z-index: 1060; width: 320px; }
         .toast-msg { display:flex; align-items:center; gap:.5rem; padding:.6rem .9rem; margin-bottom:.5rem; border-radius:.25rem; box-shadow:0 4px 12px rgba(0,0,0,.15); color:#fff; opacity:.98; }
@@ -335,6 +394,105 @@
         .toast-msg.info { background:#17a2b8; }
         .toast-msg.warning { background:#ffc107; color:#212529; }
         .toast-msg .close { background:transparent; border:0; color:inherit; font-size:1.1rem; line-height:1; margin-left:auto; }
+        
+        /* ===== CARD HEADER AZUL ===== */
+        .card-header-blue {
+            background-color: #007bff !important;
+            color: #ffffff !important;
+            border-bottom: 1px solid #0056b3 !important;
+        }
+        
+        .card-header-blue .card-title {
+            color: #ffffff !important;
+            font-weight: 600 !important;
+        }
+        
+        .card-header-blue .btn {
+            color: #ffffff !important;
+            border-color: #ffffff !important;
+        }
+        
+        /* ===== THEAD BRANCO ===== */
+        .table thead.thead-blue th {
+            background-color: #ffffff !important;
+            color: #212529 !important;
+            border-bottom: 2px solid #dee2e6 !important;
+            font-weight: 600 !important;
+        }
+        
+        /* ===== DARK MODE CUSTOMIZATIONS ===== */
+        body.dark-mode .card-header-blue {
+            background-color: #1e3a8a !important;
+            border-bottom: 1px solid #1e40af !important;
+        }
+        
+        body.dark-mode .table thead.thead-blue th {
+            background-color: #374151 !important;
+            color: #e5e7eb !important;
+            border-bottom: 2px solid #4b5563 !important;
+        }
+        
+        body.dark-mode .toast-msg.success {
+            background: #166534 !important;
+        }
+        
+        body.dark-mode .toast-msg.error {
+            background: #991b1b !important;
+        }
+        
+        body.dark-mode .toast-msg.info {
+            background: #0e7490 !important;
+        }
+        
+        body.dark-mode .toast-msg.warning {
+            background: #a16207 !important;
+            color: #fef3c7 !important;
+        }
+        
+        /* Navbar superior em dark mode */
+        body.dark-mode .main-header {
+            background-color: #1f2937 !important;
+            border-bottom: 1px solid #374151 !important;
+        }
+        
+        body.dark-mode .navbar-light .navbar-nav .nav-link {
+            color: #e5e7eb !important;
+        }
+        
+        body.dark-mode .navbar-light .navbar-nav .nav-link:hover {
+            color: #ffffff !important;
+        }
+        
+        /* Botões de relatório em dark mode - remover border branco */
+        body.dark-mode .card-header-blue .btn {
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        body.dark-mode .card-header-blue .btn:hover {
+            border-color: rgba(255, 255, 255, 0.5) !important;
+        }
+        
+        /* Ajustar cor de linhas de tabela com warning (produtos esgotados) */
+        .table-warning {
+            background-color: #fff3cd !important;
+            color: #856404 !important;
+        }
+        
+        body.dark-mode .table-warning {
+            background-color: #374151 !important;
+            color: #000000 !important;
+            border-left: 4px solid #f59e0b !important;
+        }
+        
+        body.dark-mode .table-warning td {
+            color: #000000 !important;
+            font-weight: 500 !important;
+        }
+        
+        body.dark-mode .table-warning .badge {
+            background-color: #dc2626 !important;
+            color: #ffffff !important;
+        }
     </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -348,8 +506,13 @@
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
         </ul>
-        <!-- Botão de Sair -->
+        <!-- Botão de Dark Mode e Sair -->
         <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" id="dark-mode-toggle" href="#" role="button" title="Alternar modo escuro">
+                    <i class="fas fa-moon"></i>
+                </a>
+            </li>
             <li class="nav-item">
                 <form th:action="@{/logout}" method="post">
                     <button type="submit" class="btn btn-link nav-link">
@@ -574,7 +737,7 @@ $(document).ready(function() {
                         window.location.href = '/patrimonio';
                         return false;
                     });
-                } else if ($icon.hasClass('fa-users')) {
+                } else if ($icon.hasClass('fa-id-card')) {
                     // Acolhido
                     $link.off('click').on('click', function(e) {
                         e.preventDefault();
@@ -635,6 +798,39 @@ $(function() {
   $('.main-header, .content-wrapper, .main-footer').on('click', keepCollapsed);
   // Em resize manter recolhida
   $(window).on('resize', keepCollapsed);
+});
+</script>
+<!-- Dark Mode Toggle Script -->
+<script>
+$(document).ready(function() {
+    // Carregar preferência do localStorage ao iniciar
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    if (darkMode) {
+        $('body').addClass('dark-mode');
+        $('#dark-mode-toggle i').removeClass('fa-moon').addClass('fa-sun');
+        $('#dark-mode-toggle').attr('title', 'Alternar modo claro');
+    }
+    
+    // Toggle dark mode ao clicar no botão
+    $('#dark-mode-toggle').on('click', function(e) {
+        e.preventDefault();
+        
+        // Alternar classe dark-mode no body
+        $('body').toggleClass('dark-mode');
+        
+        // Trocar ícone entre lua e sol
+        const isDarkMode = $('body').hasClass('dark-mode');
+        $(this).find('i').toggleClass('fa-moon fa-sun');
+        
+        // Atualizar tooltip
+        $(this).attr('title', isDarkMode ? 'Alternar modo claro' : 'Alternar modo escuro');
+        
+        // Salvar preferência no localStorage
+        localStorage.setItem('darkMode', isDarkMode);
+        
+        // Disparar evento customizado para atualizar gráficos
+        window.dispatchEvent(new Event('darkModeToggled'));
+    });
 });
 </script>
 <th:block th:replace="${script}"></th:block>

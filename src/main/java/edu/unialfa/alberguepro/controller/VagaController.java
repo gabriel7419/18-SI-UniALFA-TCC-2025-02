@@ -16,7 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+
 import java.util.List;
 
 @Controller
@@ -57,7 +57,8 @@ public class VagaController {
     }
 
     @PostMapping("salvar")
-    public String salvar(@ModelAttribute("vaga") Vaga vaga, BindingResult result, Model model) {
+    public String salvar(@ModelAttribute("vaga") Vaga vaga, BindingResult result, Model model,
+    org.springframework.web.servlet.mvc.support.RedirectAttributes attributes) {
 
         if (vaga.getAcolhido() == null || vaga.getAcolhido().getId() == null) {
             result.rejectValue("acolhido.id", "campo.obrigatorio", "O acolhido é obrigatório.");
@@ -88,14 +89,40 @@ public class VagaController {
             vaga.setLeito(full);
         }
 
-        service.salvar(vaga);
+        try {
+            service.salvar(vaga);
+            attributes.addFlashAttribute("successMessage", "Vaga salva com sucesso!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("errorMessage", "Erro ao salvar vaga: " + e.getMessage());
+        }
         return "redirect:/vaga/listar";
     }
 
     @GetMapping("/leitos/{quartoId}")
     @ResponseBody
-    public List<Leito> buscarLeitosPorQuarto(@PathVariable Long quartoId) {
-        return leitoService.buscarLeitosLivresPorQuartoId(quartoId);
+    public List<Leito> buscarLeitosPorQuarto(@PathVariable Long quartoId,
+    @RequestParam(required = false) Long vagaId) {
+
+        if (vagaId != null) {
+            // Modo edição: incluir o leito atual da vaga
+            Vaga vagaAtual = service.buscarPorId(vagaId);
+            List<Leito> leitosDisponiveis = leitoService.buscarLeitosDisponiveisPorQuartoId(quartoId);
+
+            // Adicionar o leito atual da vaga se não estiver na lista
+            if (vagaAtual != null && vagaAtual.getLeito() != null) {
+                boolean leitoAtualJaEstaLista = leitosDisponiveis.stream()
+                    .anyMatch(l -> l.getId().equals(vagaAtual.getLeito().getId()));
+
+                if (!leitoAtualJaEstaLista) {
+                    leitosDisponiveis.add(vagaAtual.getLeito());
+                }
+            }
+
+            return leitosDisponiveis;
+        } else {
+            // Modo cadastro: apenas leitos disponíveis
+            return leitoService.buscarLeitosDisponiveisPorQuartoId(quartoId);
+        }
     }
 
     @GetMapping("listar")
@@ -128,8 +155,13 @@ public class VagaController {
     }
 
     @GetMapping("remover/{id}")
-    public String remover(@PathVariable Long id) {
-        service.deletarPorId(id);
+    public String remover(@PathVariable Long id, org.springframework.web.servlet.mvc.support.RedirectAttributes attributes) {
+        try {
+            service.deletarPorId(id);
+            attributes.addFlashAttribute("successMessage", "Vaga removida com sucesso!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("errorMessage", "Erro ao remover vaga: " + e.getMessage());
+        }
         return "redirect:/vaga/listar";
     }
 

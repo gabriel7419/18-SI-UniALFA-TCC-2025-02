@@ -29,6 +29,9 @@
 	<field name="dataDeVencimento" class="java.time.LocalDate">
 		<fieldDescription><![CDATA[dataDeVencimento]]></fieldDescription>
 	</field>
+	<field name="naoPerecivel" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[naoPerecivel]]></fieldDescription>
+	</field>
 	<title>
 		<band height="100" splitType="Stretch">
 			<!-- Área reservada para o logo (será adicionado depois) -->
@@ -322,7 +325,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{unidade} != null ? $F{unidade}.getNome() : ""]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy">
+			<textField>
 				<reportElement mode="Opaque" x="450" y="0" width="105" height="30" backcolor="#FFFFFF" uuid="a1b2c3d4-e5f6-7890-1234-567890abcdef">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2==0]]></printWhenExpression>
 				</reportElement>
@@ -336,9 +339,9 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<paragraph leftIndent="5" rightIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{dataDeVencimento}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{naoPerecivel} != null && $F{naoPerecivel}) || $F{dataDeVencimento} == null ? "Não Perecível" : new java.text.SimpleDateFormat("dd/MM/yyyy").format(java.sql.Date.valueOf($F{dataDeVencimento}))]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy">
+			<textField>
 				<reportElement mode="Opaque" x="450" y="0" width="105" height="30" backcolor="#F5F5F5" uuid="a1b2c3d4-e5f6-7891-1234-567890abcdef">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2!=0]]></printWhenExpression>
 				</reportElement>
@@ -352,7 +355,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<paragraph leftIndent="5" rightIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{dataDeVencimento}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{naoPerecivel} != null && $F{naoPerecivel}) || $F{dataDeVencimento} == null ? "Não Perecível" : new java.text.SimpleDateFormat("dd/MM/yyyy").format(java.sql.Date.valueOf($F{dataDeVencimento}))]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

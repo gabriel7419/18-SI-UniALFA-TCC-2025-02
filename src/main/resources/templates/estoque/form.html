@@ -61,8 +61,17 @@
             </select>
             <div th:if="${#fields.hasErrors('unidadeId')}" th:errors="*{unidadeId}" class="invalid-feedback"></div>
           </div>
-          <!-- Data de vencimento -->
+          <!-- Checkbox Produto Não Perecível -->
           <div class="form-group">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="naoPerecivel" th:field="*{naoPerecivel}">
+              <label class="form-check-label" for="naoPerecivel">
+                Produto não perecível / sem data de vencimento
+              </label>
+            </div>
+          </div>
+          <!-- Data de vencimento -->
+          <div class="form-group" id="dataVencimentoGroup">
             <label for="dataDeVencimento">Data de Vencimento</label>
             <input type="date" class="form-control" id="dataDeVencimento" th:field="*{dataDeVencimento}"
               th:classappend="${#fields.hasErrors('dataDeVencimento')} ? 'is-invalid' : ''">
@@ -79,8 +88,30 @@
     </div>
   </section>
 <script>
- 
- </script>
+  // Controlar visibilidade do campo de data de vencimento
+  document.addEventListener('DOMContentLoaded', function() {
+    const checkboxNaoPerecivel = document.getElementById('naoPerecivel');
+    const dataVencimentoGroup = document.getElementById('dataVencimentoGroup');
+    const dataVencimentoInput = document.getElementById('dataDeVencimento');
+
+    function toggleDataVencimento() {
+      if (checkboxNaoPerecivel.checked) {
+        dataVencimentoGroup.style.display = 'none';
+        dataVencimentoInput.removeAttribute('required');
+        dataVencimentoInput.value = ''; // Limpar o valor quando não perecível
+      } else {
+        dataVencimentoGroup.style.display = 'block';
+        dataVencimentoInput.setAttribute('required', 'required');
+      }
+    }
+
+    // Executar ao carregar a página
+    toggleDataVencimento();
+
+    // Executar quando o checkbox mudar
+    checkboxNaoPerecivel.addEventListener('change', toggleDataVencimento);
+  });
+</script>
 </body>
 
 </html>

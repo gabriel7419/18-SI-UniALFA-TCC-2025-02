@@ -112,6 +112,11 @@ public class UsuarioService {
         boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
                 .stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
         boolean isSelf = usuario.getUsername().equals(usernameLogado);
+        
+        // Impedir que um admin altere a senha de outro admin
+        if (isAdmin && !isSelf && "ADMIN".equals(usuario.getRole())) {
+            throw new IllegalArgumentException("Não é permitido alterar a senha de outro administrador.");
+        }
 
         // Exige senha atual se o próprio usuário estiver alterando ou se não for admin
         boolean mustValidateCurrent = isSelf || !isAdmin;

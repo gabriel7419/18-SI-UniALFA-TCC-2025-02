@@ -46,6 +46,15 @@ public class UsuarioController {
     @GetMapping
     public String listarUsuarios(Model model) {
         model.addAttribute("usuarios", usuarioService.findAllDTO());
+        
+        // Adicionar informação do usuário logado
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String usernameLogado = auth.getName();
+        boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        
+        model.addAttribute("usernameLogado", usernameLogado);
+        model.addAttribute("isAdmin", isAdmin);
+        
         return "admin/usuarios/index"; // -> templates/admin/usuarios/index.html
     }
 
@@ -104,14 +113,24 @@ public class UsuarioController {
     }
 
     @PostMapping("/excluir/{id}")
-    public String excluirUsuario(@PathVariable("id") Long id) {
-        usuarioService.excluir(id);
+    public String excluirUsuario(@PathVariable("id") Long id, RedirectAttributes attributes) {
+        try {
+            usuarioService.excluir(id);
+            attributes.addFlashAttribute("successMessage", "Usuário excluído com sucesso!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("errorMessage", "Erro ao excluir usuário: " + e.getMessage());
+        }
         return "redirect:/admin/usuarios";
     }
 
     @PostMapping("/toggle/{id}")
-    public String toggleAtivo(@PathVariable("id") Long id) {
-        usuarioService.toggleAtivo(id);
+    public String toggleAtivo(@PathVariable("id") Long id, RedirectAttributes attributes) {
+        try {
+            usuarioService.toggleAtivo(id);
+            attributes.addFlashAttribute("successMessage", "Status do usuário alterado com sucesso!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("errorMessage", "Erro ao alterar status: " + e.getMessage());
+        }
         return "redirect:/admin/usuarios";
     }
 

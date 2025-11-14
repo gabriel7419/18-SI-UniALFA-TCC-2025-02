@@ -413,4 +413,82 @@ a:hover {
     .small-box {
         margin-bottom: 1rem;
     }
+    
+    /* Remover margens da sidebar em dispositivos móveis */
+    body:not(.sidebar-collapse) .content-wrapper,
+    body:not(.sidebar-collapse) .main-footer,
+    body:not(.sidebar-collapse) .main-header {
+        margin-left: 0 !important;
+    }
+    
+    body.sidebar-collapse .content-wrapper,
+    body.sidebar-collapse .main-footer,
+    body.sidebar-collapse .main-header {
+        margin-left: 0 !important;
+    }
+    
+    /* Sidebar oculta por padrão em mobile */
+    .main-sidebar {
+        margin-left: -220px !important;
+        transition: margin-left 0.3s ease-in-out !important;
+    }
+    
+    /* Quando sidebar está aberta em mobile (não colapsada) */
+    body:not(.sidebar-collapse) .main-sidebar {
+        margin-left: 0 !important;
+    }
+    
+    /* Tabelas responsivas */
+    .table-responsive {
+        border: 0;
+    }
+    
+    .table {
+        font-size: 0.85rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.5rem !important;
+        white-space: nowrap;
+    }
+    
+    /* Botões menores em mobile */
+    .btn-sm {
+        padding: 0.2rem 0.4rem !important;
+        font-size: 0.75rem !important;
+    }
+    
+    /* Input groups mais compactos */
+    .input-group {
+        flex-wrap: nowrap;
+    }
+    
+    /* Cards mais compactos */
+    .card-body {
+        padding: 1rem !important;
+    }
+    
+    .card-header {
+        padding: 0.75rem 1rem !important;
+    }
+    
+    /* Alertas mais compactos */
+    .alert {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.85rem !important;
+    }
 }
+
+/* Tabela responsiva com scroll horizontal suave */
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive > .table-bordered {
+    border: 0;
+}
+

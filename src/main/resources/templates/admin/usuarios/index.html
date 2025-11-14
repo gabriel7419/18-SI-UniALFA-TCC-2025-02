@@ -8,6 +8,15 @@
 </head>
 <body>
     <section>
+        <!-- Mensagem de sucesso -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i>
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        
         <!-- Mensagem de erro -->
         <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="fas fa-exclamation-triangle"></i>
@@ -31,7 +40,10 @@
                     <h3 class="card-title mb-0">Lista de Usuários</h3>
                     <div class="card-tools">
                         <a th:href="@{/relatorios/usuarios/pdf}" class="btn btn-danger" target="_blank">
-                            <i class="fas fa-file-pdf"></i>
+                            <i class="fas fa-file-pdf"></i> Gerar PDF
+                        </a>
+                        <a th:href="@{/relatorios/usuarios/excel}" class="btn btn-success">
+                            <i class="fas fa-file-excel"></i> Gerar Excel
                         </a>
                     </div>
                 </div>
@@ -43,8 +55,9 @@
                 </div>
 
                 <!-- Tabela só aparece se tiver usuário -->
-                <table class="table table-bordered table-hover" th:if="${not #lists.isEmpty(usuarios)}">
-                    <thead>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" th:if="${not #lists.isEmpty(usuarios)}">
+                    <thead class="thead-blue">
                         <tr>
                             <th>ID</th>
                             <th>Usuário</th>
@@ -81,7 +94,18 @@
                                 <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-warning btn-sm" title="Editar">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a th:href="@{/admin/usuarios/alterar-senha/{id}(id=${usuario.id})}" class="btn btn-info btn-sm" title="Alterar senha">
+                                <!-- Botão de alterar senha - desabilitado se for outro admin -->
+                                <a th:if="${isAdmin && usuario.role == 'ADMIN' && usuario.username != usernameLogado}" 
+                                   href="javascript:void(0);" 
+                                   class="btn btn-info btn-sm disabled" 
+                                   style="opacity: 0.5; cursor: not-allowed;"
+                                   title="Não é permitido alterar senha de outro administrador">
+                                    <i class="fas fa-key"></i>
+                                </a>
+                                <a th:if="${!(isAdmin && usuario.role == 'ADMIN' && usuario.username != usernameLogado)}" 
+                                   th:href="@{/admin/usuarios/alterar-senha/{id}(id=${usuario.id})}" 
+                                   class="btn btn-info btn-sm" 
+                                   title="Alterar senha">
                                     <i class="fas fa-key"></i>
                                 </a>
                                 <!-- Botão de excluir com confirmação -->
@@ -95,6 +119,7 @@
                         </tr>
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     </section>

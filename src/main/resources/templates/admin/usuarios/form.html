@@ -8,6 +8,24 @@
 </head>
 <body>
     <section>
+        <!-- Mensagem de erro -->
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        
+        <!-- Mensagem de sucesso -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i>
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
         <div class="card card-primary">
             <div class="card-header card-header-blue">
                 <h3 class="card-title" th:text="${usuario.id == null ? 'Novo Usuário' : 'Editar Usuário'}">Administrar Usuários - Cadastro</h3>
