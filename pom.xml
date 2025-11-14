@@ -119,6 +119,7 @@
             <artifactId>mysql-socket-factory-connector-j-8</artifactId>
             <version>1.18.0</version>
         </dependency>
+
     </dependencies>
 
     <build>
