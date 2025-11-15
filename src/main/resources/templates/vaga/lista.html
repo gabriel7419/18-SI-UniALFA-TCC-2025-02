@@ -14,7 +14,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    
+
     <!-- Mensagem de sucesso -->
     <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="fas fa-check-circle"></i>
@@ -30,37 +30,17 @@
         </a>
     </div>
 
-    <div class="card card-primary collapsed-card mb-3">
-        <div class="card-header card-header-blue">
-            <h3 class="card-title">Filtros</h3>
-            <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-plus"></i>
+    <form th:action="@{/vaga/pesquisar}" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="filtro" class="form-control"
+                   placeholder="Buscar vaga pelo nome do acolhido..." th:value="${filtro}">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">
+                    <i class="fas fa-search"></i> Buscar
                 </button>
             </div>
         </div>
-        <div class="card-body" style="display: none;">
-            <form th:action="@{/vaga/listar}" method="get">
-                <div class="row">
-                    <div class="col-md-10">
-                        <div class="form-group">
-                            <label for="filtro">Nome do Acolhido:</label>
-                            <input type="text" id="filtro" name="filtro" class="form-control"
-                                   placeholder="Buscar vaga pelo nome do acolhido..." th:value="${filtro}">
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label>&nbsp;</label>
-                            <button type="submit" class="btn btn-primary btn-block">
-                                <i class="fas fa-search"></i> Filtrar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+    </form>
 
     <div class="card">
         <div class="card-header card-header-blue">
@@ -110,7 +90,7 @@
                         <a th:href="@{/vaga/editar/{id}(id=${vaga.id})}" class="btn btn-warning btn-sm">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a th:href="@{/vaga/remover/{id}(id=${vaga.id})}" 
+                        <a th:href="@{/vaga/remover/{id}(id=${vaga.id})}"
                            class="btn btn-danger btn-sm"
                            onclick="return confirm('Tem certeza que deseja remover esta vaga?');">
                             <i class="fas fa-trash"></i>
@@ -127,12 +107,12 @@
     // Mantém os filtros abertos se algum filtro estiver ativo
     $(document).ready(function() {
         var temFiltroAtivo = false;
-        
+
         // Verifica se há filtros ativos
         if ($('#filtro').val()) {
             temFiltroAtivo = true;
         }
-        
+
         // Se houver filtro ativo, expande o card de filtros
         if (temFiltroAtivo) {
             $('.collapsed-card').removeClass('collapsed-card');

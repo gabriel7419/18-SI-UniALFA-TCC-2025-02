@@ -37,19 +37,19 @@
 
                 <div class="form-group">
                     <label for="numeroQuarto" class="form-label">Número do Quarto:</label>
-                    <input type="text" id="numeroQuarto" class="form-control" th:field="*{numeroQuarto}" 
+                    <input type="text" id="numeroQuarto" class="form-control" th:field="*{numeroQuarto}"
                            placeholder="Ex: 01, 02, 10, 15"
                            th:classappend="${#fields.hasErrors('numeroQuarto')} ? 'is-invalid' : ''">
                     <div th:if="${#fields.hasErrors('numeroQuarto')}" th:errors="*{numeroQuarto}" class="invalid-feedback"></div>
                 </div>
 
                 <div class="alert alert-secondary">
-                    <i class="fas fa-info-circle"></i> 
+                    <i class="fas fa-info-circle"></i>
                     Este quarto será criado com <strong>4 leitos</strong> (Leito 01, 02, 03 e 04) automaticamente.
                 </div>
 
             </div>
-            
+
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Salvar</button>
                 <a th:href="@{/quarto/listar}" class="btn btn-secondary">Cancelar</a>

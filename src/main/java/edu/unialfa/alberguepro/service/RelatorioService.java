@@ -24,25 +24,25 @@ public class RelatorioService {
 
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(produtos);
         JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
-        
+
         // Calcular estatísticas
         int totalItens = produtos.size();
         long itensEsgotados = produtos.stream().filter(p -> p.getQuantidade() == 0).count();
-        
+
         java.util.Map<String, Object> parameters = new java.util.HashMap<>();
         parameters.put("TOTAL_ITENS", totalItens);
         parameters.put("ITENS_ESGOTADOS", (int)itensEsgotados);
-        
+
         // Obter data/hora atual no fuso horário GMT-3 (America/Sao_Paulo)
         java.time.ZoneId saoPauloZone = java.time.ZoneId.of("America/Sao_Paulo");
         java.time.ZonedDateTime agora = java.time.ZonedDateTime.now(saoPauloZone);
         parameters.put("DATA_EMISSAO", java.util.Date.from(agora.toInstant()));
-        
+
         // Configurar timezone do relatório
         parameters.put("REPORT_TIME_ZONE", java.util.TimeZone.getTimeZone(saoPauloZone));
-        
+
         parameters.put("USUARIO_EMISSOR", org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName());
-        
+
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -50,26 +50,26 @@ public class RelatorioService {
 
         return new ByteArrayInputStream(out.toByteArray());
     }
-    
+
     public ByteArrayInputStream gerarRelatorioMovimentacaoPdf(List<MovimentacaoEstoque> movimentacoes) throws JRException {
         InputStream inputStream = getClass().getResourceAsStream("/relatorios/relatorio_movimentacao_estoque.jrxml");
 
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(movimentacoes);
         JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
-        
+
         java.util.Map<String, Object> parameters = new java.util.HashMap<>();
         parameters.put("TOTAL_MOVIMENTACOES", movimentacoes.size());
-        
+
         // Obter data/hora atual no fuso horário GMT-3 (America/Sao_Paulo)
         java.time.ZoneId saoPauloZone = java.time.ZoneId.of("America/Sao_Paulo");
         java.time.ZonedDateTime agora = java.time.ZonedDateTime.now(saoPauloZone);
         parameters.put("DATA_EMISSAO", java.util.Date.from(agora.toInstant()));
-        
+
         // Configurar timezone do relatório
         parameters.put("REPORT_TIME_ZONE", java.util.TimeZone.getTimeZone(saoPauloZone));
-        
+
         parameters.put("USUARIO_EMISSOR", org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName());
-        
+
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -139,27 +139,27 @@ public class RelatorioService {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         for (Produto produto : produtos) {
             Row row = sheet.createRow(rowNum++);
-            
+
             Cell cell0 = row.createCell(0);
             cell0.setCellValue(produto.getId());
             cell0.setCellStyle(centerStyle);
-            
+
             Cell cell1 = row.createCell(1);
             cell1.setCellValue(produto.getTipo());
             cell1.setCellStyle(dataStyle);
-            
+
             Cell cell2 = row.createCell(2);
             cell2.setCellValue(produto.getNome());
             cell2.setCellStyle(dataStyle);
-            
+
             Cell cell3 = row.createCell(3);
             cell3.setCellValue(produto.getQuantidade());
             cell3.setCellStyle(centerStyle);
-            
+
             Cell cell4 = row.createCell(4);
             cell4.setCellValue(produto.getUnidade() != null ? produto.getUnidade().getNome() : "");
             cell4.setCellStyle(dataStyle);
-            
+
             Cell cell5 = row.createCell(5);
             if (produto.getDataDeVencimento() != null) {
                 cell5.setCellValue(produto.getDataDeVencimento().format(dateFormatter));
@@ -237,31 +237,31 @@ public class RelatorioService {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         for (MovimentacaoEstoque mov : movimentacoes) {
             Row row = sheet.createRow(rowNum++);
-            
+
             Cell cell0 = row.createCell(0);
             cell0.setCellValue(mov.getId());
             cell0.setCellStyle(centerStyle);
-            
+
             Cell cell1 = row.createCell(1);
             cell1.setCellValue(mov.getProduto() != null ? mov.getProduto().getNome() : "");
             cell1.setCellStyle(dataStyle);
-            
+
             Cell cell2 = row.createCell(2);
             cell2.setCellValue(mov.getTipo() != null ? mov.getTipo().toString() : "");
             cell2.setCellStyle(dataStyle);
-            
+
             Cell cell3 = row.createCell(3);
             cell3.setCellValue(mov.getQuantidadeMovimentada());
             cell3.setCellStyle(centerStyle);
-            
+
             Cell cell4 = row.createCell(4);
             cell4.setCellValue(mov.getQuantidadeAnterior());
             cell4.setCellStyle(centerStyle);
-            
+
             Cell cell5 = row.createCell(5);
             cell5.setCellValue(mov.getQuantidadePosterior());
             cell5.setCellStyle(centerStyle);
-            
+
             Cell cell6 = row.createCell(6);
             if (mov.getDataMovimentacao() != null) {
                 cell6.setCellValue(mov.getDataMovimentacao().format(dateTimeFormatter));

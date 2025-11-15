@@ -32,7 +32,7 @@ public class ControlePatrimonioController {
         @RequestParam(required = false) String nome,
         @RequestParam(required = false) String status,
         @RequestParam(required = false) String localAtual) {
-        
+
         Specification<ControlePatrimonio> spec = Specification.where(null);
 
         if (nome != null && !nome.isEmpty()) {
@@ -51,7 +51,7 @@ public class ControlePatrimonioController {
         model.addAttribute("nome", nome);
         model.addAttribute("status", status);
         model.addAttribute("localAtual", localAtual);
-        
+
         return "patrimonio/index";
     }
 
@@ -84,6 +84,8 @@ public class ControlePatrimonioController {
         } catch (Exception e) {
             attributes.addFlashAttribute("errorMessage", "Erro ao salvar patrimônio: " + e.getMessage());
         }
+
+        controlePatrimonioRepository.save(controlePatrimonio);
         return new ModelAndView("redirect:/patrimonio");
     }
 
@@ -97,5 +99,18 @@ public class ControlePatrimonioController {
         } else {
             return "redirect:/patrimonio";
         }
+    }
+
+    @GetMapping("/pesquisar")
+    public String pesquisaForm(@RequestParam(value = "filtro", required = false) String filtro, Model model) {
+        List<ControlePatrimonio> controlePatrimonios;
+        if (filtro != null && !filtro.isEmpty()) {
+            controlePatrimonios = controlePatrimonioRepository.findByPatrimonioContainingIgnoreCase(filtro);
+        } else {
+            controlePatrimonios = controlePatrimonioRepository.findAll();
+        }
+        model.addAttribute("patrimonios", controlePatrimonios);
+        model.addAttribute("filtro", filtro);
+        return "patrimonio/index";
     }
 }

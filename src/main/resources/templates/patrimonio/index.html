@@ -28,56 +28,6 @@
             </button>
         </div>
 
-        <!-- Filtros Colapsáveis -->
-        <div class="card card-primary collapsed-card mb-3">
-            <div class="card-header card-header-blue">
-                <h3 class="card-title">Filtros</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body" style="display: none;">
-                <form th:action="@{/patrimonio}" method="get">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="nome">Nome:</label>
-                                <input type="text" id="nome" name="nome" th:value="${nome}" class="form-control" placeholder="Buscar por nome..." />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="status">Status:</label>
-                                <select id="status" name="status" class="form-control">
-                                    <option value="">Todos</option>
-                                    <option value="Em uso" th:selected="${status == 'Em uso'}">Em uso</option>
-                                    <option value="Em manutenção" th:selected="${status == 'Em manutenção'}">Em manutenção</option>
-                                    <option value="Em estoque" th:selected="${status == 'Em estoque'}">Em estoque</option>
-                                    <option value="Baixado" th:selected="${status == 'Baixado'}">Baixado</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="localAtual">Local:</label>
-                                <input type="text" id="localAtual" name="localAtual" th:value="${localAtual}" class="form-control" placeholder="Buscar por local..." />
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>&nbsp;</label>
-                                <button type="submit" class="btn btn-primary btn-block">
-                                    <i class="fas fa-search"></i> Filtrar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
         <!-- Botões de ação -->
         <div class="mb-3">
             <!-- Botão pra criar patrimonio novo -->
@@ -85,6 +35,18 @@
                 <i class="fas fa-plus"></i> Novo Patrimômio
             </a>
         </div>
+
+        <!-- Formulário de busca pra filtrar os patrimonios -->
+        <form th:action="@{/patrimonio/pesquisar}" method="get" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="filtro" class="form-control" placeholder="Buscar os patrimônios por numero..." th:value="${filtro}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </div>
+        </form>
 
         <!-- Tabela de patrimonios -->
         <div class="card">
@@ -149,12 +111,12 @@
     // Mantém os filtros abertos se algum filtro estiver ativo
     $(document).ready(function() {
         var temFiltroAtivo = false;
-        
+
         // Verifica se há filtros ativos
         if ($('#nome').val() || $('#status').val() || $('#localAtual').val()) {
             temFiltroAtivo = true;
         }
-        
+
         // Se houver filtro ativo, expande o card de filtros
         if (temFiltroAtivo) {
             $('.collapsed-card').removeClass('collapsed-card');

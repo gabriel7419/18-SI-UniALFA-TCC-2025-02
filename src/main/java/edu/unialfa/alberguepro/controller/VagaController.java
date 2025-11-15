@@ -2,8 +2,10 @@ package edu.unialfa.alberguepro.controller;
 
 import edu.unialfa.alberguepro.dto.AcolhidoDTO;
 import edu.unialfa.alberguepro.model.CadastroAcolhido;
+import edu.unialfa.alberguepro.model.ControlePatrimonio;
 import edu.unialfa.alberguepro.model.Leito;
 import edu.unialfa.alberguepro.model.Vaga;
+import edu.unialfa.alberguepro.repository.VagaRepository;
 import edu.unialfa.alberguepro.service.CadastroAcolhidoService;
 import edu.unialfa.alberguepro.service.LeitoService;
 import edu.unialfa.alberguepro.service.QuartoService;
@@ -20,6 +22,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/vaga")
 public class VagaController {
+
+    @Autowired
+    private VagaRepository vagaRepository;
 
     @Autowired
     private VagaService service;
@@ -52,7 +57,7 @@ public class VagaController {
     }
 
     @PostMapping("salvar")
-    public String salvar(@ModelAttribute("vaga") Vaga vaga, BindingResult result, Model model, 
+    public String salvar(@ModelAttribute("vaga") Vaga vaga, BindingResult result, Model model,
     org.springframework.web.servlet.mvc.support.RedirectAttributes attributes) {
 
         if (vaga.getAcolhido() == null || vaga.getAcolhido().getId() == null) {
@@ -95,24 +100,24 @@ public class VagaController {
 
     @GetMapping("/leitos/{quartoId}")
     @ResponseBody
-    public List<Leito> buscarLeitosPorQuarto(@PathVariable Long quartoId, 
+    public List<Leito> buscarLeitosPorQuarto(@PathVariable Long quartoId,
     @RequestParam(required = false) Long vagaId) {
-        
+
         if (vagaId != null) {
             // Modo edição: incluir o leito atual da vaga
             Vaga vagaAtual = service.buscarPorId(vagaId);
             List<Leito> leitosDisponiveis = leitoService.buscarLeitosDisponiveisPorQuartoId(quartoId);
-            
+
             // Adicionar o leito atual da vaga se não estiver na lista
             if (vagaAtual != null && vagaAtual.getLeito() != null) {
                 boolean leitoAtualJaEstaLista = leitosDisponiveis.stream()
                     .anyMatch(l -> l.getId().equals(vagaAtual.getLeito().getId()));
-                
+
                 if (!leitoAtualJaEstaLista) {
                     leitosDisponiveis.add(vagaAtual.getLeito());
                 }
             }
-            
+
             return leitosDisponiveis;
         } else {
             // Modo cadastro: apenas leitos disponíveis
@@ -144,6 +149,13 @@ public class VagaController {
         if (vaga != null && vaga.getLeito() != null) {
             Long quartoId = vaga.getLeito().getQuarto().getId();
             model.addAttribute("quartoSelecionadoId", quartoId);
+
+            List<Leito> leitosLivres = leitoService.buscarLeitosLivresPorQuartoId(quartoId);
+
+            if (vaga.getLeito() != null && !leitosLivres.contains(vaga.getLeito())) {
+                leitosLivres.add(vaga.getLeito());
+            }
+
             model.addAttribute("leitosDoQuarto", leitoService.buscarPorQuartoId(quartoId));
         }
 
@@ -174,4 +186,18 @@ public class VagaController {
 
         return null;
     }
+
+    @GetMapping("/pesquisar")
+    public String pesquisaForm(@RequestParam(value = "filtro", required = false) String filtro, Model model) {
+        List<Vaga> vagas;
+        if (filtro != null && !filtro.isEmpty()) {
+            vagas = vagaRepository.findByAcolhido_NomeContainingIgnoreCase(filtro);
+        } else {
+            vagas = vagaRepository.findAll();
+        }
+        model.addAttribute("vagas", vagas);
+        model.addAttribute("filtro", filtro);
+        return "vaga/lista";
+    }
+
 }

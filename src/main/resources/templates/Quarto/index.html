@@ -46,7 +46,7 @@
                     <div class="col-md-10">
                         <div class="form-group">
                             <label for="filtro">Número do Quarto:</label>
-                            <input type="text" id="filtro" name="filtro" class="form-control" 
+                            <input type="text" id="filtro" name="filtro" class="form-control"
                                    placeholder="Buscar os quartos por número..." th:value="${filtro}">
                         </div>
                     </div>
@@ -110,7 +110,7 @@
                     </td>
 
                     <td>
-                        <a th:href="@{/quarto/remover/{id}(id=${quarto.id})}" 
+                        <a th:href="@{/quarto/remover/{id}(id=${quarto.id})}"
                            class="btn btn-danger btn-sm"
                            onclick="return confirm('Tem certeza que deseja remover este quarto e todos os seus leitos?');">
                             <i class="fas fa-trash"></i>
@@ -127,12 +127,12 @@
     // Mantém os filtros abertos se algum filtro estiver ativo
     $(document).ready(function() {
         var temFiltroAtivo = false;
-        
+
         // Verifica se há filtros ativos
         if ($('#filtro').val()) {
             temFiltroAtivo = true;
         }
-        
+
         // Se houver filtro ativo, expande o card de filtros
         if (temFiltroAtivo) {
             $('.collapsed-card').removeClass('collapsed-card');

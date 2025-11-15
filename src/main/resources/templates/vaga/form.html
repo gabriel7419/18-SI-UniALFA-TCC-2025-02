@@ -60,6 +60,9 @@
                                 th:selected="${quartoSelecionadoId != null and quartoSelecionadoId == q.id}">
                         </option>
                     </select>
+                    <div th:if="${#fields.hasErrors('leito')}" class="text-danger">
+                        O quarto é obrigatório.
+                    </div>
                 </div>
 
                 <div class="form-group">
