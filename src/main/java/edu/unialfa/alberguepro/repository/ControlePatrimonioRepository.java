@@ -10,4 +10,6 @@ public interface ControlePatrimonioRepository extends JpaRepository <ControlePat
     List<ControlePatrimonio> findByNomeContainingIgnoreCase(String nome);
     List<ControlePatrimonio> findByStatus(String status);
     List<ControlePatrimonio> findByNomeContainingIgnoreCaseAndStatus(String nome, String status);
+    ControlePatrimonio findByPatrimonio(Integer patrimonio);
+    ControlePatrimonio findByPatrimonioAndIdNot(Integer patrimonio, Long id);
 }

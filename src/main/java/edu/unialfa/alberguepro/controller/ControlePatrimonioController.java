@@ -3,6 +3,7 @@ package edu.unialfa.alberguepro.controller;
 import edu.unialfa.alberguepro.model.ControlePatrimonio;
 import edu.unialfa.alberguepro.repository.ControlePatrimonioRepository;
 import edu.unialfa.alberguepro.repository.PatrimonioSpecification;
+import edu.unialfa.alberguepro.service.ControlePatrimonioService;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class ControlePatrimonioController {
 
     @Autowired
     private ControlePatrimonioRepository controlePatrimonioRepository;
+
+    @Autowired
+    private ControlePatrimonioService controlePatrimonioService;
 
     @GetMapping
     public String listarPatrimonios(Model model,
@@ -70,28 +74,15 @@ public class ControlePatrimonioController {
             return mv;
         }
 
-        ControlePatrimonio patrimonioExistente = null;
-        String numeroPatrimonio = controlePatrimonio.getPatrimonio();
-
-        if (controlePatrimonio.getId() == null) {
-            // Novo cadastro
-            patrimonioExistente = controlePatrimonioRepository.findByPatrimonio(numeroPatrimonio);
-        } else {
-            // Edição
-            patrimonioExistente = controlePatrimonioRepository.findByPatrimonioAndIdNot(
-                    numeroPatrimonio,
-                    controlePatrimonio.getId()
-            );
-        }
-
-        if (patrimonioExistente != null) {
-
-            result.rejectValue("patrimonio", "patrimonio.duplicado",
-                    "O número de patrimônio '" + numeroPatrimonio + "' já está cadastrado. Por favor, utilize um número único.");
-
+        try {
+            controlePatrimonioService.salvar(controlePatrimonio);
+            attributes.addFlashAttribute("successMessage", "Patrimônio salvo com sucesso!");
+        } catch (IllegalArgumentException e) {
             ModelAndView mv = new ModelAndView("patrimonio/form");
-            mv.addObject("errorMessage", "Erro de Validação: O número de patrimônio já existe.");
+            mv.addObject("errorMessage", e.getMessage());
             return mv;
+        } catch (Exception e) {
+            attributes.addFlashAttribute("errorMessage", "Erro ao salvar patrimônio: " + e.getMessage());
         }
 
         controlePatrimonioRepository.save(controlePatrimonio);

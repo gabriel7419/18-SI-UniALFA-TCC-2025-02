@@ -126,9 +126,17 @@ public class VagaController {
     }
 
     @GetMapping("listar")
-    public String listar(Model model) {
-        List<Vaga> vaga = service.listarTodos();
+    public String listar(Model model, @RequestParam(required = false) String filtro) {
+        List<Vaga> vaga;
+        
+        if (filtro != null && !filtro.trim().isEmpty()) {
+            vaga = service.buscarPorNomeAcolhido(filtro);
+        } else {
+            vaga = service.listarTodos();
+        }
+        
         model.addAttribute("vagas", vaga);
+        model.addAttribute("filtro", filtro);
         return "vaga/lista";
     }
 

@@ -55,4 +55,8 @@ public class VagaService {
     public void deletarPorId(Long id) {
         repository.deleteById(id);
     }
+
+    public List<Vaga> buscarPorNomeAcolhido(String nome) {
+        return repository.findByAcolhidoNomeContainingIgnoreCase(nome);
+    }
 }
