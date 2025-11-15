@@ -118,7 +118,7 @@
     }
 
     ['input','blur'].forEach(function(evt){
-      [current,pwd,confirm].forEach(function(el){ el.addEventListener(evt, validate); });
+      [current,pwd,confirm].forEach(function(el){ if(el) el.addEventListener(evt, validate); });
     });
 
     loadZxcvbn(validate);
