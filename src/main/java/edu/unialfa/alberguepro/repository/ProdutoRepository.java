@@ -4,7 +4,6 @@ import edu.unialfa.alberguepro.model.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,5 +14,4 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long>, JpaSpec
     Optional<Produto> findByNomeIgnoreCaseAndTipoIgnoreCaseAndIdNot(String nome, String tipo, Long id);
     List<Produto> findTop5ByOrderByQuantidadeAsc();
     List<Produto> findTop10ByOrderByQuantidadeAsc();
-    List<Produto> findByNaoPerecivelFalseAndDataDeVencimentoBetweenOrderByDataDeVencimentoAsc(LocalDate dataInicio, LocalDate dataFim);
 }

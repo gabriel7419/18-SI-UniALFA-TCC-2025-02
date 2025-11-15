@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -104,11 +102,5 @@ public class EstoqueService {
             existingProduto = produtoRepository.findByNomeIgnoreCaseAndTipoIgnoreCaseAndIdNot(nome, tipo, id);
         }
         return existingProduto.isEmpty();
-    }
-
-    public List<Produto> buscarProdutosProximosVencimento(Integer dias) {
-        LocalDate dataLimite = LocalDate.now().plusDays(dias);
-        return produtoRepository.findByNaoPerecivelFalseAndDataDeVencimentoBetweenOrderByDataDeVencimentoAsc(
-            LocalDate.now(), dataLimite);
     }
 }
