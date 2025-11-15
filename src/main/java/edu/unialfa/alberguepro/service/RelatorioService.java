@@ -355,4 +355,124 @@ public class RelatorioService {
         style.setVerticalAlignment(VerticalAlignment.CENTER);
         return style;
     }
+
+    public ByteArrayInputStream gerarRelatorioVencimentoPdf(List<Produto> produtos, Integer dias) throws JRException {
+        InputStream inputStream = getClass().getResourceAsStream("/relatorios/relatorio_vencimento.jrxml");
+
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(produtos);
+        JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+
+        java.time.ZoneId saoPauloZone = java.time.ZoneId.of("America/Sao_Paulo");
+        java.time.ZonedDateTime agora = java.time.ZonedDateTime.now(saoPauloZone);
+
+        java.util.Map<String, Object> parameters = new java.util.HashMap<>();
+        parameters.put("DIAS_PERIODO", dias);
+        parameters.put("TOTAL_PRODUTOS", produtos.size());
+        parameters.put("DATA_EMISSAO", java.util.Date.from(agora.toInstant()));
+        parameters.put("REPORT_TIME_ZONE", java.util.TimeZone.getTimeZone(saoPauloZone));
+        parameters.put("USUARIO_EMISSOR", org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName());
+
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    public ByteArrayInputStream gerarRelatorioVencimentoExcel(List<Produto> produtos, Integer dias) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Produtos Próximos ao Vencimento");
+
+        // Estilos
+        CellStyle headerStyle = createHeaderStyle(workbook);
+        CellStyle dataStyle = createDataStyle(workbook);
+        CellStyle dateStyle = createDateStyle(workbook);
+        CellStyle alertStyle = createAlertStyle(workbook);
+
+        // Título
+        Row titleRow = sheet.createRow(0);
+        Cell titleCell = titleRow.createCell(0);
+        titleCell.setCellValue("Relatório de Produtos Próximos ao Vencimento - " + dias + " dias");
+        titleCell.setCellStyle(headerStyle);
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
+
+        // Data de emissão
+        Row dateRow = sheet.createRow(1);
+        Cell dateCell = dateRow.createCell(0);
+        dateCell.setCellValue("Data de Emissão: " + java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 5));
+
+        // Linha em branco
+        sheet.createRow(2);
+
+        // Cabeçalho da tabela
+        Row headerRow = sheet.createRow(3);
+        String[] columns = {"Nome", "Tipo", "Quantidade", "Unidade", "Data de Vencimento", "Dias Restantes"};
+        for (int i = 0; i < columns.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(columns[i]);
+            cell.setCellStyle(headerStyle);
+        }
+
+        // Dados
+        int rowNum = 4;
+        java.time.LocalDate hoje = java.time.LocalDate.now();
+        for (Produto produto : produtos) {
+            Row row = sheet.createRow(rowNum++);
+            
+            long diasRestantes = java.time.temporal.ChronoUnit.DAYS.between(hoje, produto.getDataDeVencimento());
+            CellStyle rowStyle = diasRestantes <= 7 ? alertStyle : dataStyle;
+            
+            Cell cell0 = row.createCell(0);
+            cell0.setCellValue(produto.getNome());
+            cell0.setCellStyle(rowStyle);
+            
+            Cell cell1 = row.createCell(1);
+            cell1.setCellValue(produto.getTipo());
+            cell1.setCellStyle(rowStyle);
+            
+            Cell cell2 = row.createCell(2);
+            cell2.setCellValue(produto.getQuantidade());
+            cell2.setCellStyle(rowStyle);
+            
+            Cell cell3 = row.createCell(3);
+            cell3.setCellValue(produto.getUnidade().getNome());
+            cell3.setCellStyle(rowStyle);
+            
+            Cell cell4 = row.createCell(4);
+            cell4.setCellValue(produto.getDataDeVencimento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            cell4.setCellStyle(diasRestantes <= 7 ? alertStyle : dateStyle);
+            
+            Cell cell5 = row.createCell(5);
+            cell5.setCellValue(diasRestantes + " dias");
+            cell5.setCellStyle(rowStyle);
+        }
+
+        // Ajustar largura das colunas
+        for (int i = 0; i < columns.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        workbook.write(out);
+        workbook.close();
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    private CellStyle createAlertStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(true);
+        font.setColor(IndexedColors.RED.getIndex());
+        style.setFont(font);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        return style;
+    }
 }
