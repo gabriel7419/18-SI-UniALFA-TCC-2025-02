@@ -57,29 +57,64 @@ public class EstoqueController {
     public String listarProdutos(Model model,
         @RequestParam(required = false) String nome,
         @RequestParam(required = false) String tipo,
-        @RequestParam(required = false) Long unidadeId) {
-        Specification<Produto> spec = Specification.where(null);
+        @RequestParam(required = false) Long unidadeId,
+        @RequestParam(required = false) Integer diasVencimento) {
+        
+        List<Produto> produtos;
+        
+        // Se o filtro de vencimento está ativo, usar lógica específica
+        if (diasVencimento != null && diasVencimento > 0) {
+            produtos = estoqueService.buscarProdutosProximosVencimento(diasVencimento);
+            
+            // Aplicar filtros adicionais se necessário
+            if (nome != null && !nome.isEmpty()) {
+                produtos = produtos.stream()
+                    .filter(p -> p.getNome().toLowerCase().contains(nome.toLowerCase()))
+                    .toList();
+            }
+            if (tipo != null && !tipo.isEmpty()) {
+                produtos = produtos.stream()
+                    .filter(p -> tipo.equals(p.getTipo()))
+                    .toList();
+            }
+            if (unidadeId != null && unidadeId > 0) {
+                produtos = produtos.stream()
+                    .filter(p -> p.getUnidade() != null && p.getUnidade().getId().equals(unidadeId))
+                    .toList();
+            }
+        } else {
+            // Lógica normal de filtros
+            Specification<Produto> spec = Specification.where(null);
 
-        if (nome != null && !nome.isEmpty()) {
-            spec = spec.and(ProdutoSpecification.comNome(nome));
-        }
+            if (nome != null && !nome.isEmpty()) {
+                spec = spec.and(ProdutoSpecification.comNome(nome));
+            }
 
-        if (tipo != null && !tipo.isEmpty()) {
-            spec = spec.and(ProdutoSpecification.comTipo(tipo));
+            if (tipo != null && !tipo.isEmpty()) {
+                spec = spec.and(ProdutoSpecification.comTipo(tipo));
+            }
+
+            Unidade unidade = null;
+            if (unidadeId != null && unidadeId > 0) {
+                unidade = unidadeRepository.findById(unidadeId).orElse(null);
+                if (unidade != null) {
+                    spec = spec.and(ProdutoSpecification.comUnidade(unidade));
+                }
+            }
+
+            produtos = produtoRepository.findAll(spec);
         }
 
         Unidade unidade = null;
         if (unidadeId != null && unidadeId > 0) {
             unidade = unidadeRepository.findById(unidadeId).orElse(null);
-            if (unidade != null) {
-                spec = spec.and(ProdutoSpecification.comUnidade(unidade));
-            }
         }
 
-        model.addAttribute("produtos", produtoRepository.findAll(spec));
+        model.addAttribute("produtos", produtos);
         model.addAttribute("nome", nome);
         model.addAttribute("tipo", tipo);
         model.addAttribute("unidade", unidade);
+        model.addAttribute("diasVencimento", diasVencimento);
         carregarUnidades(model);
 
         return "estoque/index";
@@ -328,6 +363,35 @@ public class EstoqueController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=movimentacao_estoque.xlsx");
+
+        return ResponseEntity.ok().headers(headers)
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new InputStreamResource(bis));
+    }
+
+    @GetMapping("/relatorio/vencimento/pdf")
+    public ResponseEntity<InputStreamResource> gerarRelatorioVencimentoPdf(
+            @RequestParam(defaultValue = "30") Integer dias) throws JRException {
+        
+        List<Produto> produtos = estoqueService.buscarProdutosProximosVencimento(dias);
+        ByteArrayInputStream bis = relatorioService.gerarRelatorioVencimentoPdf(produtos, dias);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=produtos_vencimento.pdf");
+
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
+    }
+
+    @GetMapping("/relatorio/vencimento/excel")
+    public ResponseEntity<InputStreamResource> gerarRelatorioVencimentoExcel(
+            @RequestParam(defaultValue = "30") Integer dias) throws Exception {
+        
+        List<Produto> produtos = estoqueService.buscarProdutosProximosVencimento(dias);
+        ByteArrayInputStream bis = relatorioService.gerarRelatorioVencimentoExcel(produtos, dias);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=produtos_vencimento.xlsx");
 
         return ResponseEntity.ok().headers(headers)
                 .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))

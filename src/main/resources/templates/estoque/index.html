@@ -21,13 +21,13 @@
             <div class="card-body" style="display: none;">
                 <form th:action="@{/estoque}" method="get">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="nome">Nome:</label>
                                 <input type="text" id="nome" name="nome" th:value="${nome}" class="form-control" placeholder="Buscar por nome..." />
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="tipo">Tipo:</label>
                                 <select id="tipo" name="tipo" class="form-control">
@@ -38,7 +38,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="unidade">Unidade:</label>
                                 <select id="unidade" name="unidadeId" class="form-control">
@@ -47,12 +47,30 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="diasVencimento">Vencimento:</label>
+                                <select id="diasVencimento" name="diasVencimento" class="form-control">
+                                    <option value="">Todos os produtos</option>
+                                    <option value="7" th:selected="${diasVencimento != null and diasVencimento == 7}">Vencem em 7 dias</option>
+                                    <option value="15" th:selected="${diasVencimento != null and diasVencimento == 15}">Vencem em 15 dias</option>
+                                    <option value="30" th:selected="${diasVencimento != null and diasVencimento == 30}">Vencem em 30 dias</option>
+                                    <option value="60" th:selected="${diasVencimento != null and diasVencimento == 60}">Vencem em 60 dias</option>
+                                    <option value="90" th:selected="${diasVencimento != null and diasVencimento == 90}">Vencem em 90 dias</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>&nbsp;</label>
-                                <button type="submit" class="btn btn-primary btn-block">
-                                    <i class="fas fa-search"></i> Filtrar
-                                </button>
+                                <div class="btn-group btn-block">
+                                    <button type="submit" class="btn btn-primary" style="width: 60%;">
+                                        <i class="fas fa-search"></i> Filtrar
+                                    </button>
+                                    <a th:href="@{/estoque}" class="btn btn-secondary" style="width: 40%;">
+                                        <i class="fas fa-times"></i> Limpar
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -71,14 +89,29 @@
         <div class="card card-primary">
             <div class="card-header card-header-blue">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title mb-0">Lista de Produtos no Estoque</h3>
+                    <h3 class="card-title mb-0">
+                        <span th:if="${diasVencimento == null}">Lista de Produtos no Estoque</span>
+                        <span th:if="${diasVencimento != null}">Produtos que Vencem em <span th:text="${diasVencimento}"></span> dias</span>
+                    </h3>
                     <div class="card-tools">
-                        <a th:href="@{/estoque/relatorio/pdf(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-danger" target="_blank">
-                            <i class="fas fa-file-pdf"></i> Gerar PDF
-                        </a>
-                        <a th:href="@{/estoque/relatorio/excel(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-success">
-                            <i class="fas fa-file-excel"></i> Gerar Excel
-                        </a>
+                        <!-- Relatórios de Estoque Geral -->
+                        <span th:if="${diasVencimento == null}">
+                            <a th:href="@{/estoque/relatorio/pdf(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-danger" target="_blank">
+                                <i class="fas fa-file-pdf"></i> PDF Estoque
+                            </a>
+                            <a th:href="@{/estoque/relatorio/excel(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-success">
+                                <i class="fas fa-file-excel"></i> Excel Estoque
+                            </a>
+                        </span>
+                        <!-- Relatórios de Vencimento -->
+                        <span th:if="${diasVencimento != null}">
+                            <a th:href="@{/estoque/relatorio/vencimento/pdf(dias=${diasVencimento})}" class="btn btn-danger" target="_blank">
+                                <i class="fas fa-file-pdf"></i> PDF Vencimento
+                            </a>
+                            <a th:href="@{/estoque/relatorio/vencimento/excel(dias=${diasVencimento})}" class="btn btn-success">
+                                <i class="fas fa-file-excel"></i> Excel Vencimento
+                            </a>
+                        </span>
                     </div>
                 </div>
             </div>

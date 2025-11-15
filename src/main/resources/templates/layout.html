@@ -536,14 +536,14 @@
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                     <!-- Item do menu: Dashboard -->
                     <li class="nav-item">
-                        <a th:href="@{/}" class="nav-link">
+                        <a th:href="@{/}" class="nav-link" data-toggle="tooltip" data-placement="right" title="Dashboard">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
                     <!-- Item do menu: Estoque (com sub-itens) -->
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="#" class="nav-link" data-toggle="tooltip" data-placement="right" title="Gestão de Estoque">
                             <i class="nav-icon fas fa-box-open"></i>
                             <p>
                                 Gestão de Estoque
@@ -574,7 +574,7 @@
                     </li>
                     <!-- Item do menu: Patrimônio (com sub-itens) -->
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="#" class="nav-link" data-toggle="tooltip" data-placement="right" title="Gestão de Patrimônio">
                             <i class="nav-icon fas fa-landmark"></i>
                             <p>
                                 Gestão de Patrimônio
@@ -599,7 +599,7 @@
                     </li>
                     <!-- Item do menu: cadastroAcolhido (com sub-itens) -->
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a href="#" class="nav-link">
+                        <a href="#" class="nav-link" data-toggle="tooltip" data-placement="right" title="Gestão de Acolhido">
                             <i class="nav-icon fas fa-id-card"></i>
                             <p>
                                 Gestão de Acolhido
@@ -624,7 +624,7 @@
                     </li>
                     <!-- Item do menu: Vaga (com sub-itens) -->
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a href="#" class="nav-link">
+                        <a href="#" class="nav-link" data-toggle="tooltip" data-placement="right" title="Gestão de Vaga">
                             <i class="nav-icon fas fa-bed"></i>
                             <p>
                                 Gestão de Vaga
@@ -650,7 +650,7 @@
 
                     <!-- Item do menu: Quarto (com sub-itens) -->
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a href="#" class="nav-link">
+                        <a href="#" class="nav-link" data-toggle="tooltip" data-placement="right" title="Gestão de Quarto">
                             <i class="nav-icon fas fa-door-open"></i>
                             <p>
                                 Gestão de Quarto
@@ -676,7 +676,7 @@
 
                     <!-- Item do menu: Usuários -->
                     <li class="nav-item">
-                        <a th:href="@{/admin/usuarios}" class="nav-link">
+                        <a th:href="@{/admin/usuarios}" class="nav-link" data-toggle="tooltip" data-placement="right" title="Gerenciar Usuários">
                             <i class="nav-icon fas fa-user-alt"></i>
                             <p>Gerenciar Usuários</p>
                         </a>
@@ -711,6 +711,27 @@
 <!-- Redirecionar para página de consulta quando sidebar está colapsada -->
 <script>
 $(document).ready(function() {
+    // Restaurar estado da sidebar ao carregar
+    const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+    if (sidebarCollapsed) {
+        $('body').addClass('sidebar-collapse');
+    } else {
+        $('body').removeClass('sidebar-collapse');
+    }
+    
+    // Inicializar tooltips do Bootstrap
+    function initTooltips() {
+        if ($('body').hasClass('sidebar-collapse')) {
+            $('[data-toggle="tooltip"]').tooltip({
+                placement: 'right',
+                boundary: 'window',
+                offset: '0, 10'
+            }).tooltip('enable');
+        } else {
+            $('[data-toggle="tooltip"]').tooltip('dispose');
+        }
+    }
+    
     // Função para adicionar redirecionamento direto quando colapsado
     function setupCollapsedBehavior() {
         if ($('body').hasClass('sidebar-collapse')) {
@@ -750,7 +771,7 @@ $(document).ready(function() {
                     $link.off('click').on('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        window.location.href = '/vaga';
+                        window.location.href = '/vaga/listar';
                         return false;
                     });
                 } else if ($icon.hasClass('fa-door-open')) {
@@ -758,7 +779,7 @@ $(document).ready(function() {
                     $link.off('click').on('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        window.location.href = '/quarto';
+                        window.location.href = '/quarto/listar';
                         return false;
                     });
                 }
@@ -767,14 +788,19 @@ $(document).ready(function() {
     }
     
     // Aplicar ao carregar
+    initTooltips();
     setupCollapsedBehavior();
     
-    // Monitorar mudanças na sidebar
+    // Monitorar mudanças na sidebar e salvar estado
     $('[data-widget="pushmenu"]').on('collapsed.lte.pushmenu', function() {
+        localStorage.setItem('sidebarCollapsed', 'true');
+        initTooltips();
         setupCollapsedBehavior();
     });
     
     $('[data-widget="pushmenu"]').on('shown.lte.pushmenu', function() {
+        localStorage.setItem('sidebarCollapsed', 'false');
+        initTooltips();
         // Quando expandir, remover comportamento customizado
         $('.nav-sidebar .nav-item > a.nav-link').off('click');
     });
