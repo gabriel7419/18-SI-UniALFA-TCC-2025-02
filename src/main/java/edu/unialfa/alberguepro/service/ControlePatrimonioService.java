@@ -12,14 +12,11 @@ public class ControlePatrimonioService {
     private ControlePatrimonioRepository repository;
 
     public void salvar(ControlePatrimonio patrimonio) throws IllegalArgumentException {
-        // Validação de patrimônio duplicado
         ControlePatrimonio patrimonioExistente = null;
 
         if (patrimonio.getId() == null) {
-            // Novo cadastro
             patrimonioExistente = repository.findByPatrimonio(patrimonio.getPatrimonio());
         } else {
-            // Edição
             patrimonioExistente = repository.findByPatrimonioAndIdNot(
                 patrimonio.getPatrimonio(), 
                 patrimonio.getId()
