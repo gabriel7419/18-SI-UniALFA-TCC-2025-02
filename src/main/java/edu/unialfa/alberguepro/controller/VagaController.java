@@ -191,9 +191,9 @@ public class VagaController {
     public String pesquisaForm(@RequestParam(value = "filtro", required = false) String filtro, Model model) {
         List<Vaga> vagas;
         if (filtro != null && !filtro.isEmpty()) {
-            vagas = vagaRepository.findByAcolhido_NomeContainingIgnoreCase(filtro);
+            vagas = service.buscarPorNomeAcolhido(filtro);
         } else {
-            vagas = vagaRepository.findAll();
+            vagas = service.listarTodos();
         }
         model.addAttribute("vagas", vagas);
         model.addAttribute("filtro", filtro);

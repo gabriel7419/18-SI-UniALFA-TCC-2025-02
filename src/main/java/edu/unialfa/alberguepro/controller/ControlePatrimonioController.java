@@ -105,7 +105,7 @@ public class ControlePatrimonioController {
     public String pesquisaForm(@RequestParam(value = "filtro", required = false) String filtro, Model model) {
         List<ControlePatrimonio> controlePatrimonios;
         if (filtro != null && !filtro.isEmpty()) {
-            controlePatrimonios = controlePatrimonioRepository.findByPatrimonioContainingIgnoreCase(filtro);
+            controlePatrimonios = controlePatrimonioRepository.findByNomeContainingIgnoreCase(filtro);
         } else {
             controlePatrimonios = controlePatrimonioRepository.findAll();
         }

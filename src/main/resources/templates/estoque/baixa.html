@@ -34,55 +34,55 @@
         </button>
     </div>
 
+    <!-- Filtros Colapsáveis -->
+    <div class="card card-primary collapsed-card mb-3">
+        <div class="card-header card-header-blue">
+            <h3 class="card-title">Filtros</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body" style="display: none;">
+            <form th:action="@{/estoque/baixa}" method="get">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="filtro">Nome do Produto:</label>
+                            <input type="text" name="filtro" id="filtro" class="form-control" placeholder="Buscar produto por nome..." th:value="${filtro}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="tipo">Tipo:</label>
+                            <select id="tipo" name="tipo" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="Alimento" th:selected="${tipo == 'Alimento'}">Alimento</option>
+                                <option value="Higiene" th:selected="${tipo == 'Higiene'}">Higiene</option>
+                                <option value="Limpeza" th:selected="${tipo == 'Limpeza'}">Limpeza</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-primary btn-block" type="submit">
+                                <i class="fas fa-search"></i> Filtrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabela com os produtos -->
     <div class="card card-primary">
         <div class="card-header card-header-blue">
             <h3 class="card-title">Baixa em Produtos do Estoque</h3>
         </div>
         <div class="card-body">
-            <!-- Formulário de busca pra filtrar produto -->
-            <div class="card card-secondary collapsed-card mb-3">
-                <div class="card-header">
-                    <h3 class="card-title">Filtros de Busca</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body" style="display: none;">
-                    <form th:action="@{/estoque/baixa}" method="get">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="filtro">Nome do Produto:</label>
-                                    <input type="text" name="filtro" id="filtro" class="form-control" placeholder="Buscar produto por nome..." th:value="${filtro}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="tipo">Tipo:</label>
-                                    <select id="tipo" name="tipo" class="form-control">
-                                        <option value="">Todos</option>
-                                        <option value="Alimento" th:selected="${tipo == 'Alimento'}">Alimento</option>
-                                        <option value="Higiene" th:selected="${tipo == 'Higiene'}">Higiene</option>
-                                        <option value="Limpeza" th:selected="${tipo == 'Limpeza'}">Limpeza</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>&nbsp;</label>
-                                    <button class="btn btn-primary btn-block" type="submit">
-                                        <i class="fas fa-search"></i> Buscar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Tabela com os produtos -->
             <div class="table-responsive">
                 <table class="table table-bordered">
                 <thead class="thead-blue">
