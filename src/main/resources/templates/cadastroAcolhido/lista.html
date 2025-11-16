@@ -110,11 +110,11 @@
                 <table class="table table-bordered" th:if="${not #lists.isEmpty(acolhidos)}">
                 <thead class="thead-blue">
                 <tr>
-                    <th>Nome</th>
-                    <th>Idade</th>
-                    <th>Sexo</th>
-                    <th>Data de Ingresso</th>
-                    <th>Data de Saída</th>
+                    <th class="sortable" data-sort="nome">Nome</th>
+                    <th class="sortable" data-sort="idade">Idade</th>
+                    <th class="sortable" data-sort="sexo">Sexo</th>
+                    <th class="sortable" data-sort="dataIngresso">Data de Ingresso</th>
+                    <th class="sortable" data-sort="dataSaida">Data de Saída</th>
                     <th>Ações</th>
                 </tr>
                 </thead>

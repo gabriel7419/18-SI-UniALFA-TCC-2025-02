@@ -33,7 +33,9 @@ public class ControlePatrimonioController {
         @RequestParam(required = false) String status,
         @RequestParam(required = false) String localAtual,
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "15") int size) {
+        @RequestParam(defaultValue = "15") int size,
+        @RequestParam(defaultValue = "nome") String sort,
+        @RequestParam(defaultValue = "asc") String dir) {
 
         Specification<ControlePatrimonio> spec = Specification.where(null);
 
@@ -49,7 +51,11 @@ public class ControlePatrimonioController {
             spec = spec.and(PatrimonioSpecification.comLocalAtual(localAtual));
         }
 
-        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        // Criar ordenação
+        org.springframework.data.domain.Sort.Direction direction = dir.equals("desc") ? 
+            org.springframework.data.domain.Sort.Direction.DESC : org.springframework.data.domain.Sort.Direction.ASC;
+        org.springframework.data.domain.Sort sortObj = org.springframework.data.domain.Sort.by(direction, sort);
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, sortObj);
         org.springframework.data.domain.Page<ControlePatrimonio> pageResult = controlePatrimonioRepository.findAll(spec, pageable);
 
         model.addAttribute("patrimonios", pageResult.getContent());
@@ -58,6 +64,8 @@ public class ControlePatrimonioController {
         model.addAttribute("status", status);
         model.addAttribute("localAtual", localAtual);
         model.addAttribute("size", size);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
 
         return "patrimonio/index";
     }

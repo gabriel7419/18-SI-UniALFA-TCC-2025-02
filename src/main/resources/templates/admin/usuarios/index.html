@@ -59,11 +59,11 @@
                     <table class="table table-bordered table-hover" th:if="${not #lists.isEmpty(usuarios)}">
                     <thead class="thead-blue">
                         <tr>
-                            <th>ID</th>
-                            <th>Usuário</th>
+                            <th class="sortable" data-sort="id">ID</th>
+                            <th class="sortable" data-sort="username">Usuário</th>
                             <th>Tipo</th>
-                            <th>Status</th>
-                            <th>Data de Criação</th>
+                            <th class="sortable" data-sort="ativo">Status</th>
+                            <th class="sortable" data-sort="dataCriacao">Data de Criação</th>
                             <th style="width: 150px;">Ações</th>
                         </tr>
                     </thead>

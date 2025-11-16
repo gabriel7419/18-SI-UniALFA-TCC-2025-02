@@ -66,11 +66,11 @@
                 <table class="table table-bordered" th:if="${not #lists.isEmpty(vagas)}">
                 <thead class="thead-blue">
                 <tr>
-                    <th>Acolhido</th>
-                    <th>Data de Ingresso</th>
-                    <th>Data de Saída</th>
-                    <th>Leito</th>
-                    <th>Quarto</th>
+                    <th class="sortable" data-sort="acolhido.nome">Acolhido</th>
+                    <th class="sortable" data-sort="dataEntrada">Data de Ingresso</th>
+                    <th class="sortable" data-sort="dataSaida">Data de Saída</th>
+                    <th class="sortable" data-sort="leito.numeroLeito">Leito</th>
+                    <th class="sortable" data-sort="leito.quarto.numeroQuarto">Quarto</th>
                     <th>Ações</th>
                 </tr>
                 </thead>

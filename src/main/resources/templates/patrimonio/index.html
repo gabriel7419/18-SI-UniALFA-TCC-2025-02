@@ -74,11 +74,11 @@
                     <table class="table table-bordered" th:if="${not #lists.isEmpty(patrimonios)}">
                     <thead class="thead-blue">
                         <tr>
-                            <th>Nome</th>
-                            <th>Patrimônio</th>
-                            <th>Status</th>
-                            <th>Data da aquisição</th>
-                            <th>Localização atual</th>
+                            <th class="sortable" data-sort="nome">Nome</th>
+                            <th class="sortable" data-sort="patrimonio">Patrimônio</th>
+                            <th class="sortable" data-sort="status">Status</th>
+                            <th class="sortable" data-sort="dataAquisicao">Data da aquisição</th>
+                            <th class="sortable" data-sort="localAtual">Localização atual</th>
                             <th>Observação</th>
                             <th>Ações</th>
                         </tr>

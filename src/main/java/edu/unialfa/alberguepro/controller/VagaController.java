@@ -129,9 +129,16 @@ public class VagaController {
     public String listar(Model model, 
                         @RequestParam(required = false) String filtro,
                         @RequestParam(defaultValue = "0") int page,
-                        @RequestParam(defaultValue = "15") int size) {
+                        @RequestParam(defaultValue = "15") int size,
+                        @RequestParam(defaultValue = "acolhido.nome") String sort,
+                        @RequestParam(defaultValue = "asc") String dir) {
         org.springframework.data.domain.Page<Vaga> pageResult;
-        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        
+        // Criar ordenação
+        org.springframework.data.domain.Sort.Direction direction = dir.equals("desc") ? 
+            org.springframework.data.domain.Sort.Direction.DESC : org.springframework.data.domain.Sort.Direction.ASC;
+        org.springframework.data.domain.Sort sortObj = org.springframework.data.domain.Sort.by(direction, sort);
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, sortObj);
         
         if (filtro != null && !filtro.trim().isEmpty()) {
             pageResult = service.buscarPorNomeAcolhidoPaginado(filtro, pageable);
@@ -143,6 +150,8 @@ public class VagaController {
         model.addAttribute("page", pageResult);
         model.addAttribute("filtro", filtro);
         model.addAttribute("size", size);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         return "vaga/lista";
     }
 

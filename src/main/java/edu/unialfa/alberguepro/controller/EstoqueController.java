@@ -60,9 +60,16 @@ public class EstoqueController {
         @RequestParam(required = false) Long unidadeId,
         @RequestParam(required = false) Integer diasVencimento,
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "15") int size) {
+        @RequestParam(defaultValue = "15") int size,
+        @RequestParam(defaultValue = "nome") String sort,
+        @RequestParam(defaultValue = "asc") String dir) {
         
         org.springframework.data.domain.Page<Produto> pageResult;
+        
+        // Criar ordenação
+        org.springframework.data.domain.Sort.Direction direction = dir.equals("desc") ? 
+            org.springframework.data.domain.Sort.Direction.DESC : org.springframework.data.domain.Sort.Direction.ASC;
+        org.springframework.data.domain.Sort sortObj = org.springframework.data.domain.Sort.by(direction, sort);
         
         // Se o filtro de vencimento está ativo, usar lógica específica
         if (diasVencimento != null && diasVencimento > 0) {
@@ -90,7 +97,7 @@ public class EstoqueController {
             int end = Math.min(start + size, produtos.size());
             List<Produto> pageContent = produtos.subList(start, end);
             pageResult = new org.springframework.data.domain.PageImpl<>(pageContent, 
-                org.springframework.data.domain.PageRequest.of(page, size), produtos.size());
+                org.springframework.data.domain.PageRequest.of(page, size, sortObj), produtos.size());
         } else {
             // Lógica normal de filtros com paginação
             Specification<Produto> spec = Specification.where(null);
@@ -111,7 +118,7 @@ public class EstoqueController {
                 }
             }
 
-            org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+            org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, sortObj);
             pageResult = produtoRepository.findAll(spec, pageable);
         }
 
@@ -127,6 +134,8 @@ public class EstoqueController {
         model.addAttribute("unidade", unidade);
         model.addAttribute("diasVencimento", diasVencimento);
         model.addAttribute("size", size);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         carregarUnidades(model);
 
         return "estoque/index";

@@ -83,13 +83,21 @@ public class QuartoController {
     @GetMapping("/listar")
     public String listarquartos(Model model,
                                 @RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "15") int size) {
-        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+                                @RequestParam(defaultValue = "15") int size,
+                                @RequestParam(defaultValue = "numeroQuarto") String sort,
+                                @RequestParam(defaultValue = "asc") String dir) {
+        // Criar ordenação
+        org.springframework.data.domain.Sort.Direction direction = dir.equals("desc") ? 
+            org.springframework.data.domain.Sort.Direction.DESC : org.springframework.data.domain.Sort.Direction.ASC;
+        org.springframework.data.domain.Sort sortObj = org.springframework.data.domain.Sort.by(direction, sort);
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, sortObj);
         org.springframework.data.domain.Page<Quarto> pageResult = service.listarTodosPaginado(pageable);
         
         model.addAttribute("quartos", pageResult.getContent());
         model.addAttribute("page", pageResult);
         model.addAttribute("size", size);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         adicionarContagemDeLeitosOcupados(model);
         return "Quarto/index";
     }

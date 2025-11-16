@@ -269,8 +269,15 @@ public class CadastroAcolhidoController {
                         @RequestParam(required = false) Integer diasPermanencia,
                         @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "15") int size,
+                        @RequestParam(defaultValue = "nome") String sort,
+                        @RequestParam(defaultValue = "asc") String dir,
                         Model model) {
         org.springframework.data.domain.Page<CadastroAcolhido> pageResult;
+        
+        // Criar ordenação
+        org.springframework.data.domain.Sort.Direction direction = dir.equals("desc") ? 
+            org.springframework.data.domain.Sort.Direction.DESC : org.springframework.data.domain.Sort.Direction.ASC;
+        org.springframework.data.domain.Sort sortObj = org.springframework.data.domain.Sort.by(direction, sort);
 
         if (diasPermanencia != null && diasPermanencia > 0) {
             List<CadastroAcolhido> acolhidos = service.buscarAcolhidosPermanenciaProlongada(diasPermanencia);
@@ -281,13 +288,16 @@ public class CadastroAcolhidoController {
                     .toList();
             }
             
+            // Ordenar manualmente a lista
+            acolhidos = ordenarLista(acolhidos, sort, direction);
+            
             int start = Math.min(page * size, acolhidos.size());
             int end = Math.min(start + size, acolhidos.size());
             List<CadastroAcolhido> pageContent = acolhidos.subList(start, end);
             pageResult = new org.springframework.data.domain.PageImpl<>(pageContent, 
-                org.springframework.data.domain.PageRequest.of(page, size), acolhidos.size());
+                org.springframework.data.domain.PageRequest.of(page, size, sortObj), acolhidos.size());
         } else {
-            org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+            org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, sortObj);
             if (filtro != null && !filtro.trim().isEmpty()) {
                 pageResult = service.buscarPorNomePaginado(filtro, pageable);
             } else {
@@ -300,7 +310,36 @@ public class CadastroAcolhidoController {
         model.addAttribute("filtro", filtro);
         model.addAttribute("diasPermanencia", diasPermanencia);
         model.addAttribute("size", size);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         return "cadastroAcolhido/lista";
+    }
+    
+    private List<CadastroAcolhido> ordenarLista(List<CadastroAcolhido> lista, String campo, org.springframework.data.domain.Sort.Direction direction) {
+        java.util.Comparator<CadastroAcolhido> comparator = null;
+        
+        switch (campo) {
+            case "nome":
+                comparator = java.util.Comparator.comparing(CadastroAcolhido::getNome, java.util.Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+                break;
+            case "idade":
+                comparator = java.util.Comparator.comparing(CadastroAcolhido::getIdade, java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder()));
+                break;
+            case "sexo":
+                comparator = java.util.Comparator.comparing(CadastroAcolhido::getSexo, java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder()));
+                break;
+            case "dataIngresso":
+                comparator = java.util.Comparator.comparing(CadastroAcolhido::getDataIngresso, java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder()));
+                break;
+            default:
+                comparator = java.util.Comparator.comparing(CadastroAcolhido::getNome, java.util.Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+        }
+        
+        if (direction == org.springframework.data.domain.Sort.Direction.DESC) {
+            comparator = comparator.reversed();
+        }
+        
+        return lista.stream().sorted(comparator).collect(java.util.stream.Collectors.toList());
     }
 
     @GetMapping("editar/{id}")

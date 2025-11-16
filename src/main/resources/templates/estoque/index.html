@@ -126,11 +126,11 @@
                     <table class="table table-bordered" th:if="${not #lists.isEmpty(produtos)}">
                     <thead class="thead-blue">
                         <tr>
-                            <th>Nome</th>
-                            <th>Tipo</th>
-                            <th>Quantidade</th>
-                            <th>Unidade</th>
-                            <th>Data de Vencimento</th>
+                            <th class="sortable" data-sort="nome">Nome</th>
+                            <th class="sortable" data-sort="tipo">Tipo</th>
+                            <th class="sortable" data-sort="quantidade">Quantidade</th>
+                            <th class="sortable" data-sort="unidade.nome">Unidade</th>
+                            <th class="sortable" data-sort="dataDeVencimento">Data de Vencimento</th>
                             <th>Ações</th>
                         </tr>
                     </thead>

@@ -2,6 +2,31 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <style>
+        .sortable {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+        .sortable:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+        .sortable::after {
+            content: ' ⇅';
+            opacity: 0.3;
+            font-size: 0.8em;
+        }
+        .sortable.asc::after {
+            content: ' ▲';
+            opacity: 1;
+            color: #007bff;
+        }
+        .sortable.desc::after {
+            content: ' ▼';
+            opacity: 1;
+            color: #007bff;
+        }
+    </style>
 </head>
 <body>
 
@@ -58,8 +83,44 @@
         </div>
     </div>
     
-    <script>
+    <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function() {
+            // Obter parâmetros de ordenação da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentSort = urlParams.get('sort');
+            const currentDir = urlParams.get('dir');
+            
+            // Marcar coluna ordenada atualmente
+            if (currentSort) {
+                const sortableHeaders = document.querySelectorAll('.sortable[data-sort="' + currentSort + '"]');
+                sortableHeaders.forEach(function(header) {
+                    if (currentDir === 'desc') {
+                        header.classList.add('desc');
+                    } else {
+                        header.classList.add('asc');
+                    }
+                });
+            }
+            
+            // Handler para ordenação
+            document.querySelectorAll('.sortable').forEach(function(header) {
+                header.addEventListener('click', function() {
+                    const sortField = this.getAttribute('data-sort');
+                    const url = new URL(window.location.href);
+                    
+                    // Determinar direção
+                    let direction = 'asc';
+                    if (url.searchParams.get('sort') === sortField) {
+                        direction = url.searchParams.get('dir') === 'asc' ? 'desc' : 'asc';
+                    }
+                    
+                    url.searchParams.set('sort', sortField);
+                    url.searchParams.set('dir', direction);
+                    url.searchParams.set('page', '0'); // Voltar para primeira página
+                    window.location.href = url.toString();
+                });
+            });
+            
             // Handler para mudança de tamanho de página
             document.querySelectorAll('.page-size-selector').forEach(function(select) {
                 select.addEventListener('change', function() {
