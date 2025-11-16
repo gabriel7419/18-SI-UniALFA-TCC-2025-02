@@ -58,13 +58,15 @@ public class EstoqueController {
         @RequestParam(required = false) String nome,
         @RequestParam(required = false) String tipo,
         @RequestParam(required = false) Long unidadeId,
-        @RequestParam(required = false) Integer diasVencimento) {
+        @RequestParam(required = false) Integer diasVencimento,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "15") int size) {
         
-        List<Produto> produtos;
+        org.springframework.data.domain.Page<Produto> pageResult;
         
         // Se o filtro de vencimento está ativo, usar lógica específica
         if (diasVencimento != null && diasVencimento > 0) {
-            produtos = estoqueService.buscarProdutosProximosVencimento(diasVencimento);
+            List<Produto> produtos = estoqueService.buscarProdutosProximosVencimento(diasVencimento);
             
             // Aplicar filtros adicionais se necessário
             if (nome != null && !nome.isEmpty()) {
@@ -82,8 +84,15 @@ public class EstoqueController {
                     .filter(p -> p.getUnidade() != null && p.getUnidade().getId().equals(unidadeId))
                     .toList();
             }
+            
+            // Paginar manualmente a lista
+            int start = Math.min(page * size, produtos.size());
+            int end = Math.min(start + size, produtos.size());
+            List<Produto> pageContent = produtos.subList(start, end);
+            pageResult = new org.springframework.data.domain.PageImpl<>(pageContent, 
+                org.springframework.data.domain.PageRequest.of(page, size), produtos.size());
         } else {
-            // Lógica normal de filtros
+            // Lógica normal de filtros com paginação
             Specification<Produto> spec = Specification.where(null);
 
             if (nome != null && !nome.isEmpty()) {
@@ -102,7 +111,8 @@ public class EstoqueController {
                 }
             }
 
-            produtos = produtoRepository.findAll(spec);
+            org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+            pageResult = produtoRepository.findAll(spec, pageable);
         }
 
         Unidade unidade = null;
@@ -110,11 +120,13 @@ public class EstoqueController {
             unidade = unidadeRepository.findById(unidadeId).orElse(null);
         }
 
-        model.addAttribute("produtos", produtos);
+        model.addAttribute("produtos", pageResult.getContent());
+        model.addAttribute("page", pageResult);
         model.addAttribute("nome", nome);
         model.addAttribute("tipo", tipo);
         model.addAttribute("unidade", unidade);
         model.addAttribute("diasVencimento", diasVencimento);
+        model.addAttribute("size", size);
         carregarUnidades(model);
 
         return "estoque/index";

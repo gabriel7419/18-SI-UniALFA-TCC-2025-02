@@ -6,6 +6,8 @@ import edu.unialfa.alberguepro.repository.LeitoRepository;
 import edu.unialfa.alberguepro.repository.QuartoRepository;
 import edu.unialfa.alberguepro.repository.VagaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +26,10 @@ public class QuartoService {
 
     public List<Quarto> listarTodos() {
         return quartoRepository.findAll();
+    }
+
+    public Page<Quarto> listarTodosPaginado(Pageable pageable) {
+        return quartoRepository.findAll(pageable);
     }
 
     public void salvar(Quarto quarto) throws IllegalArgumentException {

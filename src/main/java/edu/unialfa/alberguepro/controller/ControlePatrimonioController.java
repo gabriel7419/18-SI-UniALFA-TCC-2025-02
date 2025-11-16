@@ -31,7 +31,9 @@ public class ControlePatrimonioController {
     public String listarPatrimonios(Model model,
         @RequestParam(required = false) String nome,
         @RequestParam(required = false) String status,
-        @RequestParam(required = false) String localAtual) {
+        @RequestParam(required = false) String localAtual,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "15") int size) {
 
         Specification<ControlePatrimonio> spec = Specification.where(null);
 
@@ -47,10 +49,15 @@ public class ControlePatrimonioController {
             spec = spec.and(PatrimonioSpecification.comLocalAtual(localAtual));
         }
 
-        model.addAttribute("patrimonios", controlePatrimonioRepository.findAll(spec));
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        org.springframework.data.domain.Page<ControlePatrimonio> pageResult = controlePatrimonioRepository.findAll(spec, pageable);
+
+        model.addAttribute("patrimonios", pageResult.getContent());
+        model.addAttribute("page", pageResult);
         model.addAttribute("nome", nome);
         model.addAttribute("status", status);
         model.addAttribute("localAtual", localAtual);
+        model.addAttribute("size", size);
 
         return "patrimonio/index";
     }

@@ -81,8 +81,15 @@ public class QuartoController {
     }
 
     @GetMapping("/listar")
-    public String listarquartos(Model model) {
-        model.addAttribute("quartos", quartoRepository.findAll());
+    public String listarquartos(Model model,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "15") int size) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        org.springframework.data.domain.Page<Quarto> pageResult = service.listarTodosPaginado(pageable);
+        
+        model.addAttribute("quartos", pageResult.getContent());
+        model.addAttribute("page", pageResult);
+        model.addAttribute("size", size);
         adicionarContagemDeLeitosOcupados(model);
         return "Quarto/index";
     }

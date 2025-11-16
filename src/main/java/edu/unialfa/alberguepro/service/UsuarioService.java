@@ -100,6 +100,10 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
+    public org.springframework.data.domain.Page<UsuarioDTO> findAllDTOPaginado(org.springframework.data.domain.Pageable pageable) {
+        return usuarioRepository.findAll(pageable).map(UsuarioDTO::new);
+    }
+
     public Optional<UsuarioDTO> findByIdDTO(Long id) {
         return usuarioRepository.findById(id).map(UsuarioDTO::new);
     }
