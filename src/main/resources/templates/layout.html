@@ -859,6 +859,29 @@ $(document).ready(function() {
         window.dispatchEvent(new Event('darkModeToggled'));
     });
 });
+
+// Desabilitar autocomplete em todos os inputs, selects e textareas
+document.addEventListener('DOMContentLoaded', function() {
+    // Desabilitar em todos os formulários
+    document.querySelectorAll('form').forEach(function(form) {
+        form.setAttribute('autocomplete', 'off');
+    });
+    
+    // Desabilitar em todos os inputs
+    document.querySelectorAll('input').forEach(function(input) {
+        input.setAttribute('autocomplete', 'off');
+    });
+    
+    // Desabilitar em todos os selects
+    document.querySelectorAll('select').forEach(function(select) {
+        select.setAttribute('autocomplete', 'off');
+    });
+    
+    // Desabilitar em todos os textareas
+    document.querySelectorAll('textarea').forEach(function(textarea) {
+        textarea.setAttribute('autocomplete', 'off');
+    });
+});
 </script>
 <th:block th:replace="${script}"></th:block>
 <!-- ApexCharts -->
