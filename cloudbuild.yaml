@@ -21,7 +21,7 @@ steps:
       - 'push'
       - 'us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest'
       
-  # 4. Deploy no Cloud Ru
+  # 4. Deploy no Cloud Run
   - name: 'us-central1-docker.pkg.dev/cloud-builders/gcloud'
     entrypoint: 'gcloud'
     args:
