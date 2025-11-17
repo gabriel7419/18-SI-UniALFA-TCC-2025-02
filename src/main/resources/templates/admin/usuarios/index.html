@@ -108,13 +108,21 @@
                                    title="Alterar senha">
                                     <i class="fas fa-key"></i>
                                 </a>
-                                <!-- Botão de excluir com confirmação -->
-                                <form th:action="@{/admin/usuarios/excluir/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">
+                                <!-- Botão de excluir com confirmação - DESABILITADO para ADMIN -->
+                                <form th:if="${usuario.role != 'ADMIN'}" th:action="@{/admin/usuarios/excluir/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">
                                     <button type="submit" class="btn btn-danger btn-sm"
                                             onclick="return confirm('Tem certeza que deseja excluir este usuário?');" title="Excluir">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
+                                <!-- Botão desabilitado para administradores -->
+                                <button th:if="${usuario.role == 'ADMIN'}" 
+                                        type="button" 
+                                        class="btn btn-danger btn-sm disabled" 
+                                        style="opacity: 0.5; cursor: not-allowed;"
+                                        title="Não é possível excluir administradores">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </td>
                         </tr>
                     </tbody>

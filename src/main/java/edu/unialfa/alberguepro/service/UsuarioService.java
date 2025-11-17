@@ -72,6 +72,11 @@ public class UsuarioService {
             throw new IllegalStateException("Não é possível excluir o usuário logado.");
         }
 
+        // Impedir exclusão de usuários administradores
+        if ("ADMIN".equals(usuarioParaExcluir.getRole())) {
+            throw new IllegalStateException("Não é possível excluir usuários administradores.");
+        }
+
         usuarioRepository.deleteById(id);
     }
 
