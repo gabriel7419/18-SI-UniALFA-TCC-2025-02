@@ -7,14 +7,24 @@
             cursor: pointer;
             user-select: none;
             position: relative;
+            transition: all 0.2s ease;
         }
         .sortable:hover {
             background-color: rgba(0,0,0,0.05);
+            transform: translateY(-1px);
+        }
+        .sortable:active {
+            transform: translateY(0);
+            background-color: rgba(0,0,0,0.1);
         }
         .sortable::after {
             content: ' ⇅';
             opacity: 0.3;
             font-size: 0.8em;
+            transition: opacity 0.2s ease;
+        }
+        .sortable:hover::after {
+            opacity: 0.6;
         }
         .sortable.asc::after {
             content: ' ▲';
