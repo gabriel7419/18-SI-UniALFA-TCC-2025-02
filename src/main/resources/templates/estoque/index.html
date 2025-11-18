@@ -4,6 +4,7 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
 <head>
+    <title>Lista de Produtos em Estoque</title>
 </head>
 <body>
     <!-- Conteúdo principal da página -->
@@ -91,32 +92,10 @@
         <!-- Tabela de produtos -->
         <div class="card card-primary">
             <div class="card-header card-header-blue">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title mb-0">
-                        <span th:if="${diasVencimento == null}">Lista de Produtos no Estoque</span>
-                        <span th:if="${diasVencimento != null}">Produtos que Vencem em <span th:text="${diasVencimento}"></span> dias</span>
-                    </h3>
-                    <div class="card-tools">
-                        <!-- Relatórios de Estoque Geral -->
-                        <span th:if="${diasVencimento == null}">
-                            <a th:href="@{/estoque/relatorio/pdf(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-danger" target="_blank">
-                                <i class="fas fa-file-pdf"></i> PDF Estoque
-                            </a>
-                            <a th:href="@{/estoque/relatorio/excel(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-success">
-                                <i class="fas fa-file-excel"></i> Excel Estoque
-                            </a>
-                        </span>
-                        <!-- Relatórios de Vencimento -->
-                        <span th:if="${diasVencimento != null}">
-                            <a th:href="@{/estoque/relatorio/vencimento/pdf(dias=${diasVencimento})}" class="btn btn-danger" target="_blank">
-                                <i class="fas fa-file-pdf"></i> PDF Vencimento
-                            </a>
-                            <a th:href="@{/estoque/relatorio/vencimento/excel(dias=${diasVencimento})}" class="btn btn-success">
-                                <i class="fas fa-file-excel"></i> Excel Vencimento
-                            </a>
-                        </span>
-                    </div>
-                </div>
+                <h3 class="card-title mb-0">
+                    <span th:if="${diasVencimento == null}">Lista de Produtos em Estoque</span>
+                    <span th:if="${diasVencimento != null}">Lista de Produtos que Vencem em <span th:text="${diasVencimento}"></span> dias</span>
+                </h3>
             </div>
             <div class="card-body">
                 <!-- Se não tiver produto, mostra essa mensagem -->

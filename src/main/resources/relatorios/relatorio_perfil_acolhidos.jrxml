@@ -30,6 +30,26 @@
     <field name="quantidade" class="java.lang.Long"/>
     <field name="percentual" class="java.lang.Double"/>
     
+    <group name="categoriaGroup">
+        <groupExpression><![CDATA[$F{categoria}]]></groupExpression>
+        <groupHeader>
+            <band height="40">
+                <textField>
+                    <reportElement x="0" y="10" width="555" height="25" uuid="674e8022-b161-4e82-bf9a-747c04cf912c"/>
+                    <box>
+                        <pen lineWidth="0.5"/>
+                        <topPen lineWidth="1.5" lineColor="#007BFF"/>
+                        <bottomPen lineWidth="1.5" lineColor="#007BFF"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="12" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression>
+                </textField>
+            </band>
+        </groupHeader>
+    </group>
+    
     <title>
         <band height="200">
             <staticText>
@@ -114,26 +134,6 @@
             </textField>
         </band>
     </title>
-    
-    <group name="categoriaGroup">
-        <groupExpression><![CDATA[$F{categoria}]]></groupExpression>
-        <groupHeader>
-            <band height="40">
-                <textField>
-                    <reportElement x="0" y="10" width="555" height="25" uuid="674e8022-b161-4e82-bf9a-747c04cf912c"/>
-                    <box>
-                        <pen lineWidth="0.5"/>
-                        <topPen lineWidth="1.5" lineColor="#007BFF"/>
-                        <bottomPen lineWidth="1.5" lineColor="#007BFF"/>
-                    </box>
-                    <textElement textAlignment="Center" verticalAlignment="Middle">
-                        <font size="12" isBold="true"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression>
-                </textField>
-            </band>
-        </groupHeader>
-    </group>
     
     <columnHeader>
         <band height="30">

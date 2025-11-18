@@ -5,7 +5,7 @@
       th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
 <head>
     <!-- Título que vai aparecer na aba do navegador -->
-    <title>Consultar Patrimônio</title>
+    <title>Lista de Patrimônios</title>
 </head>
 <body>
     <!-- Conteúdo principal da página -->
@@ -51,17 +51,7 @@
         <!-- Tabela de patrimonios -->
         <div class="card">
             <div class="card-header card-header-blue">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title mb-0">Lista de Patrimônios</h3>
-                    <div class="card-tools">
-                        <a th:href="@{/relatorios/patrimonio/pdf(nome=${nome}, status=${status}, localAtual=${localAtual})}" class="btn btn-danger" target="_blank">
-                            <i class="fas fa-file-pdf"></i> Gerar PDF
-                        </a>
-                        <a th:href="@{/relatorios/patrimonio/excel(nome=${nome}, status=${status}, localAtual=${localAtual})}" class="btn btn-success">
-                            <i class="fas fa-file-excel"></i> Gerar Excel
-                        </a>
-                    </div>
-                </div>
+                <h3 class="card-title mb-0">Lista de Patrimônios</h3>
             </div>
             <div class="card-body">
                 <!-- Se não tiver nada no banc de dados, mostra essa mensagem -->
