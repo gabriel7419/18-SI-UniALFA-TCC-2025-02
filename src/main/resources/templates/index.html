@@ -29,17 +29,14 @@
             </div>
         </div>
 
-        <!-- Taxa de Ocupação -->
+        <!-- Quartos Livres -->
         <div class="col-lg-3 col-6 mb-2">
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3>
-                        <span th:text="${dashboard.leitosOcupados} + ' / ' + ${dashboard.totalLeitos}">0 / 0</span>
-                        <small style="font-size: 0.6em;" th:text="'(' + ${#numbers.formatDecimal((dashboard.leitosOcupados * 100.0 / dashboard.totalLeitos), 1, 1)} + '%)'"> (0%)</small>
-                    </h3>
-                    <p>Taxa de Ocupação</p>
+                    <h3 th:text="${dashboard.quartosLivres} + ' / ' + ${dashboard.totalQuartos}">0 / 0</h3>
+                    <p>Quartos Livres</p>
                 </div>
-                <div class="icon"><i class="fas fa-chart-pie"></i></div>
+                <div class="icon"><i class="fas fa-door-open"></i></div>
             </div>
         </div>
 
