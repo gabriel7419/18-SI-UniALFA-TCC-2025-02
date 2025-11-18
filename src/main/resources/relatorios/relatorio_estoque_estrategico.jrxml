@@ -10,7 +10,7 @@
               rightMargin="20" 
               topMargin="20" 
               bottomMargin="20" 
-              uuid="estoque-estrategico-uuid">
+              uuid="f1490fd5-b3c1-4b28-950d-b681beafdaee">
     
     <parameter name="TOTAL_PRODUTOS" class="java.lang.Long"/>
     <parameter name="TOTAL_ITENS" class="java.lang.Long"/>
@@ -28,14 +28,14 @@
     <title>
         <band height="150">
             <staticText>
-                <reportElement x="0" y="10" width="555" height="30" uuid="title-uuid"/>
+                <reportElement x="0" y="10" width="555" height="30" uuid="30f23a29-5085-4ed6-9052-9641ad1b417b"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="18" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Relatório Estratégico de Estoque]]></text>
             </staticText>
             <textField pattern="dd/MM/yyyy HH:mm">
-                <reportElement x="0" y="45" width="555" height="20" uuid="date-uuid"/>
+                <reportElement x="0" y="45" width="555" height="20" uuid="9af4057b-8031-4890-bfd6-9794decdb8da"/>
                 <textElement textAlignment="Center">
                     <font size="10"/>
                 </textElement>

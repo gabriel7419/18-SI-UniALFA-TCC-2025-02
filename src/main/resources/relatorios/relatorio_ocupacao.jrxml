@@ -10,7 +10,7 @@
               rightMargin="20" 
               topMargin="20" 
               bottomMargin="20" 
-              uuid="ocupacao-uuid">
+              uuid="14033cf3-6e8f-454f-b991-f324780ae5b1">
     
     <parameter name="TOTAL_LEITOS" class="java.lang.Long"/>
     <parameter name="TOTAL_OCUPADOS" class="java.lang.Long"/>
@@ -26,14 +26,14 @@
     <title>
         <band height="120">
             <staticText>
-                <reportElement x="0" y="10" width="555" height="30" uuid="title-uuid"/>
+                <reportElement x="0" y="10" width="555" height="30" uuid="465ef968-cd7b-4524-985b-66331ed806d9"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="18" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Relatório de Ocupação de Quartos]]></text>
             </staticText>
             <textField pattern="dd/MM/yyyy HH:mm">
-                <reportElement x="0" y="45" width="555" height="20" uuid="date-uuid"/>
+                <reportElement x="0" y="45" width="555" height="20" uuid="4f660a00-b932-4f4a-94b4-f5086988d145"/>
                 <textElement textAlignment="Center">
                     <font size="10"/>
                 </textElement>

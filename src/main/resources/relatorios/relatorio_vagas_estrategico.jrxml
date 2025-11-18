@@ -10,7 +10,7 @@
               rightMargin="20" 
               topMargin="20" 
               bottomMargin="20" 
-              uuid="vagas-estrategico-uuid">
+              uuid="7d82ee85-680a-414a-bf46-df2da721c6cf">
     
     <parameter name="TOTAL_VAGAS" class="java.lang.Long"/>
     <parameter name="VAGAS_ATIVAS" class="java.lang.Long"/>
@@ -25,14 +25,14 @@
     <title>
         <band height="150">
             <staticText>
-                <reportElement x="0" y="10" width="555" height="30" uuid="title-uuid"/>
+                <reportElement x="0" y="10" width="555" height="30" uuid="fa7f9b60-7dae-4319-9263-19030e1a4479"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="18" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Relatório Estratégico de Gestão de Vagas]]></text>
             </staticText>
             <textField pattern="dd/MM/yyyy HH:mm">
-                <reportElement x="0" y="45" width="555" height="20" uuid="date-uuid"/>
+                <reportElement x="0" y="45" width="555" height="20" uuid="66ac9209-3680-4704-86f3-be3940205940"/>
                 <textElement textAlignment="Center">
                     <font size="10"/>
                 </textElement>

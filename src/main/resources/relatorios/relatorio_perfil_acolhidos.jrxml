@@ -10,7 +10,7 @@
               rightMargin="20" 
               topMargin="20" 
               bottomMargin="20" 
-              uuid="perfil-acolhidos-uuid">
+              uuid="927785b3-30fb-4d59-99a4-905273a5eab4">
     
     <parameter name="TOTAL_ACOLHIDOS" class="java.lang.Long"/>
     <parameter name="ACOLHIDOS_ATIVOS" class="java.lang.Long"/>
@@ -33,21 +33,21 @@
     <title>
         <band height="200">
             <staticText>
-                <reportElement x="0" y="10" width="555" height="35" uuid="title-uuid"/>
+                <reportElement x="0" y="10" width="555" height="35" uuid="dbae096b-aade-488a-a679-e2d0fdb76b29"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="20" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Relatório Estratégico]]></text>
             </staticText>
             <staticText>
-                <reportElement x="0" y="45" width="555" height="25" uuid="subtitle-uuid"/>
+                <reportElement x="0" y="45" width="555" height="25" uuid="47ff6638-f696-4fc8-b29b-d79697fd490c"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="14" isBold="true" isItalic="true"/>
                 </textElement>
                 <text><![CDATA[Perfil Demográfico dos Acolhidos]]></text>
             </staticText>
             <textField pattern="dd/MM/yyyy HH:mm">
-                <reportElement x="0" y="75" width="555" height="20" uuid="date-uuid"/>
+                <reportElement x="0" y="75" width="555" height="20" uuid="09760e48-0c03-4440-8e42-0da3f4b4120e"/>
                 <textElement textAlignment="Center">
                     <font size="9" isItalic="true"/>
                 </textElement>
