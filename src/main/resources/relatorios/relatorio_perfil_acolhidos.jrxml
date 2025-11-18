@@ -115,22 +115,25 @@
         </band>
     </title>
     
-    <pageHeader>
-        <band height="35">
-            <textField>
-                <reportElement x="0" y="10" width="555" height="20" uuid="section-title"/>
-                <box>
-                    <pen lineWidth="0.5"/>
-                    <topPen lineWidth="1.0" lineColor="#007BFF"/>
-                    <bottomPen lineWidth="1.0" lineColor="#007BFF"/>
-                </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="11" isBold="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression>
-            </textField>
-        </band>
-    </pageHeader>
+    <group name="categoriaGroup">
+        <groupExpression><![CDATA[$F{categoria}]]></groupExpression>
+        <groupHeader>
+            <band height="40">
+                <textField>
+                    <reportElement x="0" y="10" width="555" height="25" uuid="section-title"/>
+                    <box>
+                        <pen lineWidth="0.5"/>
+                        <topPen lineWidth="1.5" lineColor="#007BFF"/>
+                        <bottomPen lineWidth="1.5" lineColor="#007BFF"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="12" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression>
+                </textField>
+            </band>
+        </groupHeader>
+    </group>
     
     <columnHeader>
         <band height="30">

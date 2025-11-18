@@ -277,6 +277,9 @@ public class VagaController {
             
             // Carregar template
             InputStream jrxmlStream = getClass().getResourceAsStream("/relatorios/relatorio_vagas_estrategico.jrxml");
+            if (jrxmlStream == null) {
+                throw new RuntimeException("Template JRXML não encontrado: /relatorios/relatorio_vagas_estrategico.jrxml");
+            }
             net.sf.jasperreports.engine.JasperReport jasperReport = 
                     net.sf.jasperreports.engine.JasperCompileManager.compileReport(jrxmlStream);
             

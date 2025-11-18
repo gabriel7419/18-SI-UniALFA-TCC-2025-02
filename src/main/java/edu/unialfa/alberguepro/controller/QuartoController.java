@@ -164,6 +164,9 @@ public class QuartoController {
 
             // Carregar template JRXML
             InputStream jrxmlStream = getClass().getResourceAsStream("/relatorios/relatorio_ocupacao.jrxml");
+            if (jrxmlStream == null) {
+                throw new RuntimeException("Template JRXML não encontrado: /relatorios/relatorio_ocupacao.jrxml");
+            }
             net.sf.jasperreports.engine.JasperReport jasperReport = 
                     net.sf.jasperreports.engine.JasperCompileManager.compileReport(jrxmlStream);
 

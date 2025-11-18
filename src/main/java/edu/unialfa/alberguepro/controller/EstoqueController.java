@@ -466,6 +466,9 @@ public class EstoqueController {
             
             // Carregar template
             InputStream jrxmlStream = getClass().getResourceAsStream("/relatorios/relatorio_estoque_estrategico.jrxml");
+            if (jrxmlStream == null) {
+                throw new RuntimeException("Template JRXML não encontrado: /relatorios/relatorio_estoque_estrategico.jrxml");
+            }
             net.sf.jasperreports.engine.JasperReport jasperReport = 
                     net.sf.jasperreports.engine.JasperCompileManager.compileReport(jrxmlStream);
             

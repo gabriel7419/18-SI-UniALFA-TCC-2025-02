@@ -544,6 +544,9 @@ public class CadastroAcolhidoController {
             
             // Carregar template
             InputStream jrxmlStream = getClass().getResourceAsStream("/relatorios/relatorio_perfil_acolhidos.jrxml");
+            if (jrxmlStream == null) {
+                throw new RuntimeException("Template JRXML não encontrado: /relatorios/relatorio_perfil_acolhidos.jrxml");
+            }
             net.sf.jasperreports.engine.JasperReport jasperReport = 
                     net.sf.jasperreports.engine.JasperCompileManager.compileReport(jrxmlStream);
             
