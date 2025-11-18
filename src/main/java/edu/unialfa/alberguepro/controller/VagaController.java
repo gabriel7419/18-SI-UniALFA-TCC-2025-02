@@ -11,13 +11,19 @@ import edu.unialfa.alberguepro.service.LeitoService;
 import edu.unialfa.alberguepro.service.QuartoService;
 import edu.unialfa.alberguepro.service.VagaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/vaga")
@@ -213,6 +219,95 @@ public class VagaController {
         model.addAttribute("vagas", vagas);
         model.addAttribute("filtro", filtro);
         return "vaga/lista";
+    }
+
+    @GetMapping("/relatorio/estrategico-pdf")
+    public ResponseEntity<byte[]> relatorioEstrategicoPdf() {
+        try {
+            List<Vaga> todasVagas = service.listarTodos();
+            
+            // Totais gerais
+            long totalVagas = todasVagas.size();
+            long vagasAtivas = todasVagas.stream()
+                    .filter(v -> v.getDataSaida() == null || v.getDataSaida().isAfter(LocalDate.now()))
+                    .count();
+            long vagasEncerradas = totalVagas - vagasAtivas;
+            
+            // Média de permanência
+            double mediaPermanencia = todasVagas.stream()
+                    .filter(v -> v.getDataSaida() != null)
+                    .mapToLong(v -> java.time.temporal.ChronoUnit.DAYS.between(v.getDataEntrada(), v.getDataSaida()))
+                    .average()
+                    .orElse(0.0);
+            
+            // Acolhimentos por mês (últimos 12 meses)
+            LocalDate dataInicio = LocalDate.now().minusMonths(12);
+            Map<String, Long> acolhimentosPorMes = todasVagas.stream()
+                    .filter(v -> v.getDataEntrada().isAfter(dataInicio))
+                    .collect(Collectors.groupingBy(
+                            v -> v.getDataEntrada().format(java.time.format.DateTimeFormatter.ofPattern("MM/yyyy")),
+                            Collectors.counting()
+                    ));
+            
+            // Preparar dados ordenados por mês
+            List<Map<String, Object>> dados = new ArrayList<>();
+            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("MMMM/yyyy", 
+                    new java.util.Locale("pt", "BR"));
+            
+            for (int i = 11; i >= 0; i--) {
+                LocalDate mes = LocalDate.now().minusMonths(i);
+                String mesAnoChave = mes.format(java.time.format.DateTimeFormatter.ofPattern("MM/yyyy"));
+                String mesAnoExibicao = mes.format(formatter);
+                
+                long totalMes = acolhimentosPorMes.getOrDefault(mesAnoChave, 0L);
+                long ativasMes = todasVagas.stream()
+                        .filter(v -> v.getDataEntrada().getMonth() == mes.getMonth() && 
+                                    v.getDataEntrada().getYear() == mes.getYear() &&
+                                    (v.getDataSaida() == null || v.getDataSaida().isAfter(LocalDate.now())))
+                        .count();
+                long encerradasMes = totalMes - ativasMes;
+                
+                Map<String, Object> item = new HashMap<>();
+                item.put("mesAno", mesAnoExibicao.substring(0, 1).toUpperCase() + mesAnoExibicao.substring(1));
+                item.put("totalAcolhimentos", totalMes);
+                item.put("vagasAtivas", ativasMes);
+                item.put("vagasEncerradas", encerradasMes);
+                dados.add(item);
+            }
+            
+            // Carregar template
+            InputStream jrxmlStream = getClass().getResourceAsStream("/relatorios/relatorio_vagas_estrategico.jrxml");
+            net.sf.jasperreports.engine.JasperReport jasperReport = 
+                    net.sf.jasperreports.engine.JasperCompileManager.compileReport(jrxmlStream);
+            
+            // Parâmetros
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("TOTAL_VAGAS", totalVagas);
+            parametros.put("VAGAS_ATIVAS", vagasAtivas);
+            parametros.put("VAGAS_ENCERRADAS", vagasEncerradas);
+            parametros.put("MEDIA_PERMANENCIA", mediaPermanencia);
+            
+            // DataSource
+            net.sf.jasperreports.engine.data.JRBeanCollectionDataSource dataSource = 
+                    new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource(dados);
+            
+            // Preencher
+            net.sf.jasperreports.engine.JasperPrint jasperPrint = 
+                    net.sf.jasperreports.engine.JasperFillManager.fillReport(jasperReport, parametros, dataSource);
+            
+            // Exportar
+            byte[] pdf = net.sf.jasperreports.engine.JasperExportManager.exportReportToPdf(jasperPrint);
+            
+            org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+            headers.setContentType(org.springframework.http.MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("filename", "relatorio-vagas-estrategico.pdf");
+            
+            return new ResponseEntity<>(pdf, headers, org.springframework.http.HttpStatus.OK);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
     }
 
 }

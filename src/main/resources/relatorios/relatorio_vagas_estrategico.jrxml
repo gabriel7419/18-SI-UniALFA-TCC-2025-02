@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+              name="relatorio_vagas_estrategico" 
+              pageWidth="595" 
+              pageHeight="842" 
+              columnWidth="555" 
+              leftMargin="20" 
+              rightMargin="20" 
+              topMargin="20" 
+              bottomMargin="20" 
+              uuid="vagas-estrategico-uuid">
+    
+    <parameter name="TOTAL_VAGAS" class="java.lang.Long"/>
+    <parameter name="VAGAS_ATIVAS" class="java.lang.Long"/>
+    <parameter name="VAGAS_ENCERRADAS" class="java.lang.Long"/>
+    <parameter name="MEDIA_PERMANENCIA" class="java.lang.Double"/>
+    
+    <field name="mesAno" class="java.lang.String"/>
+    <field name="totalAcolhimentos" class="java.lang.Long"/>
+    <field name="vagasAtivas" class="java.lang.Long"/>
+    <field name="vagasEncerradas" class="java.lang.Long"/>
+    
+    <title>
+        <band height="150">
+            <staticText>
+                <reportElement x="0" y="10" width="555" height="30" uuid="title-uuid"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="18" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Relatório Estratégico de Gestão de Vagas]]></text>
+            </staticText>
+            <textField pattern="dd/MM/yyyy HH:mm">
+                <reportElement x="0" y="45" width="555" height="20" uuid="date-uuid"/>
+                <textElement textAlignment="Center">
+                    <font size="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Gerado em: " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
+            </textField>
+            
+            <!-- Resumo Geral -->
+            <rectangle>
+                <reportElement x="0" y="75" width="555" height="70" backcolor="#F0F0F0" uuid="summary-bg"/>
+            </rectangle>
+            <staticText>
+                <reportElement x="10" y="80" width="150" height="15" uuid="label1"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Total de Vagas:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="160" y="80" width="80" height="15" uuid="field1"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL_VAGAS}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="10" y="100" width="150" height="15" uuid="label2"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Vagas Ativas:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="160" y="100" width="80" height="15" uuid="field2"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{VAGAS_ATIVAS}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="295" y="80" width="150" height="15" uuid="label3"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Vagas Encerradas:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="445" y="80" width="100" height="15" uuid="field3"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{VAGAS_ENCERRADAS}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="295" y="100" width="150" height="15" uuid="label4"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Média de Permanência:]]></text>
+            </staticText>
+            <textField pattern="#0.0' dias'">
+                <reportElement x="445" y="100" width="100" height="15" uuid="field4"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{MEDIA_PERMANENCIA}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="10" y="125" width="535" height="20" uuid="section-title"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ACOLHIMENTOS POR MÊS (Últimos 12 meses)]]></text>
+            </staticText>
+        </band>
+    </title>
+    
+    <columnHeader>
+        <band height="30">
+            <staticText>
+                <reportElement mode="Opaque" x="0" y="0" width="200" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="ch1"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Mês/Ano]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="200" y="0" width="120" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="ch2"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total Acolhimentos]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="320" y="0" width="115" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="ch3"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Ativas]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="435" y="0" width="120" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="ch4"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Encerradas]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    
+    <detail>
+        <band height="25">
+            <textField>
+                <reportElement x="0" y="0" width="200" height="25" uuid="d1"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{mesAno}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="200" y="0" width="120" height="25" uuid="d2"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{totalAcolhimentos}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="320" y="0" width="115" height="25" uuid="d3"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{vagasAtivas}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="435" y="0" width="120" height="25" uuid="d4"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{vagasEncerradas}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    
+    <pageFooter>
+        <band height="30">
+            <textField>
+                <reportElement x="0" y="10" width="350" height="15" uuid="footer1"/>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["AlberguePro - Relatório Estratégico de Vagas"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="450" y="10" width="80" height="15" uuid="footer2"/>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>
