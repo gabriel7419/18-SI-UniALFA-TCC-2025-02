@@ -196,7 +196,7 @@ public class QuartoController {
 
         } catch (Exception e) {
             log.error("Erro ao gerar relatório PDF de ocupação", e);
-            return ResponseEntity.status(500).build();
+            return ResponseEntity.status(500).body(("Erro: " + e.getMessage()).getBytes());
         }
     }
 

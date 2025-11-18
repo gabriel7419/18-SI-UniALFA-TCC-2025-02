@@ -16,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -28,6 +30,8 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/vaga")
 public class VagaController {
+
+    private static final Logger log = LoggerFactory.getLogger(VagaController.class);
 
     @Autowired
     private VagaRepository vagaRepository;
@@ -308,8 +312,9 @@ public class VagaController {
             return new ResponseEntity<>(pdf, headers, org.springframework.http.HttpStatus.OK);
             
         } catch (Exception e) {
+            log.error("Erro ao gerar relatório estratégico de vagas", e);
             e.printStackTrace();
-            return ResponseEntity.status(500).build();
+            return ResponseEntity.status(500).body(("Erro: " + e.getMessage()).getBytes());
         }
     }
 

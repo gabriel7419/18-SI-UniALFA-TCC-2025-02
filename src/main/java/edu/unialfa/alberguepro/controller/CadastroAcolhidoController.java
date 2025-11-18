@@ -2,6 +2,8 @@ package edu.unialfa.alberguepro.controller;
 
 import edu.unialfa.alberguepro.model.CadastroAcolhido;
 import edu.unialfa.alberguepro.service.CadastroAcolhidoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/cadastroAcolhido")
 public class CadastroAcolhidoController {
+
+    private static final Logger log = LoggerFactory.getLogger(CadastroAcolhidoController.class);
 
     @Autowired
     private CadastroAcolhidoService service;
@@ -583,8 +587,9 @@ public class CadastroAcolhidoController {
             return new ResponseEntity<>(pdf, headers, org.springframework.http.HttpStatus.OK);
             
         } catch (Exception e) {
+            log.error("Erro ao gerar relatório estratégico de acolhidos", e);
             e.printStackTrace();
-            return ResponseEntity.status(500).build();
+            return ResponseEntity.status(500).body(("Erro: " + e.getMessage()).getBytes());
         }
     }
     

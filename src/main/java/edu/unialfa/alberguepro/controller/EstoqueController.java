@@ -28,6 +28,8 @@ import org.springframework.http.MediaType;
 
 import jakarta.validation.Valid;
 import net.sf.jasperreports.engine.JRException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -42,6 +44,8 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/estoque")
 public class EstoqueController {
+
+    private static final Logger log = LoggerFactory.getLogger(EstoqueController.class);
 
     @Autowired
     private ProdutoRepository produtoRepository;
@@ -497,8 +501,9 @@ public class EstoqueController {
             return new ResponseEntity<>(pdf, headers, org.springframework.http.HttpStatus.OK);
             
         } catch (Exception e) {
+            log.error("Erro ao gerar relatório estratégico de estoque", e);
             e.printStackTrace();
-            return ResponseEntity.status(500).build();
+            return ResponseEntity.status(500).body(("Erro: " + e.getMessage()).getBytes());
         }
     }
 
