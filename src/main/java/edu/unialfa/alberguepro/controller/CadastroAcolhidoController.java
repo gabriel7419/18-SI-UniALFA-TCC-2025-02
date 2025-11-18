@@ -582,7 +582,9 @@ public class CadastroAcolhidoController {
             
             org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
             headers.setContentType(org.springframework.http.MediaType.APPLICATION_PDF);
-            headers.setContentDispositionFormData("filename", "relatorio-perfil-acolhidos.pdf");
+            headers.setContentDisposition(org.springframework.http.ContentDisposition.inline()
+                    .filename("relatorio-perfil-acolhidos.pdf")
+                    .build());
             
             return new ResponseEntity<>(pdf, headers, org.springframework.http.HttpStatus.OK);
             
