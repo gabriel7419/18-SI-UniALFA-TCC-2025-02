@@ -117,6 +117,9 @@
                     <td>
                         <a th:href="@{/quarto/remover/{id}(id=${quarto.id})}"
                            class="btn btn-danger btn-sm"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Excluir quarto e leitos"
                            onclick="return confirm('Tem certeza que deseja remover este quarto e todos os seus leitos?');">
                             <i class="fas fa-trash"></i>
                         </a>
