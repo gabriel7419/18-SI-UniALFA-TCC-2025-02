@@ -6,15 +6,7 @@
 </head>
 <body>
 <section>
-    <div class="mb-3">
-        <a th:href="@{/cadastroAcolhido}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Novo Acolhido
-        </a>
-        <a th:href="@{/cadastroAcolhido/relatorio/estrategico-pdf}" class="btn btn-info" target="_blank">
-            <i class="fas fa-chart-line"></i> Relatório Estratégico
-        </a>
-    </div>
-
+    <!-- Filtros Colapsáveis -->
     <div class="card card-primary collapsed-card mb-3">
         <div class="card-header card-header-blue">
             <h3 class="card-title">Filtros</h3>
@@ -27,39 +19,71 @@
         <div class="card-body" style="display: none;">
             <form th:action="@{/cadastroAcolhido/listar}" method="get">
                 <div class="row">
-                    <div class="col-md-7">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="filtro">Nome do Acolhido:</label>
                             <input type="text" id="filtro" name="filtro" class="form-control" placeholder="Buscar acolhido por nome..." th:value="${filtro}">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
-                            <label for="diasPermanencia">Filtrar por tempo de permanência:</label>
-                            <select id="diasPermanencia" name="diasPermanencia" class="form-control">
-                                <option value="">Todos os acolhidos</option>
-                                <option value="30" th:selected="${diasPermanencia != null and diasPermanencia == 30}">Permanência superior a 30 dias</option>
-                                <option value="60" th:selected="${diasPermanencia != null and diasPermanencia == 60}">Permanência superior a 60 dias</option>
-                                <option value="90" th:selected="${diasPermanencia != null and diasPermanencia == 90}">Permanência superior a 90 dias (Limite)</option>
+                            <label for="sexo">Sexo:</label>
+                            <select id="sexo" name="sexo" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="Masculino" th:selected="${sexo == 'Masculino'}">Masculino</option>
+                                <option value="Feminino" th:selected="${sexo == 'Feminino'}">Feminino</option>
+                                <option value="Outro" th:selected="${sexo == 'Outro'}">Outro</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label>&nbsp;</label>
-                            <div class="btn-group btn-block">
-                                <button type="submit" class="btn btn-primary" style="width: 60%;">
-                                    <i class="fas fa-search"></i> Filtrar
-                                </button>
-                                <a th:href="@{/cadastroAcolhido/listar}" class="btn btn-secondary" style="width: 40%;">
-                                    <i class="fas fa-times"></i> Limpar
-                                </a>
-                            </div>
+                            <label for="idadeMin">Idade Mín.:</label>
+                            <input type="number" id="idadeMin" name="idadeMin" class="form-control" placeholder="Ex: 18" th:value="${idadeMin}" min="0" max="130">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="idadeMax">Idade Máx.:</label>
+                            <input type="number" id="idadeMax" name="idadeMax" class="form-control" placeholder="Ex: 65" th:value="${idadeMax}" min="0" max="130">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="diasPermanencia">Permanência:</label>
+                            <select id="diasPermanencia" name="diasPermanencia" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="30" th:selected="${diasPermanencia != null and diasPermanencia == 30}">Mais de 30 dias</option>
+                                <option value="60" th:selected="${diasPermanencia != null and diasPermanencia == 60}">Mais de 60 dias</option>
+                                <option value="90" th:selected="${diasPermanencia != null and diasPermanencia == 90}">Mais de 90 dias (Limite)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="btn-group float-right">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Filtrar
+                            </button>
+                            <a th:href="@{/cadastroAcolhido/listar}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Limpar
+                            </a>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="mb-3">
+        <a th:href="@{/cadastroAcolhido}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Novo Acolhido
+        </a>
+        <a th:href="@{/cadastroAcolhido/relatorio/estrategico-pdf}" class="btn btn-info" target="_blank">
+            <i class="fas fa-chart-line"></i> Relatório Estratégico
+        </a>
     </div>
 
     <div class="card">

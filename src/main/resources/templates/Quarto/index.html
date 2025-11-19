@@ -25,12 +25,7 @@
         </button>
     </div>
 
-    <div class="mb-3">
-        <a th:href="@{/quarto/novo}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Novo Quarto
-        </a>
-    </div>
-
+    <!-- Filtros Colapsáveis -->
     <div class="card card-primary collapsed-card mb-3">
         <div class="card-header card-header-blue">
             <h3 class="card-title">Filtros</h3>
@@ -43,21 +38,38 @@
         <div class="card-body" style="display: none;">
             <form th:action="@{/quarto/pesquisar}" method="get">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="filtro">Número do Quarto:</label>
                             <input type="text" id="filtro" name="filtro" class="form-control"
-                                   placeholder="Buscar os quartos por número..." th:value="${filtro}">
+                                   placeholder="Buscar por número..." th:value="${filtro}">
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="capacidadeMin">Capacidade Mín.:</label>
+                            <input type="number" id="capacidadeMin" name="capacidadeMin" class="form-control"
+                                   placeholder="Ex: 2" th:value="${capacidadeMin}" min="1">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="disponibilidade">Disponibilidade:</label>
+                            <select id="disponibilidade" name="disponibilidade" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="disponivel" th:selected="${disponibilidade == 'disponivel'}">Com vagas</option>
+                                <option value="ocupado" th:selected="${disponibilidade == 'ocupado'}">Lotado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label>&nbsp;</label>
                             <div class="btn-group btn-block">
-                                <button type="submit" class="btn btn-primary" style="width: 60%;">
+                                <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-search"></i> Filtrar
                                 </button>
-                                <a th:href="@{/quarto/pesquisar}" class="btn btn-secondary" style="width: 40%;">
+                                <a th:href="@{/quarto}" class="btn btn-secondary">
                                     <i class="fas fa-times"></i> Limpar
                                 </a>
                             </div>
@@ -66,6 +78,13 @@
                 </div>
             </form>
         </div>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="mb-3">
+        <a th:href="@{/quarto/novo}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Novo Quarto
+        </a>
     </div>
 
     <div class="card">

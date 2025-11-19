@@ -26,6 +26,64 @@
             </button>
         </div>
         
+        <!-- Filtros Colapsáveis -->
+        <div class="card card-primary collapsed-card mb-3">
+            <div class="card-header card-header-blue">
+                <h3 class="card-title">Filtros</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: none;">
+                <form th:action="@{/admin/usuarios}" method="get">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="username">Nome de Usuário:</label>
+                                <input type="text" id="username" name="username" class="form-control" 
+                                       placeholder="Buscar por username..." th:value="${username}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="role">Tipo:</label>
+                                <select id="role" name="role" class="form-control">
+                                    <option value="">Todos</option>
+                                    <option value="ADMIN" th:selected="${role == 'ADMIN'}">Administrador</option>
+                                    <option value="USER" th:selected="${role == 'USER'}">Usuário</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="ativo">Status:</label>
+                                <select id="ativo" name="ativo" class="form-control">
+                                    <option value="">Todos</option>
+                                    <option value="true" th:selected="${ativo == 'true'}">Ativo</option>
+                                    <option value="false" th:selected="${ativo == 'false'}">Inativo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <div class="btn-group btn-block">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-search"></i> Filtrar
+                                    </button>
+                                    <a th:href="@{/admin/usuarios}" class="btn btn-secondary">
+                                        <i class="fas fa-times"></i> Limpar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
         <!-- Botão pra criar usuário novo -->
         <div class="mb-3">
             <a th:href="@{/admin/usuarios/novo}" class="btn btn-primary">
