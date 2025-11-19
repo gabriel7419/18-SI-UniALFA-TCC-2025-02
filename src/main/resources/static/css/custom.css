@@ -202,6 +202,10 @@ body::before {
 
 /* ========================================
    🔘 BOTÕES - MODERNOS COM ANIMAÇÕES
+   Cores Padronizadas:
+   - Cancelar/Fechar: Vermelho
+   - Confirmar/Salvar: Azul
+   - Info/Alerta: Amarelo
    ======================================== */
 
 .btn {
@@ -242,34 +246,137 @@ body::before {
     transform: translateY(0);
 }
 
+/* Botões Primários - AZUL (Confirmar/Salvar) */
 .btn-primary {
-    background: var(--gradient-primary) !important;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
     color: var(--white) !important;
 }
 
-.btn-info {
-    background: var(--gradient-info) !important;
-    color: var(--white) !important;
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0069d9 0%, #004085 100%) !important;
 }
 
-.btn-success {
-    background: var(--gradient-success) !important;
-    color: var(--white) !important;
-}
-
-.btn-warning {
-    background: var(--gradient-warning) !important;
-    color: var(--white) !important;
-}
-
-.btn-danger {
-    background: var(--gradient-danger) !important;
-    color: var(--white) !important;
-}
-
+/* Botões Secundários - CINZA (Voltar) */
 .btn-secondary {
     background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
     color: var(--white) !important;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #343a40 100%) !important;
+}
+
+/* Botões Danger - VERMELHO (Cancelar/Fechar/Excluir) */
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+    color: var(--white) !important;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%) !important;
+}
+
+/* Botões Warning - AMARELO (Info/Alerta) */
+.btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%) !important;
+    color: var(--dark) !important;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e0a800 0%, #d39e00 100%) !important;
+}
+
+/* Botões Success - VERDE (Confirmações) */
+.btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%) !important;
+    color: var(--white) !important;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%) !important;
+}
+
+/* Botões Info - AZUL CLARO */
+.btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+    color: var(--white) !important;
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, #138496 0%, #117a8b 100%) !important;
+}
+
+/* Botões Outline */
+.btn-outline-secondary {
+    border: 2px solid #6c757d !important;
+    color: #6c757d !important;
+    background: transparent !important;
+}
+
+.btn-outline-secondary:hover {
+    background: #6c757d !important;
+    color: var(--white) !important;
+}
+
+.btn-outline-primary {
+    border: 2px solid #007bff !important;
+    color: #007bff !important;
+    background: transparent !important;
+}
+
+.btn-outline-primary:hover {
+    background: #007bff !important;
+    color: var(--white) !important;
+}
+
+/* ========================================
+   💡 TOOLTIPS PARA BOTÕES DE AÇÃO
+   ======================================== */
+
+/* Tooltip padrão do Bootstrap com melhorias */
+.tooltip {
+    z-index: 1080 !important;
+}
+
+.tooltip-inner {
+    background: var(--dark) !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 1rem !important;
+    box-shadow: var(--shadow-md) !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+}
+
+.tooltip.bs-tooltip-top .arrow::before {
+    border-top-color: var(--dark) !important;
+}
+
+.tooltip.bs-tooltip-bottom .arrow::before {
+    border-bottom-color: var(--dark) !important;
+}
+
+.tooltip.bs-tooltip-left .arrow::before {
+    border-left-color: var(--dark) !important;
+}
+
+.tooltip.bs-tooltip-right .arrow::before {
+    border-right-color: var(--dark) !important;
+}
+
+/* Ícones de ação com cursor pointer e transição */
+.btn-sm, .btn-xs {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.875rem !important;
+}
+
+/* Ícones clicáveis */
+a[title], button[title], [data-toggle="tooltip"] {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+a[title]:hover, button[title]:hover, [data-toggle="tooltip"]:hover {
+    transform: scale(1.1);
 }
 
 

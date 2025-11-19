@@ -139,11 +139,18 @@
                         <span th:if="${acolhido.dataSaida == null}">-</span>
                     </td>
                     <td>
-                        <a th:href="@{/cadastroAcolhido/editar/{id}(id=${acolhido.id})}" class="btn btn-warning btn-sm">
+                        <a th:href="@{/cadastroAcolhido/editar/{id}(id=${acolhido.id})}" 
+                           class="btn btn-warning btn-sm" 
+                           data-toggle="tooltip" 
+                           data-placement="top" 
+                           title="Editar cadastro">
                             <i class="fas fa-edit"></i>
                         </a>
                         <a th:href="@{/cadastroAcolhido/remover/{id}(id=${acolhido.id})}"
                            class="btn btn-danger btn-sm"
+                           data-toggle="tooltip" 
+                           data-placement="top" 
+                           title="Excluir cadastro"
                            onclick="return confirm('Tem certeza que deseja remover o acolhido ' + '${acolhido.nome}' + '?');">
                             <i class="fas fa-trash"></i>
                         </a>

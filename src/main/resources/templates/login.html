@@ -69,9 +69,98 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        
+        body.dark-mode .login-box .card {
+            background-color: #2d3748;
+            border: 1px solid #4a5568;
+        }
+        
+        body.dark-mode .login-logo a,
+        body.dark-mode .login-box-msg {
+            color: #e2e8f0 !important;
+        }
+        
+        body.dark-mode .form-control {
+            background-color: #1a202c;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .form-control:focus {
+            background-color: #2d3748;
+            border-color: #667eea;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .input-group-text {
+            background-color: #1a202c;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .loading-content {
+            background-color: #2d3748;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .alert {
+            background-color: #2d3748;
+            border-color: #4a5568;
+        }
+        
+        /* Toggle Switch */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .theme-toggle button {
+            background: transparent;
+            border: 2px solid #cbd5e0;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .theme-toggle button:hover {
+            transform: scale(1.1);
+            border-color: #667eea;
+        }
+        
+        body.dark-mode .theme-toggle button {
+            border-color: #4a5568;
+            color: #fbd38d;
+        }
+        
+        .toggle-password {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .toggle-password:hover {
+            color: #667eea;
+        }
     </style>
 </head>
 <body class="hold-transition login-page">
+<div class="theme-toggle">
+    <button type="button" onclick="toggleTheme()" title="Alternar tema">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+</div>
 <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-content">
         <i class="fas fa-spinner loading-spinner"></i>
@@ -118,10 +207,10 @@
         </div>
         </div>
         <div class="input-group mb-3">
-        <input type="password" class="form-control" placeholder="Senha" name="password" required autocomplete="off">
+        <input type="password" class="form-control" id="passwordInput" placeholder="Senha" name="password" required autocomplete="off">
         <div class="input-group-append">
-            <div class="input-group-text">
-            <span class="fas fa-lock"></span>
+            <div class="input-group-text toggle-password" onclick="togglePassword()" title="Mostrar/Ocultar senha">
+            <span class="fas fa-eye" id="toggleIcon"></span>
             </div>
         </div>
         <div class="invalid-feedback">
@@ -142,7 +231,51 @@
 <script th:src="@{/webjars/AdminLTE/3.2.0/dist/js/adminlte.min.js}"></script>
 
 <script>
+// Toggle Password Visibility
+function togglePassword() {
+    const passwordInput = document.getElementById('passwordInput');
+    const toggleIcon = document.getElementById('toggleIcon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+
+// Toggle Dark Mode
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('themeIcon');
+    
+    body.classList.toggle('dark-mode');
+    
+    if (body.classList.contains('dark-mode')) {
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'light');
+    }
+}
+
+// Load Theme Preference
 document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('themeIcon');
+    
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+    }
+    
     const loginForm = document.querySelector('form');
     const submitButton = loginForm.querySelector('button[type="submit"]');
     const requiredInputs = document.querySelectorAll('input[required]');
