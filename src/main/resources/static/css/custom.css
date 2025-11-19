@@ -379,6 +379,87 @@ a[title]:hover, button[title]:hover, [data-toggle="tooltip"]:hover {
     transform: scale(1.1);
 }
 
+/* ========================================
+   💬 TOOLTIPS APRIMORADOS PARA BOTÕES DE AÇÃO
+   ======================================== */
+
+/* Tooltip customizado para botões de ação nas tabelas */
+.btn-action-tooltip {
+    position: relative;
+}
+
+/* Estilos gerais dos tooltips do Bootstrap - Aprimorados */
+.tooltip {
+    z-index: 1080 !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.tooltip-inner {
+    background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%) !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 0.75rem !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    font-size: 0.8125rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Setas dos tooltips com gradiente */
+.tooltip.bs-tooltip-top .arrow::before {
+    border-top-color: #2d3748 !important;
+}
+
+.tooltip.bs-tooltip-bottom .arrow::before {
+    border-bottom-color: #1a202c !important;
+}
+
+.tooltip.bs-tooltip-left .arrow::before {
+    border-left-color: #2d3748 !important;
+}
+
+.tooltip.bs-tooltip-right .arrow::before {
+    border-right-color: #2d3748 !important;
+}
+
+/* Animação suave para os tooltips */
+.tooltip {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.tooltip.show {
+    opacity: 1;
+}
+
+/* Tooltips específicos para cada tipo de botão */
+.btn-warning[data-toggle="tooltip"] .tooltip-inner,
+.btn-warning[data-toggle="tooltip"] ~ .tooltip .tooltip-inner {
+    background: linear-gradient(135deg, #f5a623 0%, #e0a800 100%) !important;
+    color: #2d3748 !important;
+}
+
+.btn-danger[data-toggle="tooltip"] .tooltip-inner,
+.btn-danger[data-toggle="tooltip"] ~ .tooltip .tooltip-inner {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+}
+
+.btn-info[data-toggle="tooltip"] .tooltip-inner,
+.btn-info[data-toggle="tooltip"] ~ .tooltip .tooltip-inner {
+    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%) !important;
+}
+
+.btn-success[data-toggle="tooltip"] .tooltip-inner,
+.btn-success[data-toggle="tooltip"] ~ .tooltip .tooltip-inner {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%) !important;
+}
+
+/* Hover effect nos botões com tooltip */
+[data-toggle="tooltip"]:hover {
+    position: relative;
+    z-index: 1000;
+}
+
 
 /* ========================================
    🎯 LINKS E INTERAÇÕES

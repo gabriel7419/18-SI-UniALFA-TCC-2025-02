@@ -722,15 +722,25 @@ $(document).ready(function() {
     
     // Inicializar tooltips do Bootstrap
     function initTooltips() {
+        // Tooltips da sidebar (quando colapsada)
         if ($('body').hasClass('sidebar-collapse')) {
-            $('[data-toggle="tooltip"]').tooltip({
+            $('.nav-sidebar [data-toggle="tooltip"]').tooltip({
                 placement: 'right',
                 boundary: 'window',
                 offset: '0, 10'
             }).tooltip('enable');
         } else {
-            $('[data-toggle="tooltip"]').tooltip('dispose');
+            $('.nav-sidebar [data-toggle="tooltip"]').tooltip('dispose');
         }
+        
+        // Tooltips dos botões de ação nas tabelas (sempre ativos)
+        $('.table [data-toggle="tooltip"], .btn[data-toggle="tooltip"]').tooltip({
+            placement: 'top',
+            boundary: 'window',
+            trigger: 'hover',
+            animation: true,
+            delay: { show: 300, hide: 100 }
+        });
     }
     
     // Função para adicionar redirecionamento direto quando colapsado
@@ -878,6 +888,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Desabilitar em todos os textareas
+    document.querySelectorAll('textarea').forEach(function(textarea) {
+        textarea.setAttribute('autocomplete', 'off');
+    });
+    
+    // Inicializar tooltips globalmente para botões de ação
+    if (typeof $ !== 'undefined' && $.fn.tooltip) {
+        $('[data-toggle="tooltip"]').tooltip({
+            boundary: 'window',
+            trigger: 'hover',
+            animation: true,
+            delay: { show: 300, hide: 100 }
+        });
+    }
+});
     document.querySelectorAll('textarea').forEach(function(textarea) {
         textarea.setAttribute('autocomplete', 'off');
     });
