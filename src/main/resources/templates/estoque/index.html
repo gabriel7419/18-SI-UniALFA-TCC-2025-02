@@ -158,7 +158,11 @@
                             </td>
                             <td>
                                 <!-- Botão pra editar o produto -->
-                                <a th:href="@{/estoque/editar/{id}(id=${produto.id})}" class="btn btn-warning btn-sm">
+                                <a th:href="@{/estoque/editar/{id}(id=${produto.id})}" 
+                                   class="btn btn-warning btn-sm"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Editar produto">
                                     <i class="fas fa-edit"></i>
                                 </a>
                             </td>

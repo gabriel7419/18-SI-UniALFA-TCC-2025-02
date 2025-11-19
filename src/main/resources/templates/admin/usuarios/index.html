@@ -86,12 +86,18 @@
                                             th:classappend="${usuario.ativo ? 'btn-outline-success' : 'btn-outline-danger'}"
                                             class="btn btn-sm"
                                             style="width: 45px;"
-                                            th:title="${usuario.ativo ? 'Desativar' : 'Ativar'}">
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            th:title="${usuario.ativo ? 'Desativar usuário' : 'Ativar usuário'}">
                                         <i th:classappend="${usuario.ativo ? 'fas fa-toggle-off' : 'fas fa-toggle-on'}"></i>
                                     </button>
                                 </form>
                                 <!-- Botão de editar -->
-                                <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-warning btn-sm" title="Editar">
+                                <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" 
+                                   class="btn btn-warning btn-sm" 
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Editar usuário">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <!-- Botão de alterar senha - desabilitado se for outro admin -->
@@ -99,19 +105,26 @@
                                    href="javascript:void(0);" 
                                    class="btn btn-info btn-sm disabled" 
                                    style="opacity: 0.5; cursor: not-allowed;"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
                                    title="Não é permitido alterar senha de outro administrador">
                                     <i class="fas fa-key"></i>
                                 </a>
                                 <a th:if="${!(isAdmin && usuario.role == 'ADMIN' && usuario.username != usernameLogado)}" 
                                    th:href="@{/admin/usuarios/alterar-senha/{id}(id=${usuario.id})}" 
                                    class="btn btn-info btn-sm" 
+                                   data-toggle="tooltip"
+                                   data-placement="top"
                                    title="Alterar senha">
                                     <i class="fas fa-key"></i>
                                 </a>
                                 <!-- Botão de excluir com confirmação - DESABILITADO para ADMIN -->
                                 <form th:if="${usuario.role != 'ADMIN'}" th:action="@{/admin/usuarios/excluir/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">
                                     <button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Tem certeza que deseja excluir este usuário?');" title="Excluir">
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            onclick="return confirm('Tem certeza que deseja excluir este usuário?');" 
+                                            title="Excluir usuário">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -120,6 +133,8 @@
                                         type="button" 
                                         class="btn btn-danger btn-sm disabled" 
                                         style="opacity: 0.5; cursor: not-allowed;"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
                                         title="Não é possível excluir administradores">
                                     <i class="fas fa-trash"></i>
                                 </button>

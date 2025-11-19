@@ -96,7 +96,11 @@
                             <td th:text="${patrimonio.local_atual}"></td>
                             <td th:text="${patrimonio.observacao}"></td>
                             <td>
-                                <a th:href="@{/patrimonio/editar/{id}(id=${patrimonio.id})}" class="btn btn-warning btn-sm">
+                                <a th:href="@{/patrimonio/editar/{id}(id=${patrimonio.id})}" 
+                                   class="btn btn-warning btn-sm"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Editar patrimônio">
                                     <i class="fas fa-edit"></i>
                                 </a>
                             </td>

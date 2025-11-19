@@ -80,11 +80,18 @@
                     <td th:text="${vaga.leito != null and vaga.leito.quarto != null} ? ${vaga.leito.quarto.numeroQuarto} : '---'">Quarto 1</td>
 
                     <td>
-                        <a th:href="@{/vaga/editar/{id}(id=${vaga.id})}" class="btn btn-warning btn-sm">
+                        <a th:href="@{/vaga/editar/{id}(id=${vaga.id})}" 
+                           class="btn btn-warning btn-sm"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Editar vaga">
                             <i class="fas fa-edit"></i>
                         </a>
                         <a th:href="@{/vaga/remover/{id}(id=${vaga.id})}"
                            class="btn btn-danger btn-sm"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Excluir vaga"
                            onclick="return confirm('Tem certeza que deseja remover esta vaga?');">
                             <i class="fas fa-trash"></i>
                         </a>
