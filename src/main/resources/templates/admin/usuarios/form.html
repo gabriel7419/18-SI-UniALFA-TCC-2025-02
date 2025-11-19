@@ -51,9 +51,16 @@
                     <!-- Campo de senha -->
                     <div class="form-group mb-3" th:if="${usuario.id == null}">
                         <label for="password">Senha</label>
-                        <input type="password" class="form-control" id="password" th:field="*{password}" autocomplete="new-password" minlength="8"
-                               th:placeholder="${usuario.id == null ? 'Insira uma senha segura.' : 'Deixe em branco para manter a senha atual.'}"
-                               th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''">
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password" th:field="*{password}" autocomplete="new-password" minlength="8"
+                                   th:placeholder="${usuario.id == null ? 'Insira uma senha segura.' : 'Deixe em branco para manter a senha atual.'}"
+                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('password', 'togglePasswordIcon')" title="Mostrar/Ocultar senha">
+                                    <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                                </button>
+                            </div>
+                        </div>
                         <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">
                             <span th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
                         </div>
@@ -96,6 +103,21 @@
         </div>
     </section>
 <script>
+function togglePasswordVisibility(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
 (function() {
   function loadZxcvbn(cb) {
     if (typeof zxcvbn !== 'undefined') { cb(); return; }
