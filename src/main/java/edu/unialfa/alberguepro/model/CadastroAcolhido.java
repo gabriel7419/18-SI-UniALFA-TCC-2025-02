@@ -30,6 +30,7 @@ public class CadastroAcolhido {
     private String profissao;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     private Sexo sexo;
 
     private String cor;
