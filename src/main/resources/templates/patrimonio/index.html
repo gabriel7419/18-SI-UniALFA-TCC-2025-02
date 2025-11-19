@@ -83,25 +83,23 @@
             </div>
         </div>
 
-        <!-- Botões de ação -->
-        <div class="mb-3">
-            <!-- Botão pra criar patrimonio novo -->
-            <a th:href="@{/patrimonio/novo}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Novo Patrimônio
-            </a>
-        </div>
-
-        <!-- Tabela de patrimonios -->
+        <!-- Tabela de patrimônios -->
         <div class="card">
             <div class="card-header card-header-blue">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
                     <h3 class="card-title mb-0">Lista de Patrimônios</h3>
-                    <div class="card-tools">
-                        <a th:href="@{/relatorios/patrimonio/pdf(nome=${nome}, status=${status}, localAtual=${localAtual})}" class="btn btn-danger" target="_blank">
-                            <i class="fas fa-file-pdf"></i> Gerar PDF
+                    <div class="card-tools mt-2 mt-md-0">
+                        <!-- Botão de Ação Principal -->
+                        <a th:href="@{/patrimonio/novo}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Novo
                         </a>
-                        <a th:href="@{/relatorios/patrimonio/excel(nome=${nome}, status=${status}, localAtual=${localAtual})}" class="btn btn-success">
-                            <i class="fas fa-file-excel"></i> Gerar Excel
+                        
+                        <!-- Botões de Relatórios -->
+                        <a th:href="@{/relatorios/patrimonio/pdf(nome=${nome}, status=${status}, localAtual=${localAtual})}" class="btn btn-danger btn-sm" target="_blank">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </a>
+                        <a th:href="@{/relatorios/patrimonio/excel(nome=${nome}, status=${status}, localAtual=${localAtual})}" class="btn btn-success btn-sm">
+                            <i class="fas fa-file-excel"></i> Excel
                         </a>
                     </div>
                 </div>

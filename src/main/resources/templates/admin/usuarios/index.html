@@ -84,24 +84,23 @@
             </div>
         </div>
         
-        <!-- Botão pra criar usuário novo -->
-        <div class="mb-3">
-            <a th:href="@{/admin/usuarios/novo}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Novo Usuário
-            </a>
-        </div>
-
         <!-- Tabela de usuários -->
         <div class="card card-primary">
             <div class="card-header card-header-blue">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
                     <h3 class="card-title mb-0">Lista de Usuários</h3>
-                    <div class="card-tools">
-                        <a th:href="@{/relatorios/usuarios/pdf}" class="btn btn-danger" target="_blank">
-                            <i class="fas fa-file-pdf"></i> Gerar PDF
+                    <div class="card-tools mt-2 mt-md-0">
+                        <!-- Botão de Ação Principal -->
+                        <a th:href="@{/admin/usuarios/novo}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Novo
                         </a>
-                        <a th:href="@{/relatorios/usuarios/excel}" class="btn btn-success">
-                            <i class="fas fa-file-excel"></i> Gerar Excel
+                        
+                        <!-- Botões de Relatórios -->
+                        <a th:href="@{/relatorios/usuarios/pdf}" class="btn btn-danger btn-sm" target="_blank">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </a>
+                        <a th:href="@{/relatorios/usuarios/excel}" class="btn btn-success btn-sm">
+                            <i class="fas fa-file-excel"></i> Excel
                         </a>
                     </div>
                 </div>

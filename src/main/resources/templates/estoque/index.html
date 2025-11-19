@@ -79,41 +79,47 @@
             </div>
         </div>
 
-        <!-- Botões de ação -->
-        <div class="mb-3">
-            <a th:href="@{/estoque/novo}" class="btn btn-primary"><i class="fas fa-plus"></i> Novo Produto</a>
-            <a th:href="@{/estoque/baixa}" class="btn btn-danger"><i class="fas fa-arrow-down"></i> Registrar Baixa</a>
-            <a th:href="@{/estoque/historico}" class="btn btn-warning"><i class="fas fa-history"></i> Ver Histórico</a>
-            <a th:href="@{/estoque/relatorio/estrategico-pdf}" class="btn btn-info" target="_blank">
-                <i class="fas fa-chart-line"></i> Relatório Estratégico
-            </a>
-        </div>
-
         <!-- Tabela de produtos -->
         <div class="card card-primary">
             <div class="card-header card-header-blue">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
                     <h3 class="card-title mb-0">
                         <span th:if="${diasVencimento == null}">Lista de Produtos em Estoque</span>
                         <span th:if="${diasVencimento != null}">Lista de Produtos que Vencem em <span th:text="${diasVencimento}"></span> dias</span>
                     </h3>
-                    <div class="card-tools">
+                    <div class="card-tools mt-2 mt-md-0">
+                        <!-- Botões de Ação Principal -->
+                        <a th:href="@{/estoque/novo}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Novo
+                        </a>
+                        <a th:href="@{/estoque/baixa}" class="btn btn-danger btn-sm">
+                            <i class="fas fa-arrow-down"></i> Baixa
+                        </a>
+                        <a th:href="@{/estoque/historico}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-history"></i> Histórico
+                        </a>
+                        
+                        <!-- Botões de Relatórios -->
+                        <a th:href="@{/estoque/relatorio/estrategico-pdf}" class="btn btn-info btn-sm" target="_blank">
+                            <i class="fas fa-chart-line"></i> Estratégico
+                        </a>
+                        
                         <!-- Relatórios de Estoque Geral -->
                         <span th:if="${diasVencimento == null}">
-                            <a th:href="@{/estoque/relatorio/pdf(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-danger" target="_blank">
-                                <i class="fas fa-file-pdf"></i> PDF Estoque
+                            <a th:href="@{/estoque/relatorio/pdf(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-danger btn-sm" target="_blank">
+                                <i class="fas fa-file-pdf"></i> PDF
                             </a>
-                            <a th:href="@{/estoque/relatorio/excel(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-success">
-                                <i class="fas fa-file-excel"></i> Excel Estoque
+                            <a th:href="@{/estoque/relatorio/excel(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-success btn-sm">
+                                <i class="fas fa-file-excel"></i> Excel
                             </a>
                         </span>
                         <!-- Relatórios de Vencimento -->
                         <span th:if="${diasVencimento != null}">
-                            <a th:href="@{/estoque/relatorio/vencimento/pdf(dias=${diasVencimento})}" class="btn btn-danger" target="_blank">
-                                <i class="fas fa-file-pdf"></i> PDF Vencimento
+                            <a th:href="@{/estoque/relatorio/vencimento/pdf(dias=${diasVencimento})}" class="btn btn-danger btn-sm" target="_blank">
+                                <i class="fas fa-file-pdf"></i> PDF
                             </a>
-                            <a th:href="@{/estoque/relatorio/vencimento/excel(dias=${diasVencimento})}" class="btn btn-success">
-                                <i class="fas fa-file-excel"></i> Excel Vencimento
+                            <a th:href="@{/estoque/relatorio/vencimento/excel(dias=${diasVencimento})}" class="btn btn-success btn-sm">
+                                <i class="fas fa-file-excel"></i> Excel
                             </a>
                         </span>
                     </div>
