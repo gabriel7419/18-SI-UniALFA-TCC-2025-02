@@ -494,10 +494,59 @@
             background-color: #dc2626 !important;
             color: #ffffff !important;
         }
+        
+        /* Dark Mode Styles - Simples */
+        body.dark-mode .card-header-blue {
+            background-color: #1e3a8a !important;
+            border-bottom: 1px solid #1e40af !important;
+        }
+        
+        body.dark-mode .table thead.thead-blue th {
+            background-color: #374151 !important;
+            color: #e5e7eb !important;
+            border-bottom: 2px solid #4b5563 !important;
+        }
+        
+        body.dark-mode .toast-msg.success {
+            background: #166534 !important;
+        }
+        
+        body.dark-mode .toast-msg.error {
+            background: #991b1b !important;
+        }
+        
+        body.dark-mode .toast-msg.info {
+            background: #0e7490 !important;
+        }
+        
+        body.dark-mode .toast-msg.warning {
+            background: #a16207 !important;
+            color: #fef3c7 !important;
+        }
+        
+        /* Navbar superior em dark mode */
+        body.dark-mode .main-header {
+            background-color: #1f2937 !important;
+            border-bottom: 1px solid #374151 !important;
+        }
+        
+        body.dark-mode .navbar-light .navbar-nav .nav-link {
+            color: #e5e7eb !important;
+        }
+        
+        body.dark-mode .navbar-light .navbar-nav .nav-link:hover {
+            color: #ffffff !important;
+        }
+        
+        /* Botões de relatório em dark mode */
+        body.dark-mode .card-header-blue .btn {
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        body.dark-mode .card-header-blue .btn:hover {
+            border-color: rgba(255, 255, 255, 0.5) !important;
+        }
     </style>
-    
-    <!-- CSS Customizado com Dark Mode -->
-    <link rel="stylesheet" th:href="@{/css/custom.css}">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
