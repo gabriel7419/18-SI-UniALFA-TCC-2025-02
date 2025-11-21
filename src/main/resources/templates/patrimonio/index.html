@@ -39,12 +39,12 @@
                 </div>
             </div>
             <div class="card-body" style="display: none;">
-                <form th:action="@{/patrimonio/pesquisar}" method="get">
+                <form th:action="@{/patrimonio}" method="get">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="filtro">Número ou Nome:</label>
-                                <input type="text" id="filtro" name="filtro" class="form-control" placeholder="Buscar patrimônio..." th:value="${filtro}">
+                                <label for="nome">Nome:</label>
+                                <input type="text" id="nome" name="nome" class="form-control" placeholder="Buscar por nome..." th:value="${nome}">
                             </div>
                         </div>
                         <div class="col-md-3">
