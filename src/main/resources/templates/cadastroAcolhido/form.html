@@ -266,13 +266,13 @@
                     </div>
 
                     <div class="form-group" id="divQualMedicamento" style="display:none;">
-                        <label for="qualMedicamento">Qual Medicamento</label>
+                        <label for="qualMedicamento">Especifique o Medicamento</label>
                         <input type="text" class="form-control" id="qualMedicamento" th:field="*{qualMedicamento}" placeholder="Informe qual medicamento">
                         <div th:if="${#fields.hasErrors('qualMedicamento')}" th:errors="*{qualMedicamento}" class="text-danger"></div>
                     </div>
 
                     <div class="form-group">
-                        <label for="doencaSexualmentetransmissivel">Doença Sexualmente Transmissível?</label>
+                        <label for="doencaSexualmentetransmissivel">Possui Doença Sexualmente Transmissível?</label>
                         <select class="form-control" id="doencaSexualmentetransmissivel" th:field="*{doencaSexualmentetransmissivel}">
                             <option value="">Selecione...</option>
                             <option th:each="do : ${doencaSexualmentetransmissivel}"
@@ -339,7 +339,7 @@
                     </div>
 
                     <div class="form-group" id="divQualDroga" style="display:none;">
-                        <label for="qualDroga">Qual Droga</label>
+                        <label for="qualDroga">Especifique a Droga</label>
                         <input type="text" class="form-control" id="qualDroga" th:field="*{qualDroga}" placeholder="Informe qual droga">
                         <div th:if="${#fields.hasErrors('qualDroga')}" th:errors="*{qualDroga}" class="text-danger"></div>
                     </div>
@@ -415,13 +415,13 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="ultimaCidadeQueEsteve">Última Cidade que Esteve</label>
+                        <label for="ultimaCidadeQueEsteve">Última Cidade que Esteve:</label>
                         <input type="text" class="form-control" id="ultimaCidadeQueEsteve" th:field="*{ultimaCidadeQueEsteve}" placeholder="Informe a última cidade que esteve">
                         <div th:if="${#fields.hasErrors('ultimaCidadeQueEsteve')}" th:errors="*{ultimaCidadeQueEsteve}" class="text-danger"></div>
                     </div>
 
                     <div class="form-group">
-                        <label for="tempoUltimaCidade">Tempo na Última Cidade</label>
+                        <label for="tempoUltimaCidade">Tempo na Última Cidade:</label>
                         <input type="text" class="form-control" id="tempoUltimaCidade" th:field="*{tempoUltimaCidade}" placeholder="Informe há quanto tempo esteve na ultima cidade">
                         <div th:if="${#fields.hasErrors('tempoUltimaCidade')}" th:errors="*{tempoUltimaCidade}" class="text-danger"></div>
                     </div>
