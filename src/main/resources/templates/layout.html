@@ -997,6 +997,7 @@ $(function() {
     }
 })();
 </script>
+<script>
 // Desabilitar autocomplete em todos os inputs, selects e textareas
 document.addEventListener('DOMContentLoaded', function() {
     // Desabilitar em todos os formulários
@@ -1028,10 +1029,6 @@ document.addEventListener('DOMContentLoaded', function() {
             delay: { show: 300, hide: 100 }
         });
     }
-});
-    document.querySelectorAll('textarea').forEach(function(textarea) {
-        textarea.setAttribute('autocomplete', 'off');
-    });
 });
 </script>
 <th:block th:replace="${script}"></th:block>
