@@ -18,4 +18,8 @@ public interface CadastroAcolhidoRepository extends JpaRepository <CadastroAcolh
     Page<CadastroAcolhido> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
     
     List<CadastroAcolhido> findByDataIngressoBeforeAndDataSaidaIsNullOrderByDataIngressoAsc(LocalDate dataLimite);
+    
+    List<CadastroAcolhido> findByDataIngressoBetweenOrderByDataIngressoAsc(LocalDate dataInicio, LocalDate dataFim);
+    
+    long countByDataIngressoBetween(LocalDate dataInicio, LocalDate dataFim);
 }

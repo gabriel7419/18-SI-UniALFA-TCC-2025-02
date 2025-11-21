@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
+<head>
+    <title>Relatório de Patrimônio por Período de Aquisição</title>
+</head>
+<body>
+    <section>
+        <div class="card">
+            <div class="card-header card-header-blue">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-landmark"></i> Relatório de Patrimônio por Período de Aquisição
+                    </h3>
+                    <a th:href="@{/relatorios/estrategicos}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Sobre este relatório:</strong> Analise os patrimônios adquiridos em um período específico. 
+                    Útil para planejamento orçamentário e análise de investimentos realizados.
+                </div>
+
+                <form id="filtroForm" method="get">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="dataInicio"><i class="fas fa-calendar-alt"></i> Data Início:</label>
+                                <input type="date" id="dataInicio" name="dataInicio" class="form-control" 
+                                       th:value="${dataInicio}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="dataFim"><i class="fas fa-calendar-alt"></i> Data Fim:</label>
+                                <input type="date" id="dataFim" name="dataFim" class="form-control" 
+                                       th:value="${dataFim}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="status"><i class="fas fa-filter"></i> Status:</label>
+                                <select id="status" name="status" class="form-control">
+                                    <option value="">Todos</option>
+                                    <option value="Ativo">Ativo</option>
+                                    <option value="Em Uso">Em Uso</option>
+                                    <option value="Manutenção">Manutenção</option>
+                                    <option value="Baixado">Baixado</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <div class="btn-group btn-block">
+                                    <button type="button" id="btnPdf" class="btn btn-danger">
+                                        <i class="fas fa-file-pdf"></i> PDF
+                                    </button>
+                                    <button type="button" id="btnExcel" class="btn btn-success">
+                                        <i class="fas fa-file-excel"></i> Excel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('mes')">Este Mês</button>
+                                <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('trimestre')">Último Trimestre</button>
+                                <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('semestre')">Último Semestre</button>
+                                <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('ano')">Este Ano</button>
+                                <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('ultimoano')">Último Ano</button>
+                                <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('5anos')">Últimos 5 Anos</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <hr>
+
+                <div class="alert alert-warning">
+                    <i class="fas fa-lightbulb"></i>
+                    <strong>Dica:</strong> Filtre por status para ver apenas patrimônios ativos, em manutenção ou baixados. 
+                    Ideal para auditorias e inventários periódicos.
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        function setPeriodo(tipo) {
+            const hoje = new Date();
+            let dataInicio, dataFim;
+
+            switch(tipo) {
+                case 'mes':
+                    dataFim = hoje;
+                    dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+                    break;
+                case 'trimestre':
+                    dataFim = hoje;
+                    dataInicio = new Date(hoje);
+                    dataInicio.setMonth(hoje.getMonth() - 3);
+                    break;
+                case 'semestre':
+                    dataFim = hoje;
+                    dataInicio = new Date(hoje);
+                    dataInicio.setMonth(hoje.getMonth() - 6);
+                    break;
+                case 'ano':
+                    dataFim = hoje;
+                    dataInicio = new Date(hoje.getFullYear(), 0, 1);
+                    break;
+                case 'ultimoano':
+                    dataFim = hoje;
+                    dataInicio = new Date(hoje);
+                    dataInicio.setFullYear(hoje.getFullYear() - 1);
+                    break;
+                case '5anos':
+                    dataFim = hoje;
+                    dataInicio = new Date(hoje);
+                    dataInicio.setFullYear(hoje.getFullYear() - 5);
+                    break;
+            }
+
+            document.getElementById('dataInicio').value = formatDate(dataInicio);
+            document.getElementById('dataFim').value = formatDate(dataFim);
+        }
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        document.getElementById('btnPdf').addEventListener('click', function() {
+            const dataInicio = document.getElementById('dataInicio').value;
+            const dataFim = document.getElementById('dataFim').value;
+            const status = document.getElementById('status').value;
+            
+            if (!dataInicio || !dataFim) {
+                alert('Por favor, selecione as datas de início e fim.');
+                return;
+            }
+
+            let url = '/relatorios/estrategicos/patrimonio/pdf?dataInicio=' + dataInicio + '&dataFim=' + dataFim;
+            if (status) {
+                url += '&status=' + status;
+            }
+            window.open(url, '_blank');
+        });
+
+        document.getElementById('btnExcel').addEventListener('click', function() {
+            const dataInicio = document.getElementById('dataInicio').value;
+            const dataFim = document.getElementById('dataFim').value;
+            const status = document.getElementById('status').value;
+            
+            if (!dataInicio || !dataFim) {
+                alert('Por favor, selecione as datas de início e fim.');
+                return;
+            }
+
+            let url = '/relatorios/estrategicos/patrimonio/excel?dataInicio=' + dataInicio + '&dataFim=' + dataFim;
+            if (status) {
+                url += '&status=' + status;
+            }
+            window.location.href = url;
+        });
+    </script>
+</body>
+</html>

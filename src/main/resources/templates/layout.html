@@ -727,6 +727,43 @@
                         </ul>
                     </li>
 
+                    <!-- Item do menu: Relatórios Estratégicos -->
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-toggle="tooltip" data-placement="right" title="Relatórios Estratégicos">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>
+                                Relatórios Estratégicos
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a th:href="@{/relatorios/estrategicos}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Visão Geral</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{/relatorios/estrategicos/acolhidos}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Entradas Acolhidos</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{/relatorios/estrategicos/movimentacao-estoque}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Movimentação Estoque</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{/relatorios/estrategicos/patrimonio}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Patrimônio</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
                     <!-- Item do menu: Usuários -->
                     <li class="nav-item">
                         <a th:href="@{/admin/usuarios}" class="nav-link" data-toggle="tooltip" data-placement="right" title="Gerenciar Usuários">
