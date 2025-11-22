@@ -173,6 +173,9 @@ public class EstoqueController {
             if (produto.getDataDeVencimento() == null) {
                 result.rejectValue("dataDeVencimento", "error.produto", "A data de vencimento é obrigatória para produtos perecíveis.");
             }
+        } else {
+            // Se for não perecível, limpa a data de vencimento
+            produto.setDataDeVencimento(null);
         }
 
         // Verifica todos os erros de validação
