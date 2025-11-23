@@ -158,7 +158,7 @@ public class CadastroAcolhidoController {
             result.rejectValue("usaDrogas", "campo.obrigatorio", "Informe se utiliza drogas.");
         } else if (acolhido.getUsaDrogas() == CadastroAcolhido.UsaDrogas.Sim
                 && (acolhido.getQualDroga() == null || acolhido.getQualDroga().trim().isEmpty())) {
-            result.rejectValue("qualDroga", "campo.obrigatorio", "Informe qual droga utiliza.");
+            result.rejectValue("qualDroga", "campo.obrigatorio", "Informe a droga utilizada.");
         }
 
         if (acolhido.getSituacaoRua() == null) {

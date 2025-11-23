@@ -492,3 +492,69 @@ a:hover {
     border: 0;
 }
 
+/* ========================================
+   ⚠️ ALERTAS DE VENCIMENTO DE ESTOQUE
+   ======================================== */
+
+/* Produto próximo ao vencimento (< 3 dias) - Amarelo */
+.table-warning-expiration {
+    background-color: #FFF9E6 !important;
+    border-left: 4px solid #FFC107 !important;
+}
+
+.table-warning-expiration:hover {
+    background-color: #FFF3CD !important;
+}
+
+/* Produto vencido - Vermelho */
+.table-danger-expiration {
+    background-color: #FFE6E6 !important;
+    border-left: 4px solid #DC3545 !important;
+}
+
+.table-danger-expiration:hover {
+    background-color: #F8D7DA !important;
+}
+
+/* Modo Escuro */
+@media (prefers-color-scheme: dark) {
+    /* Produto próximo ao vencimento (< 3 dias) - Amarelo escuro */
+    .table-warning-expiration {
+        background-color: #3D3420 !important;
+        border-left: 4px solid #FFC107 !important;
+    }
+    
+    .table-warning-expiration:hover {
+        background-color: #4D4228 !important;
+    }
+    
+    /* Produto vencido - Vermelho escuro */
+    .table-danger-expiration {
+        background-color: #3D2020 !important;
+        border-left: 4px solid #DC3545 !important;
+    }
+    
+    .table-danger-expiration:hover {
+        background-color: #4D2828 !important;
+    }
+}
+
+/* Suporte para classe dark-mode do AdminLTE */
+.dark-mode .table-warning-expiration {
+    background-color: #3D3420 !important;
+    border-left: 4px solid #FFC107 !important;
+}
+
+.dark-mode .table-warning-expiration:hover {
+    background-color: #4D4228 !important;
+}
+
+.dark-mode .table-danger-expiration {
+    background-color: #3D2020 !important;
+    border-left: 4px solid #DC3545 !important;
+}
+
+.dark-mode .table-danger-expiration:hover {
+    background-color: #4D2828 !important;
+}
+

@@ -121,6 +121,20 @@
                 </div>
             </div>
             <div class="card-body">
+                <!-- Legenda de Alertas -->
+                <div class="alert alert-info mb-3" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                    <i class="fas fa-info-circle"></i> <strong>Legenda:</strong>
+                    <span class="ml-2" style="padding: 0.2rem 0.6rem; background-color: #FFE6E6; border-left: 3px solid #DC3545; display: inline-block;">
+                        <i class="fas fa-exclamation-triangle"></i> Produto Vencido
+                    </span>
+                    <span class="ml-2" style="padding: 0.2rem 0.6rem; background-color: #FFF9E6; border-left: 3px solid #FFC107; display: inline-block;">
+                        <i class="fas fa-clock"></i> Vence em menos de 3 dias
+                    </span>
+                    <span class="ml-2" style="padding: 0.2rem 0.6rem; background-color: #FFF3CD; border-left: 3px solid #FFC107; display: inline-block;">
+                        <i class="fas fa-box-open"></i> Estoque Esgotado
+                    </span>
+                </div>
+
                 <!-- Se não tiver produto, mostra essa mensagem -->
                 <div th:if="${#lists.isEmpty(produtos)}" class="alert alert-info">
                     Nenhum produto cadastrado no estoque.
@@ -142,7 +156,10 @@
                     <tbody>
                         <!-- Loop pra criar uma linha pra cada produto -->
                         <!-- Se a qtd for 0, a linha fica amarela -->
-                        <tr th:each="produto : ${produtos}" th:classappend="${produto.quantidade == 0 ? 'table-warning' : ''}">
+                        <!-- Se o produto estiver vencido, a linha fica vermelha -->
+                        <!-- Se o produto estiver próximo ao vencimento (< 3 dias), a linha fica amarela -->
+                        <tr th:each="produto : ${produtos}" 
+                            th:classappend="${produto.vencido ? 'table-danger-expiration' : (produto.proximoDoVencimento ? 'table-warning-expiration' : (produto.quantidade == 0 ? 'table-warning' : ''))}">
                             <!-- Mostra os dados do produto -->
                             <td th:text="${produto.nome}">Arroz</td>
                             <td th:text="${produto.tipo}">Alimento</td>
@@ -155,7 +172,11 @@
                             <!-- Formata a data pra o padrão brasileiro ou mostra "Não Perecível" -->
                             <td>
                                 <span th:if="${produto.naoPerecivel == true or produto.dataDeVencimento == null}" class="badge badge-info">Não Perecível</span>
-                                <span th:if="${produto.naoPerecivel != true and produto.dataDeVencimento != null}" th:text="${#temporals.format(produto.dataDeVencimento, 'dd/MM/yyyy')}">15/10/2025</span>
+                                <span th:if="${produto.naoPerecivel != true and produto.dataDeVencimento != null}">
+                                    <span th:text="${#temporals.format(produto.dataDeVencimento, 'dd/MM/yyyy')}">15/10/2025</span>
+                                    <span th:if="${produto.vencido}" class="badge bg-danger ml-1">Vencido</span>
+                                    <span th:if="${produto.proximoDoVencimento and !produto.vencido}" class="badge bg-warning ml-1">Vence em breve</span>
+                                </span>
                             </td>
                             <td>
                                 <!-- Botão pra editar o produto -->
