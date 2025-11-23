@@ -52,4 +52,8 @@ public class CadastroAcolhidoService {
         LocalDate dataLimite = LocalDate.now().minusDays(dias);
         return repository.findByDataIngressoBeforeAndDataSaidaIsNullOrderByDataIngressoAsc(dataLimite);
     }
+
+    public List<CadastroAcolhido> listarAcolhidosSemLeitoAtivo() {
+        return repository.findAcolhidosSemLeitoAtivo();
+    }
 }
