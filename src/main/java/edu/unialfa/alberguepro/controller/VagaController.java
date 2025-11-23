@@ -49,7 +49,7 @@ public class VagaController {
     private QuartoService quartoService;
 
     private void addCommonAttributes(Model model) {
-        model.addAttribute("acolhidos", acolhidoService.listarTodos());
+        model.addAttribute("acolhidos", acolhidoService.listarAcolhidosSemLeitoAtivo());
         model.addAttribute("quartos", quartoService.listarTodos());
     }
 
@@ -169,7 +169,22 @@ public class VagaController {
     public String editar(@PathVariable Long id, Model model) {
         Vaga vaga = service.buscarPorId(id);
         model.addAttribute("vaga", vaga);
-        addCommonAttributes(model);
+        
+        // Buscar acolhidos sem leito ativo
+        List<CadastroAcolhido> acolhidosDisponiveis = acolhidoService.listarAcolhidosSemLeitoAtivo();
+        
+        // Adicionar o acolhido atual da vaga se não estiver na lista
+        if (vaga != null && vaga.getAcolhido() != null) {
+            boolean acolhidoAtualNaLista = acolhidosDisponiveis.stream()
+                .anyMatch(a -> a.getId().equals(vaga.getAcolhido().getId()));
+            
+            if (!acolhidoAtualNaLista) {
+                acolhidosDisponiveis.add(vaga.getAcolhido());
+            }
+        }
+        
+        model.addAttribute("acolhidos", acolhidosDisponiveis);
+        model.addAttribute("quartos", quartoService.listarTodos());
 
         if (vaga != null && vaga.getLeito() != null) {
             Long quartoId = vaga.getLeito().getQuarto().getId();
