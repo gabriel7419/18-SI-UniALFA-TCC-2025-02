@@ -177,10 +177,10 @@
                                 </a>
                                 <!-- Botão de excluir com confirmação - DESABILITADO para ADMIN -->
                                 <form th:if="${usuario.role != 'ADMIN'}" th:action="@{/admin/usuarios/excluir/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">
-                                    <button type="submit" class="btn btn-danger btn-sm"
+                                    <button type="submit" class="btn btn-danger btn-sm btn-confirm-delete-form"
                                             data-toggle="tooltip"
                                             data-placement="top"
-                                            onclick="return confirm('Tem certeza que deseja excluir este usuário?');" 
+                                            data-confirm-message="Tem certeza que deseja excluir este usuário?" 
                                             title="Excluir usuário">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -205,9 +205,41 @@
                 <div th:replace="fragments/pagination :: pagination"></div>
             </div>
         </div>
+
+        <!-- Modal de Confirmação Reutilizável -->
+        <div th:replace="fragments/confirmation-modal :: confirmationModal"></div>
     </section>
 <script>
-
+    // Script para lidar com forms no modal de confirmação
+    $(document).ready(function() {
+        let targetForm = null;
+        
+        $('.btn-confirm-delete-form').on('click', function(e) {
+            e.preventDefault();
+            
+            targetForm = $(this).closest('form');
+            const customMessage = $(this).data('confirm-message');
+            
+            if (customMessage) {
+                $('#confirmDeleteMessage').html(customMessage);
+            }
+            
+            $('#confirmDeleteModal').modal('show');
+        });
+        
+        $('#confirmDeleteBtn').on('click', function() {
+            if (targetForm) {
+                targetForm.submit();
+            }
+        });
+        
+        $('#confirmDeleteModal').on('hidden.bs.modal', function() {
+            targetForm = null;
+            $('#confirmDeleteMessage').html('Tem certeza que deseja realizar esta exclusão?');
+        });
+    });
 </script>
+<!-- Script do Modal de Confirmação -->
+<script th:replace="fragments/confirmation-modal :: confirmationScript"></script>
 </body>
 </html>

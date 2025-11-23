@@ -167,11 +167,11 @@
                             <i class="fas fa-edit"></i>
                         </a>
                         <a th:href="@{/cadastroAcolhido/remover/{id}(id=${acolhido.id})}"
-                           class="btn btn-danger btn-sm"
+                           class="btn btn-danger btn-sm btn-confirm-delete"
                            data-toggle="tooltip" 
                            data-placement="top" 
-                           title="Excluir cadastro"
-                           onclick="return confirm('Tem certeza que deseja remover o acolhido ' + '${acolhido.nome}' + '?');">
+                           th:attr="data-confirm-message='Tem certeza que deseja remover o acolhido &lt;strong&gt;' + ${acolhido.nome} + '&lt;/strong&gt;?'"
+                           title="Excluir cadastro">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>
@@ -191,6 +191,9 @@
             <div th:replace="fragments/pagination :: pagination"></div>
         </div>
     </div>
+
+    <!-- Modal de Confirmação Reutilizável -->
+    <div th:replace="fragments/confirmation-modal :: confirmationModal"></div>
 </section>
 <script th:inline="javascript">
     const filtro = /*[[${filtro}]]*/ null;
@@ -239,5 +242,7 @@
         }
     });
 </script>
+<!-- Script do Modal de Confirmação -->
+<script th:replace="fragments/confirmation-modal :: confirmationScript"></script>
 </body>
 </html>

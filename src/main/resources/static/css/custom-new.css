@@ -558,3 +558,55 @@ a:hover {
     background-color: #4D2828 !important;
 }
 
+/* ========================================
+   🗑️ MODAL DE CONFIRMAÇÃO CUSTOMIZADO
+   ======================================== */
+
+/* Modal de confirmação */
+#confirmDeleteModal .modal-content {
+    border: none;
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+}
+
+#confirmDeleteModal .modal-header {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+#confirmDeleteModal .modal-footer {
+    border-top: 1px solid var(--gray-200);
+    padding: 1rem 1.25rem;
+}
+
+#confirmDeleteModal .modal-body {
+    padding: 2rem 1.5rem;
+}
+
+/* Animação suave para o modal */
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+}
+
+/* Modo Escuro para o Modal */
+@media (prefers-color-scheme: dark) {
+    #confirmDeleteModal .modal-content {
+        background-color: #2C3E50;
+        color: #FFFFFF;
+    }
+    
+    #confirmDeleteModal .modal-footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+.dark-mode #confirmDeleteModal .modal-content {
+    background-color: #2C3E50;
+    color: #FFFFFF;
+}
+
+.dark-mode #confirmDeleteModal .modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+

@@ -135,11 +135,11 @@
 
                     <td>
                         <a th:href="@{/quarto/remover/{id}(id=${quarto.id})}"
-                           class="btn btn-danger btn-sm"
+                           class="btn btn-danger btn-sm btn-confirm-delete"
                            data-toggle="tooltip"
                            data-placement="top"
-                           title="Excluir quarto e leitos"
-                           onclick="return confirm('Tem certeza que deseja remover este quarto e todos os seus leitos?');">
+                           data-confirm-message="Tem certeza que deseja remover o &lt;strong&gt;Quarto ${quarto.numeroQuarto}&lt;/strong&gt; e todos os seus leitos?"
+                           title="Excluir quarto e leitos">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>
@@ -152,6 +152,9 @@
             <div th:replace="fragments/pagination :: pagination"></div>
         </div>
     </div>
+
+    <!-- Modal de Confirmação Reutilizável -->
+    <div th:replace="fragments/confirmation-modal :: confirmationModal"></div>
 </section>
 <script>
     // Mantém os filtros abertos se algum filtro estiver ativo
@@ -171,5 +174,7 @@
         }
     });
 </script>
+<!-- Script do Modal de Confirmação -->
+<script th:replace="fragments/confirmation-modal :: confirmationScript"></script>
 </body>
 </html>

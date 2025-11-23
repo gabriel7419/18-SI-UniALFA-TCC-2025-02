@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Fragment: Modal de Confirmação Reutilizável -->
+<div th:fragment="confirmationModal">
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">
+                        <i class="fas fa-exclamation-triangle"></i> Confirmar Exclusão
+                    </h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-trash-alt fa-3x text-danger"></i>
+                    </div>
+                    <p class="text-center font-weight-bold" id="confirmDeleteMessage">
+                        Tem certeza que deseja realizar esta exclusão?
+                    </p>
+                    <p class="text-center text-muted">
+                        <small>Esta ação não pode ser desfeita.</small>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <a href="#" id="confirmDeleteBtn" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Sim, Excluir
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fragment: Script JavaScript para o Modal -->
+<script th:fragment="confirmationScript">
+    $(document).ready(function() {
+        let deleteUrl = '';
+        
+        // Detecta cliques em botões de exclusão
+        $(document).on('click', '.btn-confirm-delete', function(e) {
+            e.preventDefault();
+            
+            deleteUrl = $(this).attr('href');
+            const customMessage = $(this).data('confirm-message');
+            
+            // Atualiza a mensagem se houver uma personalizada
+            if (customMessage) {
+                $('#confirmDeleteMessage').html(customMessage);
+            }
+            
+            // Abre o modal
+            $('#confirmDeleteModal').modal('show');
+        });
+        
+        // Quando confirmar a exclusão
+        $('#confirmDeleteBtn').on('click', function() {
+            if (deleteUrl) {
+                window.location.href = deleteUrl;
+            }
+        });
+        
+        // Limpa os dados quando o modal é fechado
+        $('#confirmDeleteModal').on('hidden.bs.modal', function() {
+            deleteUrl = '';
+            $('#confirmDeleteMessage').html('Tem certeza que deseja realizar esta exclusão?');
+        });
+    });
+</script>
+
+</body>
+</html>
