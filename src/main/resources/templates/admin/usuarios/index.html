@@ -51,6 +51,7 @@
                                 <label for="role">Tipo:</label>
                                 <select id="role" name="role" class="form-control">
                                     <option value="">Todos</option>
+                                    <option value="MASTER" th:selected="${role == 'MASTER'}">Master</option>
                                     <option value="ADMIN" th:selected="${role == 'ADMIN'}">Administrador</option>
                                     <option value="USER" th:selected="${role == 'USER'}">Usuário</option>
                                 </select>
@@ -149,25 +150,43 @@
                                         <i th:classappend="${usuario.ativo ? 'fas fa-toggle-off' : 'fas fa-toggle-on'}"></i>
                                     </button>
                                 </form>
-                                <!-- Botão de editar -->
-                                <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" 
+                                
+                                <!-- Botão de editar - desabilitado para admin editando outro admin/master ou para admin/master editando master -->
+                                <a th:if="${(isAdmin && !isMaster && usuario.username != usernameLogado && (usuario.role == 'ADMIN' || usuario.role == 'MASTER')) || 
+                                            (!isMaster && usuario.role == 'MASTER')}" 
+                                   href="javascript:void(0);" 
+                                   class="btn btn-warning btn-sm disabled" 
+                                   style="opacity: 0.5; cursor: not-allowed;"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   th:title="${usuario.role == 'MASTER' ? 'Apenas Masters podem editar outros Masters' : 'Não é permitido editar outro administrador'}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                
+                                <!-- Botão de editar - habilitado -->
+                                <a th:if="${!((isAdmin && !isMaster && usuario.username != usernameLogado && (usuario.role == 'ADMIN' || usuario.role == 'MASTER')) || 
+                                            (!isMaster && usuario.role == 'MASTER'))}" 
+                                   th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" 
                                    class="btn btn-warning btn-sm" 
                                    data-toggle="tooltip"
                                    data-placement="top"
                                    title="Editar usuário">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <!-- Botão de alterar senha - desabilitado se for outro admin -->
-                                <a th:if="${isAdmin && usuario.role == 'ADMIN' && usuario.username != usernameLogado}" 
+                                
+                                <!-- Botão de alterar senha - desabilitado se admin tentando alterar admin/master ou não-master tentando alterar master -->
+                                <a th:if="${(isAdmin && !isMaster && usuario.username != usernameLogado && (usuario.role == 'ADMIN' || usuario.role == 'MASTER')) || 
+                                            (!isMaster && usuario.role == 'MASTER')}" 
                                    href="javascript:void(0);" 
                                    class="btn btn-info btn-sm disabled" 
                                    style="opacity: 0.5; cursor: not-allowed;"
                                    data-toggle="tooltip"
                                    data-placement="top"
-                                   title="Não é permitido alterar senha de outro administrador">
+                                   th:title="${usuario.role == 'MASTER' ? 'Apenas Masters podem alterar senha de Masters' : 'Não é permitido alterar senha de outro administrador'}">
                                     <i class="fas fa-key"></i>
                                 </a>
-                                <a th:if="${!(isAdmin && usuario.role == 'ADMIN' && usuario.username != usernameLogado)}" 
+                                <a th:if="${!((isAdmin && !isMaster && usuario.username != usernameLogado && (usuario.role == 'ADMIN' || usuario.role == 'MASTER')) || 
+                                            (!isMaster && usuario.role == 'MASTER'))}" 
                                    th:href="@{/admin/usuarios/alterar-senha/{id}(id=${usuario.id})}" 
                                    class="btn btn-info btn-sm" 
                                    data-toggle="tooltip"
@@ -175,8 +194,10 @@
                                    title="Alterar senha">
                                     <i class="fas fa-key"></i>
                                 </a>
-                                <!-- Botão de excluir com confirmação - DESABILITADO para ADMIN -->
-                                <form th:if="${usuario.role != 'ADMIN'}" th:action="@{/admin/usuarios/excluir/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">
+                                
+                                <!-- Botão de excluir com confirmação - DESABILITADO para ADMIN, MASTER -->
+                                <form th:if="${usuario.role != 'ADMIN' && usuario.role != 'MASTER'}" 
+                                      th:action="@{/admin/usuarios/excluir/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">
                                     <button type="submit" class="btn btn-danger btn-sm btn-confirm-delete-form"
                                             data-toggle="tooltip"
                                             data-placement="top"
@@ -185,14 +206,14 @@
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
-                                <!-- Botão desabilitado para administradores -->
-                                <button th:if="${usuario.role == 'ADMIN'}" 
+                                <!-- Botão desabilitado para administradores e masters -->
+                                <button th:if="${usuario.role == 'ADMIN' || usuario.role == 'MASTER'}" 
                                         type="button" 
                                         class="btn btn-danger btn-sm disabled" 
                                         style="opacity: 0.5; cursor: not-allowed;"
                                         data-toggle="tooltip"
                                         data-placement="top"
-                                        title="Não é possível excluir administradores">
+                                        th:title="${usuario.role == 'MASTER' ? 'Não é possível excluir masters' : 'Não é possível excluir administradores'}">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>

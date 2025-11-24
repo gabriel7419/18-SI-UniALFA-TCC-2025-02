@@ -1,14 +1,25 @@
 package edu.unialfa.alberguepro.dto;
 
 import edu.unialfa.alberguepro.model.Usuario;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public class UsuarioDTO {
 
     private Long id;
+    
+    @NotBlank(message = "O nome de usuário é obrigatório.")
+    @Size(min = 4, max = 50, message = "O nome de usuário deve ter entre 4 e 50 caracteres.")
+    @Pattern(regexp = "^[a-zA-Z0-9_.]*$", message = "O nome de usuário só pode conter letras, números, '_' e '.'.")
     private String username;
+    
     private String password;
+    
+    @NotBlank(message = "A função (role) do usuário é obrigatória.")
     private String role;
+    
     private boolean ativo;
     private Integer failedLoginAttempts;
     private LocalDateTime accountLockedUntil;
