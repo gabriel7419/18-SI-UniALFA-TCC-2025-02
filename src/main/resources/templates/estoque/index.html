@@ -122,17 +122,21 @@
             </div>
             <div class="card-body">
                 <!-- Legenda de Alertas -->
-                <div class="alert alert-info mb-3" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
-                    <i class="fas fa-info-circle"></i> <strong>Legenda:</strong>
-                    <span class="ml-2" style="padding: 0.2rem 0.6rem; background-color: #FFE6E6; border-left: 3px solid #DC3545; display: inline-block;">
-                        <i class="fas fa-exclamation-triangle"></i> Produto Vencido
-                    </span>
-                    <span class="ml-2" style="padding: 0.2rem 0.6rem; background-color: #FFF9E6; border-left: 3px solid #FFC107; display: inline-block;">
-                        <i class="fas fa-clock"></i> Vence em menos de 3 dias
-                    </span>
-                    <span class="ml-2" style="padding: 0.2rem 0.6rem; background-color: #FFF3CD; border-left: 3px solid #FFC107; display: inline-block;">
-                        <i class="fas fa-box-open"></i> Estoque Esgotado
-                    </span>
+                <div class="alert alert-info mb-3 alert-legend" style="padding: 0.75rem 1rem; font-size: 0.9rem;">
+                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                        <span style="font-weight: 600;">
+                            <i class="fas fa-info-circle"></i> Legenda:
+                        </span>
+                        <span class="legend-item legend-danger" style="padding: 0.4rem 0.8rem; background-color: #FFE6E6; border-left: 4px solid #DC3545; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.4rem; color: #721C24; font-weight: 500;">
+                            <i class="fas fa-exclamation-triangle"></i> Produto Vencido
+                        </span>
+                        <span class="legend-item legend-warning" style="padding: 0.4rem 0.8rem; background-color: #FFF9E6; border-left: 4px solid #FFC107; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.4rem; color: #856404; font-weight: 500;">
+                            <i class="fas fa-clock"></i> Vence em menos de 3 dias
+                        </span>
+                        <span class="legend-item legend-stock-out" style="padding: 0.4rem 0.8rem; background-color: #FFF3CD; border-left: 4px solid #FFC107; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.4rem; color: #856404; font-weight: 500;">
+                            <i class="fas fa-box-open"></i> Estoque Esgotado
+                        </span>
+                    </div>
                 </div>
 
                 <!-- Se não tiver produto, mostra essa mensagem -->
@@ -160,13 +164,24 @@
                         <!-- Se o produto estiver próximo ao vencimento (< 3 dias), a linha fica amarela -->
                         <tr th:each="produto : ${produtos}" 
                             th:classappend="${produto.vencido ? 'table-danger-expiration' : (produto.proximoDoVencimento ? 'table-warning-expiration' : (produto.quantidade == 0 ? 'table-warning' : ''))}">
-                            <!-- Mostra os dados do produto -->
-                            <td th:text="${produto.nome}">Arroz</td>
+                            <!-- Mostra os dados do produto com ícone de alerta -->
+                            <td>
+                                <span th:if="${produto.vencido}" class="text-danger mr-1" title="Produto Vencido">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </span>
+                                <span th:if="${produto.proximoDoVencimento and !produto.vencido}" class="text-warning mr-1" title="Vence em breve">
+                                    <i class="fas fa-clock"></i>
+                                </span>
+                                <span th:if="${produto.quantidade == 0 and !produto.vencido and !produto.proximoDoVencimento}" class="text-warning mr-1" title="Estoque Esgotado">
+                                    <i class="fas fa-box-open"></i>
+                                </span>
+                                <span th:text="${produto.nome}">Arroz</span>
+                            </td>
                             <td th:text="${produto.tipo}">Alimento</td>
                             <td>
                                 <span th:text="${produto.quantidade}">50</span>
                                 <!-- Se a qtd for 0, mostra a badge "Esgotado" -->
-                                <span th:if="${produto.quantidade == 0}" class="badge bg-danger">Esgotado</span>
+                                <span th:if="${produto.quantidade == 0}" class="badge bg-danger ml-1">Esgotado</span>
                             </td>
                             <td th:text="${produto.unidade.nome}">kg</td>
                             <!-- Formata a data pra o padrão brasileiro ou mostra "Não Perecível" -->
@@ -174,8 +189,12 @@
                                 <span th:if="${produto.naoPerecivel == true or produto.dataDeVencimento == null}" class="badge badge-info">Não Perecível</span>
                                 <span th:if="${produto.naoPerecivel != true and produto.dataDeVencimento != null}">
                                     <span th:text="${#temporals.format(produto.dataDeVencimento, 'dd/MM/yyyy')}">15/10/2025</span>
-                                    <span th:if="${produto.vencido}" class="badge bg-danger ml-1">Vencido</span>
-                                    <span th:if="${produto.proximoDoVencimento and !produto.vencido}" class="badge bg-warning ml-1">Vence em breve</span>
+                                    <span th:if="${produto.vencido}" class="badge bg-danger ml-1">
+                                        <i class="fas fa-exclamation-triangle"></i> Vencido
+                                    </span>
+                                    <span th:if="${produto.proximoDoVencimento and !produto.vencido}" class="badge bg-warning ml-1" style="color: #000 !important;">
+                                        <i class="fas fa-clock"></i> Vence em breve
+                                    </span>
                                 </span>
                             </td>
                             <td>

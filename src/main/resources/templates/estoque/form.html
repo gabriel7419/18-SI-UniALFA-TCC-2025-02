@@ -5,14 +5,14 @@
   th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
 
 <head>
-    <title>Controle de Estoque - Cadastrar</title>
+    <title th:text="${produto.id == null ? 'Controle de Estoque - Cadastrar' : 'Controle de Estoque - Editar'}">Controle de Estoque</title>
 </head>
 
 <body>
   <section>
     <div class="card card-primary">
       <div class="card-header card-header-blue">
-        <h3 class="card-title">Controle de Estoque - Cadastrar</h3>
+        <h3 class="card-title" th:text="${produto.id == null ? 'Controle de Estoque - Cadastrar' : 'Controle de Estoque - Editar'}">Controle de Estoque</h3>
       </div>
       <!-- Formulário pra salvar produto -->
       <form th:action="@{/estoque/salvar}" th:object="${produto}" method="post">
