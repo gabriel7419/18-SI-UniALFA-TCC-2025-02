@@ -19,14 +19,14 @@
             <div class="card-body" style="display: none;">
                 <form id="filtroForm" method="get">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <div class="form-group">
                                 <label for="dataInicio"><i class="fas fa-calendar-alt"></i> Data Início:</label>
                                 <input type="date" id="dataInicio" name="dataInicio" class="form-control" 
                                        th:value="${dataInicio}" required>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <div class="form-group">
                                 <label for="dataFim"><i class="fas fa-calendar-alt"></i> Data Fim:</label>
                                 <input type="date" id="dataFim" name="dataFim" class="form-control" 
@@ -46,24 +46,18 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>&nbsp;</label>
-                                <div class="btn-group btn-group-sm btn-block" role="group">
-                                    <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('hoje')">Hoje</button>
-                                    <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('semana')">Semana</button>
-                                    <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('mes')">Mês</button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="btn-group btn-group-sm" role="group">
-                                <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('ultimomes')">Último Mês</button>
-                                <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('trimestre')">Último Trimestre</button>
-                                <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('semestre')">Último Semestre</button>
-                                <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('ano')">Este Ano</button>
+                            <label class="mb-2"><i class="fas fa-clock"></i> Períodos Rápidos:</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setPeriodo('hoje')">Hoje</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setPeriodo('semana')">Esta Semana</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setPeriodo('mes')">Este Mês</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setPeriodo('ultimomes')">Último Mês</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setPeriodo('trimestre')">Último Trimestre</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setPeriodo('semestre')">Último Semestre</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setPeriodo('ano')">Este Ano</button>
                             </div>
                         </div>
                     </div>
