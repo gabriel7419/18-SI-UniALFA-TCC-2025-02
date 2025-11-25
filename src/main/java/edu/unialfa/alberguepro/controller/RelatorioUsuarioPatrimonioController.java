@@ -56,7 +56,7 @@ public class RelatorioUsuarioPatrimonioController {
                 .body(new InputStreamResource(bis));
     }
     
-    @GetMapping("/patrimonio/pdf")
+    @GetMapping("/patrimonios/pdf")
     public ResponseEntity<InputStreamResource> gerarRelatorioPatrimonioPdf(
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) String status,
@@ -88,7 +88,7 @@ public class RelatorioUsuarioPatrimonioController {
                 .body(new InputStreamResource(bis));
     }
 
-    @GetMapping("/patrimonio/excel")
+    @GetMapping("/patrimonios/excel")
     public ResponseEntity<InputStreamResource> gerarRelatorioPatrimonioExcel(
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) String status,
