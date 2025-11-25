@@ -1,37 +1,39 @@
-name: Deploy no Cloud Build
+steps:
+  # 1. Build do Maven
+  - name: 'maven:3-amazoncorretto-21'
+    entrypoint: 'mvn'
+    args:
+      - 'clean'
+      - 'install'
+      - '-U'
+      
+  # 2. Build da Imagem Docker (Builder corrigido para gcr.io)
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest'
+      - '.'
+      
+  # 3. Push da Imagem (Builder corrigido para gcr.io)
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest'
+      
+  # 4. Deploy no Cloud Run (Builder corrigido para gcr.io)
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'alberguepro'
+      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest'
+      - '--region=us-central1'
+      - '--platform=managed'
+      - '--allow-unauthenticated' # Necessário se for um site/api público
 
-on:
-  push:
-    branches:
-      - deploy-cloud # Ou a branch que você usa
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest'
 
-jobs:
-  build-e-deploy:
-    name: Build e Deploy no Google Cloud
-    runs-on: ubuntu-latest
-    
-    # Adicione permissões para autenticar com o Google Cloud
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    # Autentica no Google Cloud
-    - name: Autenticar com Google Cloud
-      uses: 'google-github-actions/auth@v2'
-      with:
-        # Você precisa configurar o "Workload Identity Federation" no seu projeto GCP
-        workload_identity_provider: 'projects/742704518873/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
-        service_account: 'github-deploy-sa@sonic-earth-475722-i6.iam.gserviceaccount.com'
-
-    # Configura o GCloudSDK
-    - name: Configurar Google Cloud SDK
-      uses: 'google-github-actions/setup-gcloud@v2'
-
-    # Envia o arquivo cloudbuild.yaml para o Google executar
-    - name: Executar Cloud Build
-      run: |-
-        gcloud builds submit --config cloudbuild.yaml
+timeout: 900s
