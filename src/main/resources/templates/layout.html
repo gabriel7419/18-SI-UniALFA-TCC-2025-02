@@ -479,6 +479,20 @@
             color: #856404 !important;
         }
         
+        /* Linha para produtos vencidos */
+        .table-danger-expiration {
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
+            border-left: 4px solid #dc3545 !important;
+        }
+        
+        /* Linha para produtos próximos do vencimento */
+        .table-warning-expiration {
+            background-color: #fff3cd !important;
+            color: #856404 !important;
+            border-left: 4px solid #ffc107 !important;
+        }
+        
         body.dark-mode .table-warning {
             background-color: #374151 !important;
             color: #000000 !important;
@@ -493,6 +507,28 @@
         body.dark-mode .table-warning .badge {
             background-color: #dc2626 !important;
             color: #ffffff !important;
+        }
+        
+        /* Dark mode para produtos vencidos */
+        body.dark-mode .table-danger-expiration {
+            background-color: #7f1d1d !important;
+            border-left: 4px solid #dc2626 !important;
+        }
+        
+        body.dark-mode .table-danger-expiration td {
+            color: #fecaca !important;
+            font-weight: 600 !important;
+        }
+        
+        /* Dark mode para produtos próximos do vencimento */
+        body.dark-mode .table-warning-expiration {
+            background-color: #78350f !important;
+            border-left: 4px solid #f59e0b !important;
+        }
+        
+        body.dark-mode .table-warning-expiration td {
+            color: #fde68a !important;
+            font-weight: 500 !important;
         }
         
         /* Dark Mode Styles - Simples */
