@@ -6,18 +6,17 @@
 </head>
 <body>
     <section>
-        <div class="card">
+        <!-- Filtros Colapsáveis -->
+        <div class="card card-primary collapsed-card mb-3">
             <div class="card-header card-header-blue">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title mb-0">
-                        <i class="fas fa-exchange-alt"></i> Relatório de Movimentação de Estoque por Período
-                    </h3>
-                    <a th:href="@{/relatorios/estrategicos}" class="btn btn-secondary btn-sm">
-                        <i class="fas fa-arrow-left"></i> Voltar
-                    </a>
+                <h3 class="card-title">Filtros</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="display: none;">
                 <form id="filtroForm" method="get">
                     <div class="row">
                         <div class="col-md-4">
@@ -50,24 +49,17 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>&nbsp;</label>
-                                <div class="btn-group btn-block">
-                                    <button type="button" id="btnPdf" class="btn btn-danger">
-                                        <i class="fas fa-file-pdf"></i> PDF
-                                    </button>
-                                    <button type="button" id="btnExcel" class="btn btn-success">
-                                        <i class="fas fa-file-excel"></i> Excel
-                                    </button>
+                                <div class="btn-group btn-group-sm btn-block" role="group">
+                                    <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('hoje')">Hoje</button>
+                                    <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('semana')">Semana</button>
+                                    <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('mes')">Mês</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-12">
                             <div class="btn-group btn-group-sm" role="group">
-                                <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('hoje')">Hoje</button>
-                                <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('semana')">Esta Semana</button>
-                                <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('mes')">Este Mês</button>
                                 <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('ultimomes')">Último Mês</button>
                                 <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('trimestre')">Último Trimestre</button>
                                 <button type="button" class="btn btn-outline-primary" onclick="setPeriodo('semestre')">Último Semestre</button>
@@ -76,6 +68,33 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Card Principal -->
+        <div class="card">
+            <div class="card-header card-header-blue">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-exchange-alt"></i> Relatório de Movimentação de Estoque por Período
+                    </h3>
+                    <div class="card-tools mt-2 mt-md-0">
+                        <button type="button" id="btnPdf" class="btn btn-danger btn-sm">
+                            <i class="fas fa-file-pdf"></i> Gerar PDF
+                        </button>
+                        <button type="button" id="btnExcel" class="btn btn-success btn-sm">
+                            <i class="fas fa-file-excel"></i> Gerar Excel
+                        </button>
+                        <a th:href="@{/relatorios/estrategicos}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Selecione o período desejado e, opcionalmente, o tipo de movimentação nos filtros acima. Clique em "Gerar PDF" ou "Gerar Excel".
+                </div>
             </div>
         </div>
     </section>
