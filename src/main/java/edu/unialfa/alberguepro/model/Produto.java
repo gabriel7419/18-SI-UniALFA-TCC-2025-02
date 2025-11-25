@@ -3,6 +3,7 @@ package edu.unialfa.alberguepro.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -99,5 +100,25 @@ public class Produto {
 
     public void setNaoPerecivel(Boolean naoPerecivel) {
         this.naoPerecivel = naoPerecivel;
+    }
+
+    @Transient
+    public Long getDiasParaVencimento() {
+        if (naoPerecivel || dataDeVencimento == null) {
+            return null;
+        }
+        return ChronoUnit.DAYS.between(LocalDate.now(), dataDeVencimento);
+    }
+
+    @Transient
+    public boolean isVencido() {
+        Long dias = getDiasParaVencimento();
+        return dias != null && dias < 0;
+    }
+
+    @Transient
+    public boolean isProximoDoVencimento() {
+        Long dias = getDiasParaVencimento();
+        return dias != null && dias >= 0 && dias < 3;
     }
 }

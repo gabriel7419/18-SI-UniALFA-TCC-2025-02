@@ -35,34 +35,43 @@
             <form th:action="@{/admin/usuarios/salvar}" th:object="${usuario}" method="post">
                 <!-- ID escondido, pra saber se é pra editar ou criar -->
                 <input type="hidden" th:field="*{id}" />
+                <input type="hidden" th:field="*{ativo}" th:if="${usuario.id != null}" />
 
                 <div class="card-body">
                     <!-- Campo de usuário -->
                     <div class="form-group mb-3">
-                        <label for="username">Usuário</label>
+                        <label for="username">Usuário <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="username" th:field="*{username}"
                                placeholder="Insira o nome de usuário."
                                minlength="4" maxlength="50" pattern="^[A-Za-z0-9_.]+$" autocomplete="username" spellcheck="false"
-                               th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''">
-                        <div th:if="${#fields.hasErrors('username')}" class="invalid-feedback">
-                            <span th:each="err : ${#fields.errors('username')}" th:text="${err}"></span>
+                               th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''"
+                               required>
+                        <small class="form-text text-muted">
+                            Deve ter entre 4 e 50 caracteres. Apenas letras, números, ponto (.) e sublinhado (_).
+                        </small>
+                        <div th:if="${#fields.hasErrors('username')}" class="invalid-feedback d-block">
+                            <span th:each="err : ${#fields.errors('username')}" th:text="${err}" class="d-block"></span>
                         </div>
                     </div>
                     <!-- Campo de senha -->
                     <div class="form-group mb-3" th:if="${usuario.id == null}">
-                        <label for="password">Senha</label>
+                        <label for="password">Senha <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <input type="password" class="form-control" id="password" th:field="*{password}" autocomplete="new-password" minlength="8"
-                                   th:placeholder="${usuario.id == null ? 'Insira uma senha segura.' : 'Deixe em branco para manter a senha atual.'}"
-                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''">
+                                   placeholder="Insira uma senha segura."
+                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                                   required>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('password', 'togglePasswordIcon')" title="Mostrar/Ocultar senha">
                                     <i class="fas fa-eye" id="togglePasswordIcon"></i>
                                 </button>
                             </div>
                         </div>
-                        <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">
-                            <span th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
+                        <small class="form-text text-muted">
+                            Deve ter no mínimo 8 caracteres. Recomendado: forte ou excelente.
+                        </small>
+                        <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback d-block">
+                            <span th:each="err : ${#fields.errors('password')}" th:text="${err}" class="d-block"></span>
                         </div>
                         <div id="password-strength" class="mt-1" style="display: none;" aria-live="polite">
                             <div class="progress" style="height: 6px;">
@@ -78,19 +87,42 @@
                     </div>
                     <!-- Seletor de tipo (role) -->
                     <div class="form-group mb-3">
-                        <label>Tipo</label>
+                        <label>Tipo <span class="text-danger">*</span></label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="roleUser" th:field="*{role}" value="USER"
-                                   th:classappend="${#fields.hasErrors('role')} ? 'is-invalid' : ''">
-                            <label class="form-check-label" for="roleUser">Usuário - Acesso Básico</label>
+                                   th:classappend="${#fields.hasErrors('role')} ? 'is-invalid' : ''"
+                                   required>
+                            <label class="form-check-label" for="roleUser">
+                                <strong>Usuário</strong> - Acesso Básico
+                            </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="roleAdmin" th:field="*{role}" value="ADMIN"
-                                   th:classappend="${#fields.hasErrors('role')} ? 'is-invalid' : ''">
-                            <label class="form-check-label" for="roleAdmin">Administrador - Acesso Completo</label>
+                                   th:classappend="${#fields.hasErrors('role')} ? 'is-invalid' : ''"
+                                   required>
+                            <label class="form-check-label" for="roleAdmin">
+                                <strong>Administrador</strong> - Acesso Completo
+                            </label>
                         </div>
+                        <!-- Opção Master apenas para usuários Master -->
+                        <div class="form-check" th:if="${isMaster != null && isMaster}">
+                            <input class="form-check-input" type="radio" id="roleMaster" th:field="*{role}" value="MASTER"
+                                   th:classappend="${#fields.hasErrors('role')} ? 'is-invalid' : ''"
+                                   required>
+                            <label class="form-check-label" for="roleMaster">
+                                <strong>Master</strong> - Acesso Total (pode editar administradores)
+                            </label>
+                        </div>
+                        <!-- Mensagem para Admins que não podem ver a opção Master -->
+                        <div class="alert alert-warning mt-2" th:if="${isMaster == null || !isMaster}">
+                            <i class="fas fa-info-circle"></i>
+                            <small>Apenas usuários <strong>Master</strong> podem criar ou promover para Master.</small>
+                        </div>
+                        <small class="form-text text-muted">
+                            Selecione o nível de acesso do usuário no sistema.
+                        </small>
                         <div th:if="${#fields.hasErrors('role')}" class="invalid-feedback d-block">
-                            <span th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
+                            <span th:each="err : ${#fields.errors('role')}" th:text="${err}" class="d-block"></span>
                         </div>
                     </div>
                 </div>

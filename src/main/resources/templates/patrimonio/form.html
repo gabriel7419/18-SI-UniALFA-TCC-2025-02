@@ -2,7 +2,7 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
 <head>
-  <title>Cadastro de Patrimônios</title>
+  <title th:text="${patrimonio.id == null ? 'Cadastro de Patrimônios' : 'Edição de Patrimônios'}">Cadastro de Patrimônios</title>
 </head>
 <body>
 <section>
@@ -26,7 +26,7 @@
 
   <div class="card card-primary">
     <div class="card-header card-header-blue">
-      <h3 class="card-title">Gestão de Patrimônio - Cadastrar</h3>
+      <h3 class="card-title" th:text="${patrimonio.id == null ? 'Gestão de Patrimônio - Cadastrar' : 'Gestão de Patrimônio - Editar'}">Gestão de Patrimônio - Cadastrar</h3>
     </div>
 
     <form th:action="@{/patrimonio/salvar}" th:object="${patrimonio}" method="post">
