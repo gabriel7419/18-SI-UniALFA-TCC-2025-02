@@ -14,7 +14,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    
+
     <!-- Mensagem de sucesso -->
     <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="fas fa-check-circle"></i>
@@ -24,12 +24,7 @@
         </button>
     </div>
 
-    <div class="mb-3">
-        <a th:href="@{/vaga}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nova Vaga
-        </a>
-    </div>
-
+    <!-- Filtros Colapsáveis -->
     <div class="card card-primary collapsed-card mb-3">
         <div class="card-header card-header-blue">
             <h3 class="card-title">Filtros</h3>
@@ -40,9 +35,9 @@
             </div>
         </div>
         <div class="card-body" style="display: none;">
-            <form th:action="@{/vaga/listar}" method="get">
+            <form th:action="@{/vaga/pesquisar}" method="get">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-md-5">
                         <div class="form-group">
                             <label for="filtro">Nome do Acolhido:</label>
                             <input type="text" id="filtro" name="filtro" class="form-control"
@@ -51,10 +46,29 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
+                            <label for="numeroQuarto">Quarto:</label>
+                            <input type="number" id="numeroQuarto" name="numeroQuarto" class="form-control"
+                                   placeholder="Nº do Quarto" th:value="${numeroQuarto}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="numeroLeito">Leito:</label>
+                            <input type="number" id="numeroLeito" name="numeroLeito" class="form-control"
+                                   placeholder="Nº do Leito" th:value="${numeroLeito}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
                             <label>&nbsp;</label>
-                            <button type="submit" class="btn btn-primary btn-block">
-                                <i class="fas fa-search"></i> Filtrar
-                            </button>
+                            <div class="btn-group btn-block">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i> Filtrar
+                                </button>
+                                <a th:href="@{/vaga/listar}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Limpar
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -62,16 +76,15 @@
         </div>
     </div>
 
+    <!-- Tabela de Vagas -->
     <div class="card">
         <div class="card-header card-header-blue">
-            <div class="d-flex justify-content-between align-items-center">
-                <h3 class="card-title mb-0">Vagas Cadastradas</h3>
-                <div class="card-tools">
-                    <a th:href="@{/vaga/relatorio/pdf(filtro=${filtro})}" class="btn btn-danger" target="_blank">
-                        <i class="fas fa-file-pdf"></i> Gerar PDF
-                    </a>
-                    <a th:href="@{/vaga/relatorio/excel(filtro=${filtro})}" class="btn btn-success">
-                        <i class="fas fa-file-excel"></i> Gerar Excel
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <h3 class="card-title mb-0">Lista de Vagas Cadastradas</h3>
+                <div class="card-tools mt-2 mt-md-0">
+                    <!-- Botões de Ação Principal -->
+                    <a th:href="@{/vaga}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Nova Vaga
                     </a>
                 </div>
             </div>
@@ -86,11 +99,11 @@
                 <table class="table table-bordered" th:if="${not #lists.isEmpty(vagas)}">
                 <thead class="thead-blue">
                 <tr>
-                    <th>Acolhido</th>
-                    <th>Data de Ingresso</th>
-                    <th>Data de Saída</th>
-                    <th>Leito</th>
-                    <th>Quarto</th>
+                    <th class="sortable" data-sort="acolhido.nome">Acolhido</th>
+                    <th class="sortable" data-sort="dataEntrada">Data de Ingresso</th>
+                    <th class="sortable" data-sort="dataSaida">Data de Saída</th>
+                    <th class="sortable" data-sort="leito.numeroLeito">Leito</th>
+                    <th class="sortable" data-sort="leito.quarto.numeroQuarto">Quarto</th>
                     <th>Ações</th>
                 </tr>
                 </thead>
@@ -107,12 +120,19 @@
                     <td th:text="${vaga.leito != null and vaga.leito.quarto != null} ? ${vaga.leito.quarto.numeroQuarto} : '---'">Quarto 1</td>
 
                     <td>
-                        <a th:href="@{/vaga/editar/{id}(id=${vaga.id})}" class="btn btn-warning btn-sm">
+                        <a th:href="@{/vaga/editar/{id}(id=${vaga.id})}" 
+                           class="btn btn-warning btn-sm"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Editar vaga">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a th:href="@{/vaga/remover/{id}(id=${vaga.id})}" 
-                           class="btn btn-danger btn-sm"
-                           onclick="return confirm('Tem certeza que deseja remover esta vaga?');">
+                        <a th:href="@{/vaga/remover/{id}(id=${vaga.id})}"
+                           class="btn btn-danger btn-sm btn-confirm-delete"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           data-confirm-message="Tem certeza que deseja remover esta vaga?"
+                           title="Excluir vaga">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>
@@ -120,19 +140,25 @@
                 </tbody>
             </table>
             </div>
+            
+            <!-- Paginação -->
+            <div th:replace="fragments/pagination :: pagination"></div>
         </div>
     </div>
+
+    <!-- Modal de Confirmação Reutilizável -->
+    <div th:replace="fragments/confirmation-modal :: confirmationModal"></div>
 </section>
 <script>
     // Mantém os filtros abertos se algum filtro estiver ativo
     $(document).ready(function() {
         var temFiltroAtivo = false;
-        
+
         // Verifica se há filtros ativos
         if ($('#filtro').val()) {
             temFiltroAtivo = true;
         }
-        
+
         // Se houver filtro ativo, expande o card de filtros
         if (temFiltroAtivo) {
             $('.collapsed-card').removeClass('collapsed-card');
@@ -141,5 +167,7 @@
         }
     });
 </script>
+<!-- Script do Modal de Confirmação -->
+<script th:replace="fragments/confirmation-modal :: confirmationScript"></script>
 </body>
 </html>

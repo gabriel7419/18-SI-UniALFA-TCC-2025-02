@@ -28,7 +28,7 @@ public class Usuario {
     private String password;
 
     @NotBlank(message = "A função (role) do usuário é obrigatória.")
-    private String role; // Ex: "ADMIN", "USER"
+    private String role; // Ex: "MASTER", "ADMIN", "USER"
     
     private boolean ativo = true;
 

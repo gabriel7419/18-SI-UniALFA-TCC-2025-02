@@ -10,10 +10,11 @@ import java.util.List;
 @Repository
 public interface LeitoRepository extends JpaRepository<Leito, Long> {
 
-    List<Leito> findByQuartoId(Long quartoId);
+    List<Leito> findByQuartoIdOrderByNumeroLeitoAsc(Long quartoId);
     
     @Query("SELECT l FROM Leito l WHERE l.quarto.id = :quartoId AND l.id NOT IN " +
            "(SELECT v.leito.id FROM Vaga v WHERE v.leito.id IS NOT NULL AND " +
-           "(v.dataSaida IS NULL OR v.dataSaida >= CURRENT_DATE))")
+           "(v.dataSaida IS NULL OR v.dataSaida >= CURRENT_DATE)) " +
+           "ORDER BY l.numeroLeito ASC")
     List<Leito> findLeitosDisponiveisByQuartoId(@Param("quartoId") Long quartoId);
 }

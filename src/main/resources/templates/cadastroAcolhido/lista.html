@@ -6,12 +6,7 @@
 </head>
 <body>
 <section>
-    <div class="mb-3">
-        <a th:href="@{/cadastroAcolhido}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Novo Acolhido
-        </a>
-    </div>
-
+    <!-- Filtros Colapsáveis -->
     <div class="card card-primary collapsed-card mb-3">
         <div class="card-header card-header-blue">
             <h3 class="card-title">Filtros</h3>
@@ -24,7 +19,7 @@
         <div class="card-body" style="display: none;">
             <form th:action="@{/cadastroAcolhido/listar}" method="get">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="filtro">Nome do Acolhido:</label>
                             <input type="text" id="filtro" name="filtro" class="form-control" placeholder="Buscar acolhido por nome..." th:value="${filtro}">
@@ -32,10 +27,48 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label>&nbsp;</label>
-                            <button type="submit" class="btn btn-primary btn-block">
+                            <label for="sexo">Sexo:</label>
+                            <select id="sexo" name="sexo" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="Masculino" th:selected="${sexo == 'Masculino'}">Masculino</option>
+                                <option value="Feminino" th:selected="${sexo == 'Feminino'}">Feminino</option>
+                                <option value="Outro" th:selected="${sexo == 'Outro'}">Outro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="idadeMin">Idade Mín.:</label>
+                            <input type="number" id="idadeMin" name="idadeMin" class="form-control" placeholder="Ex: 18" th:value="${idadeMin}" min="0" max="130">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="idadeMax">Idade Máx.:</label>
+                            <input type="number" id="idadeMax" name="idadeMax" class="form-control" placeholder="Ex: 65" th:value="${idadeMax}" min="0" max="130">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="diasPermanencia">Permanência:</label>
+                            <select id="diasPermanencia" name="diasPermanencia" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="30" th:selected="${diasPermanencia != null and diasPermanencia == 30}">Mais de 30 dias</option>
+                                <option value="60" th:selected="${diasPermanencia != null and diasPermanencia == 60}">Mais de 60 dias</option>
+                                <option value="90" th:selected="${diasPermanencia != null and diasPermanencia == 90}">Mais de 90 dias (Limite)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="btn-group float-right">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-search"></i> Filtrar
                             </button>
+                            <a th:href="@{/cadastroAcolhido/listar}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Limpar
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -43,17 +76,40 @@
         </div>
     </div>
 
+    <!-- Tabela com Botões no Cabeçalho -->
     <div class="card">
         <div class="card-header card-header-blue">
-            <div class="d-flex justify-content-between align-items-center">
-                <h3 class="card-title mb-0">Acolhidos Cadastrados</h3>
-                <div class="card-tools">
-                    <a th:href="@{/cadastroAcolhido/relatorio/pdf}" class="btn btn-danger" target="_blank">
-                        <i class="fas fa-file-pdf"></i> Gerar PDF
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <h3 class="card-title mb-0">
+                    <span th:if="${diasPermanencia == null}">Lista de Acolhidos Cadastrados</span>
+                    <span th:if="${diasPermanencia != null}">Lista de Acolhidos com Permanência Superior a <span th:text="${diasPermanencia}"></span> dias 
+                        <span th:if="${diasPermanencia == 90}" class="badge badge-danger">Limite Atingido</span>
+                    </span>
+                </h3>
+                <div class="card-tools mt-2 mt-md-0">
+                    <!-- Botões de Ação Principal -->
+                    <a th:href="@{/cadastroAcolhido}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Novo
                     </a>
-                    <a th:href="@{/cadastroAcolhido/relatorio/excel}" class="btn btn-success">
-                        <i class="fas fa-file-excel"></i> Gerar Excel
-                    </a>
+                    
+                    <!-- Relatórios Gerais -->
+                    <span th:if="${diasPermanencia == null}">
+                        <a th:href="@{/cadastroAcolhido/relatorio/pdf}" class="btn btn-danger btn-sm" target="_blank">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </a>
+                        <a th:href="@{/cadastroAcolhido/relatorio/excel}" class="btn btn-success btn-sm">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </a>
+                    </span>
+                    <!-- Relatórios de Permanência -->
+                    <span th:if="${diasPermanencia != null}">
+                        <a th:href="@{/cadastroAcolhido/relatorio/permanencia/pdf(dias=${diasPermanencia})}" class="btn btn-danger btn-sm" target="_blank">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </a>
+                        <a th:href="@{/cadastroAcolhido/relatorio/permanencia/excel(dias=${diasPermanencia})}" class="btn btn-success btn-sm">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </a>
+                    </span>
                 </div>
             </div>
         </div>
@@ -77,26 +133,45 @@
                 <table class="table table-bordered" th:if="${not #lists.isEmpty(acolhidos)}">
                 <thead class="thead-blue">
                 <tr>
-                    <th>Nome</th>
-                    <th>Idade</th>
-                    <th>Sexo</th>
-                    <th>Data de Ingresso</th>
+                    <th class="sortable" data-sort="nome">Nome</th>
+                    <th class="sortable" data-sort="cpf">CPF</th>
+                    <th class="sortable" data-sort="idade">Idade</th>
+                    <th class="sortable" data-sort="sexo">Sexo</th>
+                    <th class="sortable" data-sort="dataIngresso">Data de Ingresso</th>
+                    <th class="sortable" data-sort="dataSaida">Data de Saída</th>
                     <th>Ações</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="acolhido : ${acolhidos}">
+                <tr th:each="acolhido : ${acolhidos}"
+                    th:classappend="${acolhido.dataSaidaProxima ? 'table-warning' : ''}">
                     <td th:text="${acolhido.nome}">João da Silva</td>
+                    <td th:text="${acolhido.cpf != null and acolhido.cpf.length() > 0 ? acolhido.cpf : '-'}">123.456.789-00</td>
                     <td th:text="${acolhido.idade}">35</td>
                     <td th:text="${acolhido.sexo}">Masculino</td>
                     <td th:text="${#temporals.format(acolhido.dataIngresso, 'dd/MM/yyyy')}">10/09/2025</td>
                     <td>
-                        <a th:href="@{/cadastroAcolhido/editar/{id}(id=${acolhido.id})}" class="btn btn-warning btn-sm">
+                        <span th:if="${acolhido.dataSaida != null}" 
+                              th:text="${#temporals.format(acolhido.dataSaida, 'dd/MM/yyyy')}"
+                              th:classappend="${acolhido.dataSaidaProxima ? 'badge badge-warning' : ''}">
+                            10/11/2025
+                        </span>
+                        <span th:if="${acolhido.dataSaida == null}">-</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/cadastroAcolhido/editar/{id}(id=${acolhido.id})}" 
+                           class="btn btn-warning btn-sm" 
+                           data-toggle="tooltip" 
+                           data-placement="top" 
+                           title="Editar cadastro">
                             <i class="fas fa-edit"></i>
                         </a>
                         <a th:href="@{/cadastroAcolhido/remover/{id}(id=${acolhido.id})}"
-                           class="btn btn-danger btn-sm"
-                           onclick="return confirm('Tem certeza que deseja remover o acolhido ' + '${acolhido.nome}' + '?');">
+                           class="btn btn-danger btn-sm btn-confirm-delete"
+                           data-toggle="tooltip" 
+                           data-placement="top" 
+                           th:attr="data-confirm-message='Tem certeza que deseja remover o acolhido &lt;strong&gt;' + ${acolhido.nome} + '&lt;/strong&gt;?'"
+                           title="Excluir cadastro">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>
@@ -104,8 +179,21 @@
                 </tbody>
             </table>
             </div>
+            
+            <div class="mt-3" th:if="${not #lists.isEmpty(acolhidos)}">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle"></i> 
+                    <strong>Legenda:</strong> Linhas destacadas em <span class="badge badge-warning">amarelo</span> indicam acolhidos com data de saída prevista nos próximos 7 dias.
+                </small>
+            </div>
+            
+            <!-- Paginação -->
+            <div th:replace="fragments/pagination :: pagination"></div>
         </div>
     </div>
+
+    <!-- Modal de Confirmação Reutilizável -->
+    <div th:replace="fragments/confirmation-modal :: confirmationModal"></div>
 </section>
 <script th:inline="javascript">
     const filtro = /*[[${filtro}]]*/ null;
@@ -154,5 +242,7 @@
         }
     });
 </script>
+<!-- Script do Modal de Confirmação -->
+<script th:replace="fragments/confirmation-modal :: confirmationScript"></script>
 </body>
 </html>

@@ -1,6 +1,9 @@
 package edu.unialfa.alberguepro.repository;
 
+import edu.unialfa.alberguepro.model.ControlePatrimonio;
 import edu.unialfa.alberguepro.model.Vaga;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +19,16 @@ public interface VagaRepository extends JpaRepository<Vaga, Long>  {
            "(v.dataSaida IS NULL OR v.dataSaida >= CURRENT_DATE)")
     long countLeitosOcupados();
 
+    @Query("SELECT COUNT(v.id) FROM Vaga v " +
+            "WHERE v.leito.quarto.id = :quartoId")
+    long countVagasByQuartoId(@Param("quartoId") Long quartoId);
+
+    @Query("SELECT v.leito.id " +
+            "FROM Vaga v " +
+            "WHERE v.acolhido IS NOT NULL " +
+            "  AND CURRENT_DATE BETWEEN v.dataEntrada AND v.dataSaida")
+    List<Long> findOccupiedLeitoIds();
+
     @Query("SELECT COUNT(v) " +
             "FROM Vaga v " +
             "WHERE v.leito.quarto.id = :quartoId " +
@@ -23,7 +36,7 @@ public interface VagaRepository extends JpaRepository<Vaga, Long>  {
             "  AND (v.dataSaida IS NULL OR v.dataSaida >= CURRENT_DATE)")
     Long countActiveVagasByQuartoId(@Param("quartoId") Long quartoId);
 
-    @Query("SELECT v.leito.quarto.numeroQuarto, COUNT(v) " +
+    @Query("SELECT v.leito.quarto.numeroQuarto, COUNT(DISTINCT v.leito.id) " +
             "FROM Vaga v " +
             "WHERE v.acolhido IS NOT NULL " +
             "  AND (v.dataSaida IS NULL OR v.dataSaida >= CURRENT_DATE) " +
@@ -47,4 +60,8 @@ public interface VagaRepository extends JpaRepository<Vaga, Long>  {
             "GROUP BY YEAR(data_saida), MONTH(data_saida) " +
             "ORDER BY ano, mes", nativeQuery = true)
     List<Object[]> countSaidasUltimos6Meses();
+
+    List<Vaga> findByAcolhidoNomeContainingIgnoreCase(String nome);
+    
+    Page<Vaga> findByAcolhidoNomeContainingIgnoreCase(String nome, Pageable pageable);
 }

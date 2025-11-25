@@ -110,6 +110,7 @@
         /* Barra lateral - REDUZIDA */
         .main-sidebar {
             width: 220px !important; /* aumentado de 200px para 220px */
+            overflow-x: hidden !important;
         }
         
         /* Ajustar content-wrapper para compensar sidebar menor */
@@ -493,6 +494,58 @@
             background-color: #dc2626 !important;
             color: #ffffff !important;
         }
+        
+        /* Dark Mode Styles - Simples */
+        body.dark-mode .card-header-blue {
+            background-color: #1e3a8a !important;
+            border-bottom: 1px solid #1e40af !important;
+        }
+        
+        body.dark-mode .table thead.thead-blue th {
+            background-color: #374151 !important;
+            color: #e5e7eb !important;
+            border-bottom: 2px solid #4b5563 !important;
+        }
+        
+        body.dark-mode .toast-msg.success {
+            background: #166534 !important;
+        }
+        
+        body.dark-mode .toast-msg.error {
+            background: #991b1b !important;
+        }
+        
+        body.dark-mode .toast-msg.info {
+            background: #0e7490 !important;
+        }
+        
+        body.dark-mode .toast-msg.warning {
+            background: #a16207 !important;
+            color: #fef3c7 !important;
+        }
+        
+        /* Navbar superior em dark mode */
+        body.dark-mode .main-header {
+            background-color: #1f2937 !important;
+            border-bottom: 1px solid #374151 !important;
+        }
+        
+        body.dark-mode .navbar-light .navbar-nav .nav-link {
+            color: #e5e7eb !important;
+        }
+        
+        body.dark-mode .navbar-light .navbar-nav .nav-link:hover {
+            color: #ffffff !important;
+        }
+        
+        /* Botões de relatório em dark mode */
+        body.dark-mode .card-header-blue .btn {
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        body.dark-mode .card-header-blue .btn:hover {
+            border-color: rgba(255, 255, 255, 0.5) !important;
+        }
     </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -536,14 +589,14 @@
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                     <!-- Item do menu: Dashboard -->
                     <li class="nav-item">
-                        <a th:href="@{/}" class="nav-link">
+                        <a th:href="@{/}" class="nav-link" data-toggle="tooltip" data-placement="right" title="Dashboard">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
                     <!-- Item do menu: Estoque (com sub-itens) -->
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="#" class="nav-link" data-toggle="tooltip" data-placement="right" title="Gestão de Estoque">
                             <i class="nav-icon fas fa-box-open"></i>
                             <p>
                                 Gestão de Estoque
@@ -574,7 +627,7 @@
                     </li>
                     <!-- Item do menu: Patrimônio (com sub-itens) -->
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="#" class="nav-link" data-toggle="tooltip" data-placement="right" title="Gestão de Patrimônio">
                             <i class="nav-icon fas fa-landmark"></i>
                             <p>
                                 Gestão de Patrimônio
@@ -599,7 +652,7 @@
                     </li>
                     <!-- Item do menu: cadastroAcolhido (com sub-itens) -->
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a href="#" class="nav-link">
+                        <a href="#" class="nav-link" data-toggle="tooltip" data-placement="right" title="Gestão de Acolhido">
                             <i class="nav-icon fas fa-id-card"></i>
                             <p>
                                 Gestão de Acolhido
@@ -624,7 +677,7 @@
                     </li>
                     <!-- Item do menu: Vaga (com sub-itens) -->
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a href="#" class="nav-link">
+                        <a href="#" class="nav-link" data-toggle="tooltip" data-placement="right" title="Gestão de Vaga">
                             <i class="nav-icon fas fa-bed"></i>
                             <p>
                                 Gestão de Vaga
@@ -650,7 +703,7 @@
 
                     <!-- Item do menu: Quarto (com sub-itens) -->
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a href="#" class="nav-link">
+                        <a href="#" class="nav-link" data-toggle="tooltip" data-placement="right" title="Gestão de Quarto">
                             <i class="nav-icon fas fa-door-open"></i>
                             <p>
                                 Gestão de Quarto
@@ -674,9 +727,46 @@
                         </ul>
                     </li>
 
+                    <!-- Item do menu: Relatórios Estratégicos -->
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-toggle="tooltip" data-placement="right" title="Relatórios Estratégicos">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>
+                                Relatórios Estratégicos
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a th:href="@{/relatorios/estrategicos}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Visão Geral</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{/relatorios/estrategicos/acolhidos}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Entradas Acolhidos</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{/relatorios/estrategicos/movimentacao-estoque}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Movimentação Estoque</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{/relatorios/estrategicos/patrimonio}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Patrimônio</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
                     <!-- Item do menu: Usuários -->
                     <li class="nav-item">
-                        <a th:href="@{/admin/usuarios}" class="nav-link">
+                        <a th:href="@{/admin/usuarios}" class="nav-link" data-toggle="tooltip" data-placement="right" title="Gerenciar Usuários">
                             <i class="nav-icon fas fa-user-alt"></i>
                             <p>Gerenciar Usuários</p>
                         </a>
@@ -711,6 +801,37 @@
 <!-- Redirecionar para página de consulta quando sidebar está colapsada -->
 <script>
 $(document).ready(function() {
+    // Restaurar estado da sidebar ao carregar
+    const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+    if (sidebarCollapsed) {
+        $('body').addClass('sidebar-collapse');
+    } else {
+        $('body').removeClass('sidebar-collapse');
+    }
+    
+    // Inicializar tooltips do Bootstrap
+    function initTooltips() {
+        // Tooltips da sidebar (quando colapsada)
+        if ($('body').hasClass('sidebar-collapse')) {
+            $('.nav-sidebar [data-toggle="tooltip"]').tooltip({
+                placement: 'right',
+                boundary: 'window',
+                offset: '0, 10'
+            }).tooltip('enable');
+        } else {
+            $('.nav-sidebar [data-toggle="tooltip"]').tooltip('dispose');
+        }
+        
+        // Tooltips dos botões de ação nas tabelas (sempre ativos)
+        $('.table [data-toggle="tooltip"], .btn[data-toggle="tooltip"]').tooltip({
+            placement: 'top',
+            boundary: 'window',
+            trigger: 'hover',
+            animation: true,
+            delay: { show: 300, hide: 100 }
+        });
+    }
+    
     // Função para adicionar redirecionamento direto quando colapsado
     function setupCollapsedBehavior() {
         if ($('body').hasClass('sidebar-collapse')) {
@@ -750,7 +871,7 @@ $(document).ready(function() {
                     $link.off('click').on('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        window.location.href = '/vaga';
+                        window.location.href = '/vaga/listar';
                         return false;
                     });
                 } else if ($icon.hasClass('fa-door-open')) {
@@ -758,7 +879,15 @@ $(document).ready(function() {
                     $link.off('click').on('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        window.location.href = '/quarto';
+                        window.location.href = '/quarto/listar';
+                        return false;
+                    });
+                } else if ($icon.hasClass('fa-chart-line')) {
+                    // Relatórios Estratégicos
+                    $link.off('click').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = '/relatorios/estrategicos';
                         return false;
                     });
                 }
@@ -767,14 +896,19 @@ $(document).ready(function() {
     }
     
     // Aplicar ao carregar
+    initTooltips();
     setupCollapsedBehavior();
     
-    // Monitorar mudanças na sidebar
+    // Monitorar mudanças na sidebar e salvar estado
     $('[data-widget="pushmenu"]').on('collapsed.lte.pushmenu', function() {
+        localStorage.setItem('sidebarCollapsed', 'true');
+        initTooltips();
         setupCollapsedBehavior();
     });
     
     $('[data-widget="pushmenu"]').on('shown.lte.pushmenu', function() {
+        localStorage.setItem('sidebarCollapsed', 'false');
+        initTooltips();
         // Quando expandir, remover comportamento customizado
         $('.nav-sidebar .nav-item > a.nav-link').off('click');
     });
@@ -800,37 +934,109 @@ $(function() {
   $(window).on('resize', keepCollapsed);
 });
 </script>
+
 <!-- Dark Mode Toggle Script -->
 <script>
-$(document).ready(function() {
-    // Carregar preferência do localStorage ao iniciar
-    const darkMode = localStorage.getItem('darkMode') === 'true';
-    if (darkMode) {
-        $('body').addClass('dark-mode');
-        $('#dark-mode-toggle i').removeClass('fa-moon').addClass('fa-sun');
-        $('#dark-mode-toggle').attr('title', 'Alternar modo claro');
+// Script robusto sem dependência do jQuery
+(function() {
+    'use strict';
+    
+    // Função para inicializar o modo escuro
+    function initDarkMode() {
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const body = document.body;
+        
+        if (!darkModeToggle) {
+            console.error('Botão dark-mode-toggle não encontrado!');
+            return;
+        }
+        
+        // Carregar preferência do localStorage
+        const darkMode = localStorage.getItem('darkMode') === 'true';
+        
+        if (darkMode) {
+            body.classList.add('dark-mode');
+            const icon = darkModeToggle.querySelector('i');
+            if (icon) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+            darkModeToggle.setAttribute('title', 'Alternar modo claro');
+        }
+        
+        // Adicionar evento de clique
+        darkModeToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Alternar classe dark-mode
+            body.classList.toggle('dark-mode');
+            
+            // Verificar estado atual
+            const isDarkMode = body.classList.contains('dark-mode');
+            
+            // Trocar ícone
+            const icon = this.querySelector('i');
+            if (icon) {
+                if (isDarkMode) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            }
+            
+            // Atualizar título
+            this.setAttribute('title', isDarkMode ? 'Alternar modo claro' : 'Alternar modo escuro');
+            
+            // Salvar no localStorage
+            localStorage.setItem('darkMode', isDarkMode);
+            
+            // Disparar evento para gráficos
+            window.dispatchEvent(new Event('darkModeToggled'));
+        });
     }
     
-    // Toggle dark mode ao clicar no botão
-    $('#dark-mode-toggle').on('click', function(e) {
-        e.preventDefault();
-        
-        // Alternar classe dark-mode no body
-        $('body').toggleClass('dark-mode');
-        
-        // Trocar ícone entre lua e sol
-        const isDarkMode = $('body').hasClass('dark-mode');
-        $(this).find('i').toggleClass('fa-moon fa-sun');
-        
-        // Atualizar tooltip
-        $(this).attr('title', isDarkMode ? 'Alternar modo claro' : 'Alternar modo escuro');
-        
-        // Salvar preferência no localStorage
-        localStorage.setItem('darkMode', isDarkMode);
-        
-        // Disparar evento customizado para atualizar gráficos
-        window.dispatchEvent(new Event('darkModeToggled'));
+    // Executar quando o DOM estiver pronto
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDarkMode);
+    } else {
+        initDarkMode();
+    }
+})();
+</script>
+<script>
+// Desabilitar autocomplete em todos os inputs, selects e textareas
+document.addEventListener('DOMContentLoaded', function() {
+    // Desabilitar em todos os formulários
+    document.querySelectorAll('form').forEach(function(form) {
+        form.setAttribute('autocomplete', 'off');
     });
+    
+    // Desabilitar em todos os inputs
+    document.querySelectorAll('input').forEach(function(input) {
+        input.setAttribute('autocomplete', 'off');
+    });
+    
+    // Desabilitar em todos os selects
+    document.querySelectorAll('select').forEach(function(select) {
+        select.setAttribute('autocomplete', 'off');
+    });
+    
+    // Desabilitar em todos os textareas
+    document.querySelectorAll('textarea').forEach(function(textarea) {
+        textarea.setAttribute('autocomplete', 'off');
+    });
+    
+    // Inicializar tooltips globalmente para botões de ação
+    if (typeof $ !== 'undefined' && $.fn.tooltip) {
+        $('[data-toggle="tooltip"]').tooltip({
+            boundary: 'window',
+            trigger: 'hover',
+            animation: true,
+            delay: { show: 300, hide: 100 }
+        });
+    }
 });
 </script>
 <th:block th:replace="${script}"></th:block>

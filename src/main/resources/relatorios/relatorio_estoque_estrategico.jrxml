@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+              name="relatorio_estoque_estrategico" 
+              pageWidth="595" 
+              pageHeight="842" 
+              columnWidth="555" 
+              leftMargin="20" 
+              rightMargin="20" 
+              topMargin="20" 
+              bottomMargin="20" 
+              uuid="f1490fd5-b3c1-4b28-950d-b681beafdaee">
+    
+    <parameter name="TOTAL_PRODUTOS" class="java.lang.Long"/>
+    <parameter name="TOTAL_ITENS" class="java.lang.Long"/>
+    <parameter name="PRODUTOS_EM_ESTOQUE" class="java.lang.Long"/>
+    <parameter name="PRODUTOS_ZERADOS" class="java.lang.Long"/>
+    <parameter name="PRODUTOS_BAIXO_ESTOQUE" class="java.util.List"/>
+    <parameter name="PRODUTOS_VENCIMENTO" class="java.util.List"/>
+    
+    <field name="nome" class="java.lang.String"/>
+    <field name="tipo" class="java.lang.String"/>
+    <field name="quantidade" class="java.lang.Integer"/>
+    <field name="unidade" class="java.lang.String"/>
+    <field name="situacao" class="java.lang.String"/>
+    
+    <title>
+        <band height="150">
+            <staticText>
+                <reportElement x="0" y="10" width="555" height="30" uuid="30f23a29-5085-4ed6-9052-9641ad1b417b"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="18" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Relatório Estratégico de Estoque]]></text>
+            </staticText>
+            <textField pattern="dd/MM/yyyy HH:mm">
+                <reportElement x="0" y="45" width="555" height="20" uuid="9af4057b-8031-4890-bfd6-9794decdb8da"/>
+                <textElement textAlignment="Center">
+                    <font size="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Gerado em: " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
+            </textField>
+            
+            <!-- Resumo Geral -->
+            <rectangle>
+                <reportElement x="0" y="75" width="555" height="70" backcolor="#F0F0F0" uuid="7bcd9593-9696-43a7-9b09-d5fdf2756da8"/>
+            </rectangle>
+            <staticText>
+                <reportElement x="10" y="80" width="150" height="15" uuid="816ec627-5695-4618-ac42-6cda89f096dc"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Total de Produtos:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="160" y="80" width="80" height="15" uuid="eb225073-bc6c-4940-9a28-b07700136428"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL_PRODUTOS}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="10" y="100" width="150" height="15" uuid="e866e5fc-9488-4ad8-8672-98323771cba0"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Total de Itens:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="160" y="100" width="80" height="15" uuid="df897c5d-ffd9-4db1-885b-f042b6d658c9"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL_ITENS}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="295" y="80" width="150" height="15" uuid="49e788d3-40d5-411b-8eec-4e6ef0737372"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Produtos em Estoque:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="445" y="80" width="100" height="15" uuid="cb694cf4-db94-4b2a-a725-304f81cff505"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{PRODUTOS_EM_ESTOQUE}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="295" y="100" width="150" height="15" uuid="5744d501-774d-4d2f-a44b-7a2772b9efd4"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Produtos Zerados:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="445" y="100" width="100" height="15" uuid="276a65fc-30d9-4f04-9a7f-ae52867d73bb"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{PRODUTOS_ZERADOS}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="10" y="125" width="535" height="20" uuid="bad0dab6-aa0d-4935-9ee9-60057dcd7c57"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[PRODUTOS COM ESTOQUE BAIXO (≤ 10 unidades)]]></text>
+            </staticText>
+        </band>
+    </title>
+    
+    <columnHeader>
+        <band height="30">
+            <staticText>
+                <reportElement mode="Opaque" x="0" y="0" width="200" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="4291f77c-75f5-4b1d-af41-8d3728c8ac04"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Nome]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="200" y="0" width="100" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="e09a6468-b082-444c-98cf-95af2dd91d9e"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Tipo]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="300" y="0" width="80" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="28f7d3c8-12de-4780-9ecc-677ed5c75be1"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Quantidade]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="380" y="0" width="80" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="cb5eb4f8-706a-43c3-8d67-388c4f5a40b2"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Unidade]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="460" y="0" width="95" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="7e82fb3f-385a-4f34-a692-a2d5df7b79c2"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Situação]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    
+    <detail>
+        <band height="25">
+            <textField>
+                <reportElement x="0" y="0" width="200" height="25" uuid="373eb474-31b7-4a7c-b377-61a6b1011afd"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="9"/>
+                    <paragraph leftIndent="5"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="200" y="0" width="100" height="25" uuid="96bdfc70-9c56-4036-8a12-2e8f696f96bb"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="300" y="0" width="80" height="25" uuid="28121728-50a4-44e4-baea-b9c9ba1798c2"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="380" y="0" width="80" height="25" uuid="899ca444-becd-4391-af04-a29965061513"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{unidade}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="460" y="0" width="95" height="25" uuid="325b1022-66b4-45b4-b604-51e12213100e"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{situacao}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    
+    <pageFooter>
+        <band height="30">
+            <textField>
+                <reportElement x="0" y="10" width="350" height="15" uuid="8ad07b70-65c3-48e6-af7e-97dd0da509a0"/>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["AlberguePro - Relatório Estratégico de Estoque"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="450" y="10" width="80" height="15" uuid="2dba12e8-9b14-4afc-9e42-9ccbb77bb16e"/>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

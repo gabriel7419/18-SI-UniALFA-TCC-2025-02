@@ -13,6 +13,8 @@ public class AcolhidoDTO {
     private String naturalidade;
     private String rg;
     private String cpf;
+    private String estadoSaude;
+    private String medicamentoControlado;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataIngresso;
@@ -31,6 +33,8 @@ public class AcolhidoDTO {
         this.cpf = acolhido.getCpf();
         this.dataIngresso = acolhido.getDataIngresso();
         this.dataSaida = acolhido.getDataSaida();
+        this.estadoSaude = acolhido.getEstadoSaude() != null ? acolhido.getEstadoSaude().toString() : null;
+        this.medicamentoControlado = acolhido.getMedicamentoControlado() != null ? acolhido.getMedicamentoControlado().toString() : null;
     }
 
     public Long getId() { return id; }
@@ -43,5 +47,7 @@ public class AcolhidoDTO {
     public String getCpf() { return cpf; }
     public LocalDate getDataIngresso() { return dataIngresso; }
     public LocalDate getDataSaida() { return dataSaida; }
+    public String getEstadoSaude() { return estadoSaude; }
+    public String getMedicamentoControlado() { return medicamentoControlado; }
 
 }

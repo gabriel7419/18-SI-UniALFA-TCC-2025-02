@@ -24,25 +24,25 @@ public class RelatorioService {
 
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(produtos);
         JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
-        
+
         // Calcular estatísticas
         int totalItens = produtos.size();
         long itensEsgotados = produtos.stream().filter(p -> p.getQuantidade() == 0).count();
-        
+
         java.util.Map<String, Object> parameters = new java.util.HashMap<>();
         parameters.put("TOTAL_ITENS", totalItens);
         parameters.put("ITENS_ESGOTADOS", (int)itensEsgotados);
-        
+
         // Obter data/hora atual no fuso horário GMT-3 (America/Sao_Paulo)
         java.time.ZoneId saoPauloZone = java.time.ZoneId.of("America/Sao_Paulo");
         java.time.ZonedDateTime agora = java.time.ZonedDateTime.now(saoPauloZone);
         parameters.put("DATA_EMISSAO", java.util.Date.from(agora.toInstant()));
-        
+
         // Configurar timezone do relatório
         parameters.put("REPORT_TIME_ZONE", java.util.TimeZone.getTimeZone(saoPauloZone));
-        
+
         parameters.put("USUARIO_EMISSOR", org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName());
-        
+
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -50,26 +50,26 @@ public class RelatorioService {
 
         return new ByteArrayInputStream(out.toByteArray());
     }
-    
+
     public ByteArrayInputStream gerarRelatorioMovimentacaoPdf(List<MovimentacaoEstoque> movimentacoes) throws JRException {
         InputStream inputStream = getClass().getResourceAsStream("/relatorios/relatorio_movimentacao_estoque.jrxml");
 
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(movimentacoes);
         JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
-        
+
         java.util.Map<String, Object> parameters = new java.util.HashMap<>();
         parameters.put("TOTAL_MOVIMENTACOES", movimentacoes.size());
-        
+
         // Obter data/hora atual no fuso horário GMT-3 (America/Sao_Paulo)
         java.time.ZoneId saoPauloZone = java.time.ZoneId.of("America/Sao_Paulo");
         java.time.ZonedDateTime agora = java.time.ZonedDateTime.now(saoPauloZone);
         parameters.put("DATA_EMISSAO", java.util.Date.from(agora.toInstant()));
-        
+
         // Configurar timezone do relatório
         parameters.put("REPORT_TIME_ZONE", java.util.TimeZone.getTimeZone(saoPauloZone));
-        
+
         parameters.put("USUARIO_EMISSOR", org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName());
-        
+
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -139,27 +139,27 @@ public class RelatorioService {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         for (Produto produto : produtos) {
             Row row = sheet.createRow(rowNum++);
-            
+
             Cell cell0 = row.createCell(0);
             cell0.setCellValue(produto.getId());
             cell0.setCellStyle(centerStyle);
-            
+
             Cell cell1 = row.createCell(1);
             cell1.setCellValue(produto.getTipo());
             cell1.setCellStyle(dataStyle);
-            
+
             Cell cell2 = row.createCell(2);
             cell2.setCellValue(produto.getNome());
             cell2.setCellStyle(dataStyle);
-            
+
             Cell cell3 = row.createCell(3);
             cell3.setCellValue(produto.getQuantidade());
             cell3.setCellStyle(centerStyle);
-            
+
             Cell cell4 = row.createCell(4);
             cell4.setCellValue(produto.getUnidade() != null ? produto.getUnidade().getNome() : "");
             cell4.setCellStyle(dataStyle);
-            
+
             Cell cell5 = row.createCell(5);
             if (produto.getDataDeVencimento() != null) {
                 cell5.setCellValue(produto.getDataDeVencimento().format(dateFormatter));
@@ -237,31 +237,31 @@ public class RelatorioService {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         for (MovimentacaoEstoque mov : movimentacoes) {
             Row row = sheet.createRow(rowNum++);
-            
+
             Cell cell0 = row.createCell(0);
             cell0.setCellValue(mov.getId());
             cell0.setCellStyle(centerStyle);
-            
+
             Cell cell1 = row.createCell(1);
             cell1.setCellValue(mov.getProduto() != null ? mov.getProduto().getNome() : "");
             cell1.setCellStyle(dataStyle);
-            
+
             Cell cell2 = row.createCell(2);
             cell2.setCellValue(mov.getTipo() != null ? mov.getTipo().toString() : "");
             cell2.setCellStyle(dataStyle);
-            
+
             Cell cell3 = row.createCell(3);
             cell3.setCellValue(mov.getQuantidadeMovimentada());
             cell3.setCellStyle(centerStyle);
-            
+
             Cell cell4 = row.createCell(4);
             cell4.setCellValue(mov.getQuantidadeAnterior());
             cell4.setCellStyle(centerStyle);
-            
+
             Cell cell5 = row.createCell(5);
             cell5.setCellValue(mov.getQuantidadePosterior());
             cell5.setCellStyle(centerStyle);
-            
+
             Cell cell6 = row.createCell(6);
             if (mov.getDataMovimentacao() != null) {
                 cell6.setCellValue(mov.getDataMovimentacao().format(dateTimeFormatter));
@@ -353,6 +353,126 @@ public class RelatorioService {
         style.setBorderRight(BorderStyle.THIN);
         style.setAlignment(HorizontalAlignment.CENTER);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
+        return style;
+    }
+
+    public ByteArrayInputStream gerarRelatorioVencimentoPdf(List<Produto> produtos, Integer dias) throws JRException {
+        InputStream inputStream = getClass().getResourceAsStream("/relatorios/relatorio_vencimento.jrxml");
+
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(produtos);
+        JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+
+        java.time.ZoneId saoPauloZone = java.time.ZoneId.of("America/Sao_Paulo");
+        java.time.ZonedDateTime agora = java.time.ZonedDateTime.now(saoPauloZone);
+
+        java.util.Map<String, Object> parameters = new java.util.HashMap<>();
+        parameters.put("DIAS_PERIODO", dias);
+        parameters.put("TOTAL_PRODUTOS", produtos.size());
+        parameters.put("DATA_EMISSAO", java.util.Date.from(agora.toInstant()));
+        parameters.put("REPORT_TIME_ZONE", java.util.TimeZone.getTimeZone(saoPauloZone));
+        parameters.put("USUARIO_EMISSOR", org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName());
+
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    public ByteArrayInputStream gerarRelatorioVencimentoExcel(List<Produto> produtos, Integer dias) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Produtos Próximos ao Vencimento");
+
+        // Estilos
+        CellStyle headerStyle = createHeaderStyle(workbook);
+        CellStyle dataStyle = createDataStyle(workbook);
+        CellStyle dateStyle = createDateStyle(workbook);
+        CellStyle alertStyle = createAlertStyle(workbook);
+
+        // Título
+        Row titleRow = sheet.createRow(0);
+        Cell titleCell = titleRow.createCell(0);
+        titleCell.setCellValue("Relatório de Produtos Próximos ao Vencimento - " + dias + " dias");
+        titleCell.setCellStyle(headerStyle);
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
+
+        // Data de emissão
+        Row dateRow = sheet.createRow(1);
+        Cell dateCell = dateRow.createCell(0);
+        dateCell.setCellValue("Data de Emissão: " + java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 5));
+
+        // Linha em branco
+        sheet.createRow(2);
+
+        // Cabeçalho da tabela
+        Row headerRow = sheet.createRow(3);
+        String[] columns = {"Nome", "Tipo", "Quantidade", "Unidade", "Data de Vencimento", "Dias Restantes"};
+        for (int i = 0; i < columns.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(columns[i]);
+            cell.setCellStyle(headerStyle);
+        }
+
+        // Dados
+        int rowNum = 4;
+        java.time.LocalDate hoje = java.time.LocalDate.now();
+        for (Produto produto : produtos) {
+            Row row = sheet.createRow(rowNum++);
+            
+            long diasRestantes = java.time.temporal.ChronoUnit.DAYS.between(hoje, produto.getDataDeVencimento());
+            CellStyle rowStyle = diasRestantes <= 7 ? alertStyle : dataStyle;
+            
+            Cell cell0 = row.createCell(0);
+            cell0.setCellValue(produto.getNome());
+            cell0.setCellStyle(rowStyle);
+            
+            Cell cell1 = row.createCell(1);
+            cell1.setCellValue(produto.getTipo());
+            cell1.setCellStyle(rowStyle);
+            
+            Cell cell2 = row.createCell(2);
+            cell2.setCellValue(produto.getQuantidade());
+            cell2.setCellStyle(rowStyle);
+            
+            Cell cell3 = row.createCell(3);
+            cell3.setCellValue(produto.getUnidade().getNome());
+            cell3.setCellStyle(rowStyle);
+            
+            Cell cell4 = row.createCell(4);
+            cell4.setCellValue(produto.getDataDeVencimento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            cell4.setCellStyle(diasRestantes <= 7 ? alertStyle : dateStyle);
+            
+            Cell cell5 = row.createCell(5);
+            cell5.setCellValue(diasRestantes + " dias");
+            cell5.setCellStyle(rowStyle);
+        }
+
+        // Ajustar largura das colunas
+        for (int i = 0; i < columns.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        workbook.write(out);
+        workbook.close();
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    private CellStyle createAlertStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(true);
+        font.setColor(IndexedColors.RED.getIndex());
+        style.setFont(font);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         return style;
     }
 }

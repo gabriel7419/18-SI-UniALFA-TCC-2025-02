@@ -3,6 +3,8 @@ package edu.unialfa.alberguepro.service;
 import edu.unialfa.alberguepro.model.Vaga;
 import edu.unialfa.alberguepro.repository.VagaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,11 +50,23 @@ public class VagaService {
         return repository.findAll();
     }
 
+    public Page<Vaga> listarTodosPaginado(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
     public Vaga buscarPorId(Long id) {
         return repository.findById(id).orElse(null);
     }
 
     public void deletarPorId(Long id) {
         repository.deleteById(id);
+    }
+
+    public List<Vaga> buscarPorNomeAcolhido(String nome) {
+        return repository.findByAcolhidoNomeContainingIgnoreCase(nome);
+    }
+
+    public Page<Vaga> buscarPorNomeAcolhidoPaginado(String nome, Pageable pageable) {
+        return repository.findByAcolhidoNomeContainingIgnoreCase(nome, pageable);
     }
 }

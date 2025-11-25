@@ -28,18 +28,58 @@ public class UsuarioService {
     private PasswordEncoder passwordEncoder;
 
     public void salvar(Usuario usuario) {
-        // validacao se o usuario já existe
+        // Verificar se é uma edição
         if (usuario.getId() != null) {
+            Usuario usuarioExistente = usuarioRepository.findById(usuario.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+            
+            // Obter o usuário logado
+            String usernameLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+            boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                    .stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+            boolean isMaster = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                    .stream().anyMatch(a -> a.getAuthority().equals("ROLE_MASTER"));
+            boolean isSelf = usuarioExistente.getUsername().equals(usernameLogado);
+            
+            // Impedir que um admin edite outro admin ou master (exceto se for ele mesmo)
+            if (isAdmin && !isMaster && !isSelf && 
+                ("ADMIN".equals(usuarioExistente.getRole()) || "MASTER".equals(usuarioExistente.getRole()))) {
+                throw new IllegalArgumentException("Não é permitido editar outro administrador ou master.");
+            }
+            
+            // APENAS MASTER pode promover alguém para MASTER
+            if ("MASTER".equals(usuario.getRole()) && !"MASTER".equals(usuarioExistente.getRole())) {
+                if (!isMaster) {
+                    throw new IllegalArgumentException("Apenas um Master pode promover usuários para Master.");
+                }
+            }
+            
+            // Impedir que alguém edite um Master (exceto outro Master ou ele mesmo)
+            if ("MASTER".equals(usuarioExistente.getRole()) && !isMaster && !isSelf) {
+                throw new IllegalArgumentException("Apenas um Master pode editar outro Master.");
+            }
+            
             // se uma nova senha foi fornecida (não está em branco), criptografa e atualiza
             if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {
                 usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
             } else {
-                // se não, busca a senha atual no banco e a mantém
-                usuarioRepository.findById(usuario.getId()).ifPresent(usuarioExistente -> {
-                    usuario.setPassword(usuarioExistente.getPassword());
-                });
+                // se não, mantém a senha atual
+                usuario.setPassword(usuarioExistente.getPassword());
             }
+            
+            // Manter outros campos que não devem ser alterados
+            usuario.setDataCriacao(usuarioExistente.getDataCriacao());
+            usuario.setFailedLoginAttempts(usuarioExistente.getFailedLoginAttempts());
+            usuario.setAccountLockedUntil(usuarioExistente.getAccountLockedUntil());
         } else {
+            // Validação para criação de novo usuário Master
+            boolean isMaster = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                    .stream().anyMatch(a -> a.getAuthority().equals("ROLE_MASTER"));
+            
+            if ("MASTER".equals(usuario.getRole()) && !isMaster) {
+                throw new IllegalArgumentException("Apenas um Master pode criar outro Master.");
+            }
+            
             // Se é um usuário novo, valida e criptografa a senha
             if (usuario.getPassword() == null || usuario.getPassword().length() < 8) {
                 throw new IllegalArgumentException("A senha deve ter no mínimo 8 caracteres.");
@@ -64,12 +104,23 @@ public class UsuarioService {
 
     public void excluir(Long id) {
         String usernameLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean isMaster = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                .stream().anyMatch(a -> a.getAuthority().equals("ROLE_MASTER"));
 
         Usuario usuarioParaExcluir = usuarioRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Usuário não encontrado: " + id));
 
         if (usuarioParaExcluir.getUsername().equals(usernameLogado)) {
             throw new IllegalStateException("Não é possível excluir o usuário logado.");
+        }
+
+        // Impedir exclusão de usuários administradores e masters
+        if ("ADMIN".equals(usuarioParaExcluir.getRole())) {
+            throw new IllegalStateException("Não é possível excluir usuários administradores.");
+        }
+        
+        if ("MASTER".equals(usuarioParaExcluir.getRole())) {
+            throw new IllegalStateException("Não é possível excluir usuários master.");
         }
 
         usuarioRepository.deleteById(id);
@@ -103,6 +154,10 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
+    public org.springframework.data.domain.Page<UsuarioDTO> findAllDTOPaginado(org.springframework.data.domain.Pageable pageable) {
+        return usuarioRepository.findAll(pageable).map(UsuarioDTO::new);
+    }
+
     public Optional<UsuarioDTO> findByIdDTO(Long id) {
         return usuarioRepository.findById(id).map(UsuarioDTO::new);
     }
@@ -114,15 +169,23 @@ public class UsuarioService {
         String usernameLogado = SecurityContextHolder.getContext().getAuthentication().getName();
         boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
                 .stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        boolean isMaster = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                .stream().anyMatch(a -> a.getAuthority().equals("ROLE_MASTER"));
         boolean isSelf = usuario.getUsername().equals(usernameLogado);
         
-        // Impedir que um admin altere a senha de outro admin
-        if (isAdmin && !isSelf && "ADMIN".equals(usuario.getRole())) {
-            throw new IllegalArgumentException("Não é permitido alterar a senha de outro administrador.");
+        // Impedir que um admin altere a senha de outro admin ou master
+        if (isAdmin && !isMaster && !isSelf && 
+            ("ADMIN".equals(usuario.getRole()) || "MASTER".equals(usuario.getRole()))) {
+            throw new IllegalArgumentException("Não é permitido alterar a senha de outro administrador ou master.");
+        }
+        
+        // Impedir que alguém (exceto Master) altere a senha de um Master
+        if ("MASTER".equals(usuario.getRole()) && !isMaster && !isSelf) {
+            throw new IllegalArgumentException("Apenas um Master pode alterar a senha de outro Master.");
         }
 
-        // Exige senha atual se o próprio usuário estiver alterando ou se não for admin
-        boolean mustValidateCurrent = isSelf || !isAdmin;
+        // Exige senha atual se o próprio usuário estiver alterando ou se não for master
+        boolean mustValidateCurrent = isSelf || (!isMaster);
         if (mustValidateCurrent) {
             if (senhaAtual == null || !passwordEncoder.matches(senhaAtual, usuario.getPassword())) {
                 throw new IllegalArgumentException("Senha atual incorreta.");

@@ -3,7 +3,7 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
 <head>
-    <title>Consultar Quartos</title>
+    <title>Lista de Quartos</title>
 </head>
 <body>
 <section>
@@ -25,12 +25,7 @@
         </button>
     </div>
 
-    <div class="mb-3">
-        <a th:href="@{/quarto/novo}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Novo Quarto
-        </a>
-    </div>
-
+    <!-- Filtros Colapsáveis -->
     <div class="card card-primary collapsed-card mb-3">
         <div class="card-header card-header-blue">
             <h3 class="card-title">Filtros</h3>
@@ -43,19 +38,41 @@
         <div class="card-body" style="display: none;">
             <form th:action="@{/quarto/pesquisar}" method="get">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="filtro">Número do Quarto:</label>
-                            <input type="text" id="filtro" name="filtro" class="form-control" 
-                                   placeholder="Buscar os quartos por número..." th:value="${filtro}">
+                            <input type="text" id="filtro" name="filtro" class="form-control"
+                                   placeholder="Buscar por número..." th:value="${filtro}">
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="capacidadeMin">Capacidade Mín.:</label>
+                            <input type="number" id="capacidadeMin" name="capacidadeMin" class="form-control"
+                                   placeholder="Ex: 2" th:value="${capacidadeMin}" min="1">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="disponibilidade">Disponibilidade:</label>
+                            <select id="disponibilidade" name="disponibilidade" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="disponivel" th:selected="${disponibilidade == 'disponivel'}">Com vagas</option>
+                                <option value="ocupado" th:selected="${disponibilidade == 'ocupado'}">Lotado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label>&nbsp;</label>
-                            <button type="submit" class="btn btn-primary btn-block">
-                                <i class="fas fa-search"></i> Filtrar
-                            </button>
+                            <div class="btn-group btn-block">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i> Filtrar
+                                </button>
+                                <a th:href="@{/quarto/listar}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Limpar
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -63,16 +80,23 @@
         </div>
     </div>
 
+    <!-- Tabela de Quartos -->
     <div class="card">
         <div class="card-header card-header-blue">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <h3 class="card-title mb-0">Lista de Quartos</h3>
-                <div class="card-tools">
-                    <a th:href="@{/quarto/relatorio/pdf(filtro=${filtro})}" class="btn btn-danger" target="_blank">
-                        <i class="fas fa-file-pdf"></i> Gerar PDF
+                <div class="card-tools mt-2 mt-md-0">
+                    <!-- Botão de Ação Principal -->
+                    <a th:href="@{/quarto/novo}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Novo Quarto
                     </a>
-                    <a th:href="@{/quarto/relatorio/excel(filtro=${filtro})}" class="btn btn-success">
-                        <i class="fas fa-file-excel"></i> Gerar Excel
+                </div>
+            </div>
+                    <a th:href="@{/quarto/relatorio/ocupacao-pdf}" class="btn btn-danger" target="_blank">
+                        <i class="fas fa-file-pdf"></i> Relatório de Ocupação PDF
+                    </a>
+                    <a th:href="@{/quarto/relatorio/ocupacao-excel}" class="btn btn-success">
+                        <i class="fas fa-file-excel"></i> Relatório de Ocupação Excel
                     </a>
                 </div>
             </div>
@@ -89,8 +113,8 @@
                 <table class="table table-bordered" th:if="${not #lists.isEmpty(quartos)}">
                 <thead class="thead-blue">
                 <tr>
-                    <th>ID</th>
-                    <th>Número do Quarto</th>
+                    <th class="sortable" data-sort="id">ID</th>
+                    <th class="sortable" data-sort="numeroQuarto">Número do Quarto</th>
                     <th>Ocupação (Ocupados/Total)</th>
                     <th>Ações</th>
                 </tr>
@@ -110,9 +134,12 @@
                     </td>
 
                     <td>
-                        <a th:href="@{/quarto/remover/{id}(id=${quarto.id})}" 
-                           class="btn btn-danger btn-sm"
-                           onclick="return confirm('Tem certeza que deseja remover este quarto e todos os seus leitos?');">
+                        <a th:href="@{/quarto/remover/{id}(id=${quarto.id})}"
+                           class="btn btn-danger btn-sm btn-confirm-delete"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           data-confirm-message="Tem certeza que deseja remover o &lt;strong&gt;Quarto ${quarto.numeroQuarto}&lt;/strong&gt; e todos os seus leitos?"
+                           title="Excluir quarto e leitos">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>
@@ -120,19 +147,25 @@
                 </tbody>
             </table>
             </div>
+            
+            <!-- Paginação -->
+            <div th:replace="fragments/pagination :: pagination"></div>
         </div>
     </div>
+
+    <!-- Modal de Confirmação Reutilizável -->
+    <div th:replace="fragments/confirmation-modal :: confirmationModal"></div>
 </section>
 <script>
     // Mantém os filtros abertos se algum filtro estiver ativo
     $(document).ready(function() {
         var temFiltroAtivo = false;
-        
+
         // Verifica se há filtros ativos
         if ($('#filtro').val()) {
             temFiltroAtivo = true;
         }
-        
+
         // Se houver filtro ativo, expande o card de filtros
         if (temFiltroAtivo) {
             $('.collapsed-card').removeClass('collapsed-card');
@@ -141,5 +174,7 @@
         }
     });
 </script>
+<!-- Script do Modal de Confirmação -->
+<script th:replace="fragments/confirmation-modal :: confirmationScript"></script>
 </body>
 </html>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+              name="relatorio_ocupacao" 
+              pageWidth="595" 
+              pageHeight="842" 
+              columnWidth="555" 
+              leftMargin="20" 
+              rightMargin="20" 
+              topMargin="20" 
+              bottomMargin="20" 
+              uuid="14033cf3-6e8f-454f-b991-f324780ae5b1">
+    
+    <parameter name="TOTAL_LEITOS" class="java.lang.Long"/>
+    <parameter name="TOTAL_OCUPADOS" class="java.lang.Long"/>
+    <parameter name="TOTAL_LIVRES" class="java.lang.Long"/>
+    <parameter name="TAXA_OCUPACAO" class="java.lang.Double"/>
+    
+    <field name="numeroQuarto" class="java.lang.String"/>
+    <field name="totalLeitos" class="java.lang.Integer"/>
+    <field name="leitosOcupados" class="java.lang.Integer"/>
+    <field name="leitosLivres" class="java.lang.Integer"/>
+    <field name="taxaOcupacao" class="java.lang.Double"/>
+    
+    <title>
+        <band height="120">
+            <staticText>
+                <reportElement x="0" y="10" width="555" height="30" uuid="465ef968-cd7b-4524-985b-66331ed806d9"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="18" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Relatório de Ocupação de Quartos]]></text>
+            </staticText>
+            <textField pattern="dd/MM/yyyy HH:mm">
+                <reportElement x="0" y="45" width="555" height="20" uuid="4f660a00-b932-4f4a-94b4-f5086988d145"/>
+                <textElement textAlignment="Center">
+                    <font size="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Gerado em: " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
+            </textField>
+            
+            <!-- Resumo Geral -->
+            <rectangle>
+                <reportElement x="0" y="75" width="555" height="40" backcolor="#F0F0F0" uuid="7419f315-683a-4f81-9a62-ab80735629d9"/>
+            </rectangle>
+            <staticText>
+                <reportElement x="10" y="80" width="150" height="15" uuid="50674e6c-b0c2-4cb1-88f3-f48f67419897"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Total de Leitos:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="160" y="80" width="80" height="15" uuid="de86a326-5cf9-4bdb-9611-cbca9711815c"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL_LEITOS}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="10" y="95" width="150" height="15" uuid="cd6a4da9-7c90-41c8-82b8-fa309957996f"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Leitos Ocupados:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="160" y="95" width="80" height="15" uuid="41419d4a-0869-4dfc-ab15-d2cc1c89eae2"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL_OCUPADOS}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="295" y="80" width="150" height="15" uuid="8dc4fc07-d681-467c-8f15-ce31041c6cab"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Leitos Livres:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="445" y="80" width="100" height="15" uuid="b4e58751-6fc1-48a1-b17a-7812f6516219"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL_LIVRES}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="295" y="95" width="150" height="15" uuid="4240e0fe-ae3e-4868-9d32-3fa2938625ef"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Taxa de Ocupação:]]></text>
+            </staticText>
+            <textField pattern="#0.0'%'">
+                <reportElement x="445" y="95" width="100" height="15" uuid="e804daef-b7de-44f6-a2e0-cf5ee9017323"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{TAXA_OCUPACAO}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    
+    <columnHeader>
+        <band height="30">
+            <staticText>
+                <reportElement mode="Opaque" x="0" y="0" width="120" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="9f13214a-479d-45f0-a6b2-5b0d3f6b1643"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Quarto]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="120" y="0" width="110" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="958243dd-1170-4fa6-8739-2d3b744cc6ca"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total Leitos]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="230" y="0" width="110" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="94bceabf-27d8-4e60-82b5-66f5df52c9ce"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Ocupados]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="340" y="0" width="110" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="24025d89-8c9a-4309-8882-9b024b0d4eb1"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Livres]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="450" y="0" width="105" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="c0ae8584-e9a2-4552-93a5-b7b197684d67"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Taxa (%)]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    
+    <detail>
+        <band height="25">
+            <textField>
+                <reportElement x="0" y="0" width="120" height="25" uuid="0ad5a2fe-9225-4f1b-ad1d-4bef3faccd14"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{numeroQuarto}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="120" y="0" width="110" height="25" uuid="2e087501-dcb5-4eb3-8fa6-0c1da1555a60"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{totalLeitos}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="230" y="0" width="110" height="25" uuid="ec098ad1-2f40-4643-bbb6-90cea8b359ee"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{leitosOcupados}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="340" y="0" width="110" height="25" uuid="1d571cd9-447b-486a-a867-72ad327b6667"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{leitosLivres}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#0.0'%'">
+                <reportElement x="450" y="0" width="105" height="25" uuid="e0f70f16-d75c-4c38-bd5f-fedee8a0a40b"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{taxaOcupacao}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    
+    <pageFooter>
+        <band height="30">
+            <textField>
+                <reportElement x="0" y="10" width="270" height="15" uuid="92680015-9702-4f6d-94df-aaa795969d06"/>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["AlberguePro - Sistema de Gestão de Albergue"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="450" y="10" width="80" height="15" uuid="881c8026-f81b-4fec-bd83-b407cea1039a"/>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

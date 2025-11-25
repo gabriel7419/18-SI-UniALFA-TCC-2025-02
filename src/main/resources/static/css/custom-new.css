@@ -492,3 +492,326 @@ a:hover {
     border: 0;
 }
 
+/* ========================================
+   ⚠️ ALERTAS DE VENCIMENTO DE ESTOQUE
+   ======================================== */
+
+/* Produto próximo ao vencimento (< 3 dias) - Amarelo */
+.table-warning-expiration {
+    background-color: #FFF9E6 !important;
+    border-left: 4px solid #FFC107 !important;
+}
+
+.table-warning-expiration:hover {
+    background-color: #FFF3CD !important;
+}
+
+.table-warning-expiration td {
+    color: #856404 !important;
+    font-weight: 500 !important;
+}
+
+/* Produto vencido - Vermelho */
+.table-danger-expiration {
+    background-color: #FFE6E6 !important;
+    border-left: 4px solid #DC3545 !important;
+}
+
+.table-danger-expiration:hover {
+    background-color: #F8D7DA !important;
+}
+
+.table-danger-expiration td {
+    color: #721C24 !important;
+    font-weight: 500 !important;
+}
+
+/* Estoque Esgotado */
+.table-warning td {
+    color: #856404 !important;
+}
+
+/* Modo Escuro */
+@media (prefers-color-scheme: dark) {
+    /* Produto próximo ao vencimento (< 3 dias) - Amarelo escuro */
+    .table-warning-expiration {
+        background-color: #3D3420 !important;
+        border-left: 4px solid #FFC107 !important;
+    }
+    
+    .table-warning-expiration:hover {
+        background-color: #4D4228 !important;
+    }
+    
+    .table-warning-expiration td {
+        color: #FFD966 !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Produto vencido - Vermelho escuro */
+    .table-danger-expiration {
+        background-color: #3D2020 !important;
+        border-left: 4px solid #DC3545 !important;
+    }
+    
+    .table-danger-expiration:hover {
+        background-color: #4D2828 !important;
+    }
+    
+    .table-danger-expiration td {
+        color: #FF9999 !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Estoque Esgotado no modo escuro */
+    .table-warning td {
+        color: #FFD966 !important;
+    }
+}
+
+/* Suporte para classe dark-mode do AdminLTE */
+.dark-mode .table-warning-expiration {
+    background-color: #3D3420 !important;
+    border-left: 4px solid #FFC107 !important;
+}
+
+.dark-mode .table-warning-expiration:hover {
+    background-color: #4D4228 !important;
+}
+
+.dark-mode .table-warning-expiration td {
+    color: #FFD966 !important;
+    font-weight: 500 !important;
+}
+
+.dark-mode .table-danger-expiration {
+    background-color: #3D2020 !important;
+    border-left: 4px solid #DC3545 !important;
+}
+
+.dark-mode .table-danger-expiration:hover {
+    background-color: #4D2828 !important;
+}
+
+.dark-mode .table-danger-expiration td {
+    color: #FF9999 !important;
+    font-weight: 500 !important;
+}
+
+/* Estoque Esgotado no modo escuro */
+.dark-mode .table-warning td {
+    color: #FFD966 !important;
+}
+
+/* ========================================
+   📋 LEGENDA DE ALERTAS
+   ======================================== */
+
+/* Legenda no modo claro */
+.alert-legend {
+    background-color: #D1ECF1 !important;
+    border-color: #17A2B8 !important;
+    color: #0C5460 !important;
+}
+
+.legend-item.legend-danger {
+    background-color: #FFE6E6 !important;
+    border-left: 4px solid #DC3545 !important;
+    color: #721C24 !important;
+}
+
+.legend-item.legend-warning {
+    background-color: #FFF9E6 !important;
+    border-left: 4px solid #FFC107 !important;
+    color: #856404 !important;
+}
+
+.legend-item.legend-stock-out {
+    background-color: #FFF3CD !important;
+    border-left: 4px solid #FFC107 !important;
+    color: #856404 !important;
+}
+
+/* Legenda no modo escuro */
+@media (prefers-color-scheme: dark) {
+    .alert-legend {
+        background-color: #1a3d47 !important;
+        border-color: #17A2B8 !important;
+        color: #7DD3DE !important;
+    }
+    
+    .legend-item.legend-danger {
+        background-color: #3D2020 !important;
+        border-left: 4px solid #DC3545 !important;
+        color: #FF9999 !important;
+    }
+    
+    .legend-item.legend-warning {
+        background-color: #3D3420 !important;
+        border-left: 4px solid #FFC107 !important;
+        color: #FFD966 !important;
+    }
+    
+    .legend-item.legend-stock-out {
+        background-color: #3D3420 !important;
+        border-left: 4px solid #FFC107 !important;
+        color: #FFD966 !important;
+    }
+}
+
+.dark-mode .alert-legend {
+    background-color: #1a3d47 !important;
+    border-color: #17A2B8 !important;
+    color: #7DD3DE !important;
+}
+
+.dark-mode .legend-item.legend-danger {
+    background-color: #3D2020 !important;
+    border-left: 4px solid #DC3545 !important;
+    color: #FF9999 !important;
+}
+
+.dark-mode .legend-item.legend-warning {
+    background-color: #3D3420 !important;
+    border-left: 4px solid #FFC107 !important;
+    color: #FFD966 !important;
+}
+
+.dark-mode .legend-item.legend-stock-out {
+    background-color: #3D3420 !important;
+    border-left: 4px solid #FFC107 !important;
+    color: #FFD966 !important;
+}
+
+/* ========================================
+   🔖 BADGES E ÍCONES DE ALERTA
+   ======================================== */
+
+/* Badges de alerta */
+.badge.bg-danger {
+    background-color: #DC3545 !important;
+    color: #FFFFFF !important;
+}
+
+.badge.bg-warning {
+    background-color: #FFC107 !important;
+    color: #000000 !important;
+}
+
+.badge.badge-info {
+    background-color: #17A2B8 !important;
+    color: #FFFFFF !important;
+}
+
+/* Ícones de alerta na tabela */
+.text-danger {
+    color: #DC3545 !important;
+}
+
+.text-warning {
+    color: #FFC107 !important;
+}
+
+/* Modo escuro - Badges */
+@media (prefers-color-scheme: dark) {
+    .badge.bg-danger {
+        background-color: #DC3545 !important;
+        color: #FFFFFF !important;
+    }
+    
+    .badge.bg-warning {
+        background-color: #FFC107 !important;
+        color: #000000 !important;
+        font-weight: 600 !important;
+    }
+    
+    .badge.badge-info {
+        background-color: #17A2B8 !important;
+        color: #FFFFFF !important;
+    }
+    
+    .text-danger {
+        color: #FF6B6B !important;
+    }
+    
+    .text-warning {
+        color: #FFD93D !important;
+    }
+}
+
+.dark-mode .badge.bg-danger {
+    background-color: #DC3545 !important;
+    color: #FFFFFF !important;
+}
+
+.dark-mode .badge.bg-warning {
+    background-color: #FFC107 !important;
+    color: #000000 !important;
+    font-weight: 600 !important;
+}
+
+.dark-mode .badge.badge-info {
+    background-color: #17A2B8 !important;
+    color: #FFFFFF !important;
+}
+
+.dark-mode .text-danger {
+    color: #FF6B6B !important;
+}
+
+.dark-mode .text-warning {
+    color: #FFD93D !important;
+}
+
+/* ========================================
+   🗑️ MODAL DE CONFIRMAÇÃO CUSTOMIZADO
+   ======================================== */
+
+/* Modal de confirmação */
+#confirmDeleteModal .modal-content {
+    border: none;
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+}
+
+#confirmDeleteModal .modal-header {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+#confirmDeleteModal .modal-footer {
+    border-top: 1px solid var(--gray-200);
+    padding: 1rem 1.25rem;
+}
+
+#confirmDeleteModal .modal-body {
+    padding: 2rem 1.5rem;
+}
+
+/* Animação suave para o modal */
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+}
+
+/* Modo Escuro para o Modal */
+@media (prefers-color-scheme: dark) {
+    #confirmDeleteModal .modal-content {
+        background-color: #2C3E50;
+        color: #FFFFFF;
+    }
+    
+    #confirmDeleteModal .modal-footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+.dark-mode #confirmDeleteModal .modal-content {
+    background-color: #2C3E50;
+    color: #FFFFFF;
+}
+
+.dark-mode #confirmDeleteModal .modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+

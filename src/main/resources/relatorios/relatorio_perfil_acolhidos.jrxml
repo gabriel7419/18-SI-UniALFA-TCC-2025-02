@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+              name="relatorio_perfil_acolhidos" 
+              pageWidth="595" 
+              pageHeight="842" 
+              columnWidth="555" 
+              leftMargin="20" 
+              rightMargin="20" 
+              topMargin="20" 
+              bottomMargin="20" 
+              uuid="927785b3-30fb-4d59-99a4-905273a5eab4">
+    
+    <parameter name="TOTAL_ACOLHIDOS" class="java.lang.Long"/>
+    <parameter name="ACOLHIDOS_ATIVOS" class="java.lang.Long"/>
+    <parameter name="ACOLHIDOS_INATIVOS" class="java.lang.Long"/>
+    <parameter name="MEDIA_IDADE" class="java.lang.Double"/>
+    <parameter name="COM_RG" class="java.lang.Long"/>
+    <parameter name="COM_CPF" class="java.lang.Long"/>
+    <parameter name="COM_CERTIDAO" class="java.lang.Long"/>
+    <parameter name="SEM_DOCUMENTOS" class="java.lang.Long"/>
+    <parameter name="MASCULINO" class="java.lang.Long"/>
+    <parameter name="FEMININO" class="java.lang.Long"/>
+    <parameter name="PRIMEIRA_VEZ" class="java.lang.Long"/>
+    <parameter name="RETORNOS" class="java.lang.Long"/>
+    
+    <field name="categoria" class="java.lang.String"/>
+    <field name="descricao" class="java.lang.String"/>
+    <field name="quantidade" class="java.lang.Long"/>
+    <field name="percentual" class="java.lang.Double"/>
+    
+    <group name="categoriaGroup">
+        <groupExpression><![CDATA[$F{categoria}]]></groupExpression>
+        <groupHeader>
+            <band height="40">
+                <textField>
+                    <reportElement x="0" y="10" width="555" height="25" uuid="674e8022-b161-4e82-bf9a-747c04cf912c"/>
+                    <box>
+                        <pen lineWidth="0.5"/>
+                        <topPen lineWidth="1.5" lineColor="#007BFF"/>
+                        <bottomPen lineWidth="1.5" lineColor="#007BFF"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="12" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression>
+                </textField>
+            </band>
+        </groupHeader>
+    </group>
+    
+    <title>
+        <band height="200">
+            <staticText>
+                <reportElement x="0" y="10" width="555" height="35" uuid="dbae096b-aade-488a-a679-e2d0fdb76b29"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="20" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Relatório Estratégico]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="45" width="555" height="25" uuid="47ff6638-f696-4fc8-b29b-d79697fd490c"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="14" isBold="true" isItalic="true"/>
+                </textElement>
+                <text><![CDATA[Perfil Demográfico dos Acolhidos]]></text>
+            </staticText>
+            <textField pattern="dd/MM/yyyy HH:mm">
+                <reportElement x="0" y="75" width="555" height="20" uuid="09760e48-0c03-4440-8e42-0da3f4b4120e"/>
+                <textElement textAlignment="Center">
+                    <font size="9" isItalic="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Gerado em: " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
+            </textField>
+            
+            <!-- RESUMO EXECUTIVO -->
+            <rectangle>
+                <reportElement x="0" y="105" width="555" height="90" backcolor="#E8F4F8" uuid="ed56bd62-19f7-425b-a765-81be5c7b63f5"/>
+                <graphicElement><pen lineWidth="1.5" lineColor="#007BFF"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="10" y="110" width="535" height="20" uuid="ad4f094a-8bc6-4d7e-9d56-0550345dab09"/>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[RESUMO EXECUTIVO]]></text>
+            </staticText>
+            
+            <!-- Linha 1 -->
+            <staticText>
+                <reportElement x="20" y="140" width="130" height="15" uuid="8c36f704-499f-4099-9625-fe9afc71b56d"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Total de Acolhidos:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="150" y="140" width="80" height="15" uuid="0f65df7f-7df9-4950-b1bc-c95e9db0f9a1"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL_ACOLHIDOS}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="300" y="140" width="130" height="15" uuid="f40c1e3a-c1b4-40be-97aa-6055153a0403"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Média de Idade:]]></text>
+            </staticText>
+            <textField pattern="#0.0' anos'">
+                <reportElement x="430" y="140" width="110" height="15" uuid="b9a302b9-1573-4509-ae8c-0595ea14615b"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{MEDIA_IDADE}]]></textFieldExpression>
+            </textField>
+            
+            <!-- Linha 2 -->
+            <staticText>
+                <reportElement x="20" y="160" width="130" height="15" uuid="e01e5f15-ff05-4162-a397-c967c1a0577c"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Acolhidos Ativos:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="150" y="160" width="80" height="15" uuid="1fb6d071-5fd7-4ccb-8499-c7918333b77e"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{ACOLHIDOS_ATIVOS}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="300" y="160" width="130" height="15" uuid="98e58a58-c1f5-404f-8c97-f418a874869d"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Acolhidos Inativos:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="430" y="160" width="110" height="15" uuid="a3d34c16-6b52-4c70-a8af-72dd67e4e339"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{ACOLHIDOS_INATIVOS}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    
+    <columnHeader>
+        <band height="30">
+            <staticText>
+                <reportElement mode="Opaque" x="0" y="0" width="250" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="21ce6626-7062-417c-8a56-c1fb511d0e1b"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Descrição]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="250" y="0" width="155" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="085c2ad5-5ec9-4d77-ac73-8b7a8ba563ee"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Quantidade]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="405" y="0" width="150" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="c3797d5f-c127-4e24-9dd8-a54df967e772"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Percentual]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    
+    <detail>
+        <band height="25">
+            <textField>
+                <reportElement x="0" y="0" width="250" height="25" uuid="089325c5-58c2-4ae7-885d-4bde77867761"/>
+                <box leftPadding="5"><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="250" y="0" width="155" height="25" uuid="8b289a76-00bf-4bfa-89f8-049f91ff7af8"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#0.0'%'">
+                <reportElement x="405" y="0" width="150" height="25" uuid="dcdf2408-832f-4e9b-ba30-865b4dd120f7"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{percentual}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    
+    <pageFooter>
+        <band height="30">
+            <textField>
+                <reportElement x="0" y="10" width="400" height="15" uuid="fdde5b89-70ee-401f-8842-7d836e10b1bf"/>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["AlberguePro - Relatório Estratégico de Perfil dos Acolhidos"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="450" y="10" width="80" height="15" uuid="5eb254c3-4afc-4083-ab25-c93d607fd996"/>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

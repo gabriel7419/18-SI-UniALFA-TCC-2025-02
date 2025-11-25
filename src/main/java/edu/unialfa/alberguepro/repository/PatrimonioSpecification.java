@@ -28,7 +28,7 @@ public class PatrimonioSpecification {
             if (localAtual == null || localAtual.isEmpty()) {
                 return criteriaBuilder.conjunction();
             }
-            return criteriaBuilder.like(criteriaBuilder.lower(root.get("local_atual")), "%" + localAtual.toLowerCase() + "%");
+            return criteriaBuilder.like(criteriaBuilder.lower(root.get("localAtual")), "%" + localAtual.toLowerCase() + "%");
         };
     }
 }

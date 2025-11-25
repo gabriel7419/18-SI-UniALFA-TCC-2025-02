@@ -1,5 +1,6 @@
 package edu.unialfa.alberguepro.service;
 
+import edu.unialfa.alberguepro.model.CadastroAcolhido;
 import edu.unialfa.alberguepro.repository.CadastroAcolhidoRepository;
 import edu.unialfa.alberguepro.dto.AcolhidoDTO;
 import net.sf.jasperreports.engine.*;
@@ -253,5 +254,145 @@ public class RelatorioAcolhidoService {
         style.setAlignment(HorizontalAlignment.CENTER);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
         return style;
+    }
+
+    public ByteArrayInputStream gerarRelatorioPermanenciaPdf(List<CadastroAcolhido> acolhidos, Integer dias) throws JRException {
+        InputStream inputStream = getClass().getResourceAsStream("/relatorios/relatorio_permanencia.jrxml");
+        if (inputStream == null) throw new RuntimeException("Arquivo JRXML não encontrado!");
+
+        List<AcolhidoDTO> acolhidosDTO = acolhidos.stream()
+                .map(AcolhidoDTO::new)
+                .collect(Collectors.toList());
+
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(acolhidosDTO);
+        JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+
+        java.time.ZoneId saoPauloZone = java.time.ZoneId.of("America/Sao_Paulo");
+        java.time.ZonedDateTime agora = java.time.ZonedDateTime.now(saoPauloZone);
+
+        java.util.Map<String, Object> parameters = new java.util.HashMap<>();
+        parameters.put("DIAS_PERIODO", dias);
+        parameters.put("TOTAL_ACOLHIDOS", acolhidos.size());
+        parameters.put("DATA_EMISSAO", java.util.Date.from(agora.toInstant()));
+        parameters.put("REPORT_TIME_ZONE", java.util.TimeZone.getTimeZone(saoPauloZone));
+        parameters.put("USUARIO_EMISSOR", org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName());
+
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    public ByteArrayInputStream gerarRelatorioPermanenciaExcel(List<CadastroAcolhido> acolhidos, Integer dias) throws IOException {
+        List<AcolhidoDTO> acolhidosDTO = acolhidos.stream()
+                .map(AcolhidoDTO::new)
+                .collect(Collectors.toList());
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Permanência Prolongada");
+
+        CellStyle headerStyle = createHeaderStyle(workbook);
+        CellStyle titleStyle = createTitleStyle(workbook);
+        CellStyle subtitleStyle = createSubtitleStyle(workbook);
+        CellStyle dataStyle = createDataStyle(workbook);
+        CellStyle centerStyle = createCenterStyle(workbook);
+        CellStyle dateStyle = createDateStyle(workbook);
+
+        int rowNum = 0;
+
+        Row titleRow = sheet.createRow(rowNum++);
+        Cell titleCell = titleRow.createCell(0);
+        titleCell.setCellValue("AlberguePro");
+        titleCell.setCellStyle(titleStyle);
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
+
+        Row subtitleRow = sheet.createRow(rowNum++);
+        Cell subtitleCell = subtitleRow.createCell(0);
+        subtitleCell.setCellValue("Relatório de Permanência Prolongada - Superior a " + dias + " dias");
+        subtitleCell.setCellStyle(subtitleStyle);
+        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 5));
+
+        rowNum++;
+        Row infoRow1 = sheet.createRow(rowNum++);
+        Cell infoCell1 = infoRow1.createCell(0);
+        java.time.ZoneId saoPauloZone = java.time.ZoneId.of("America/Sao_Paulo");
+        java.time.ZonedDateTime agora = java.time.ZonedDateTime.now(saoPauloZone);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        infoCell1.setCellValue("Data de Emissão: " + agora.format(formatter));
+        sheet.addMergedRegion(new CellRangeAddress(rowNum-1, rowNum-1, 0, 2));
+
+        Cell infoCell2 = infoRow1.createCell(3);
+        infoCell2.setCellValue("Usuário: " + org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName());
+        sheet.addMergedRegion(new CellRangeAddress(rowNum-1, rowNum-1, 3, 5));
+
+        Row infoRow2 = sheet.createRow(rowNum++);
+        Cell totalCell = infoRow2.createCell(0);
+        totalCell.setCellValue("Total de Acolhidos: " + acolhidos.size());
+        sheet.addMergedRegion(new CellRangeAddress(rowNum-1, rowNum-1, 0, 2));
+
+        rowNum++;
+
+        Row headerRow = sheet.createRow(rowNum++);
+        String[] headers = {"Nome", "CPF", "Data Ingresso", "Dias de Permanência", "Estado Saúde", "Medicamento Controlado"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+            cell.setCellStyle(headerStyle);
+        }
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        java.time.LocalDate hoje = java.time.LocalDate.now();
+        
+        for (AcolhidoDTO acolhido : acolhidosDTO) {
+            Row row = sheet.createRow(rowNum++);
+            
+            Cell cell0 = row.createCell(0);
+            cell0.setCellValue(acolhido.getNome());
+            cell0.setCellStyle(dataStyle);
+            
+            Cell cell1 = row.createCell(1);
+            cell1.setCellValue(acolhido.getCpf());
+            cell1.setCellStyle(dataStyle);
+            
+            Cell cell2 = row.createCell(2);
+            if (acolhido.getDataIngresso() != null) {
+                cell2.setCellValue(acolhido.getDataIngresso().format(dateFormatter));
+            }
+            cell2.setCellStyle(dateStyle);
+            
+            Cell cell3 = row.createCell(3);
+            if (acolhido.getDataIngresso() != null) {
+                long diasPermanencia = java.time.temporal.ChronoUnit.DAYS.between(acolhido.getDataIngresso(), hoje);
+                cell3.setCellValue(diasPermanencia + " dias");
+            }
+            cell3.setCellStyle(centerStyle);
+            
+            Cell cell4 = row.createCell(4);
+            if (acolhido.getEstadoSaude() != null) {
+                cell4.setCellValue(acolhido.getEstadoSaude());
+            }
+            cell4.setCellStyle(centerStyle);
+            
+            Cell cell5 = row.createCell(5);
+            if (acolhido.getMedicamentoControlado() != null) {
+                cell5.setCellValue(acolhido.getMedicamentoControlado());
+            }
+            cell5.setCellStyle(centerStyle);
+        }
+
+        sheet.setColumnWidth(0, 8000);
+        sheet.setColumnWidth(1, 4000);
+        sheet.setColumnWidth(2, 3500);
+        sheet.setColumnWidth(3, 5000);
+        sheet.setColumnWidth(4, 3500);
+        sheet.setColumnWidth(5, 5500);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        workbook.write(out);
+        workbook.close();
+
+        return new ByteArrayInputStream(out.toByteArray());
     }
 }

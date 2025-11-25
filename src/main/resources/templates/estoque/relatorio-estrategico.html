@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório Estratégico de Estoque</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .summary {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .summary h2 {
+            margin-top: 0;
+            color: #007bff;
+            font-size: 18px;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .summary-item {
+            padding: 10px;
+            background-color: white;
+            border-left: 4px solid #007bff;
+        }
+        .summary-item strong {
+            display: block;
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        .summary-item span {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        h2 {
+            color: #007bff;
+            font-size: 18px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e9ecef;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+        }
+        .alert-critico {
+            background-color: #f8d7da;
+            color: #721c24;
+            font-weight: bold;
+        }
+        .alert-atencao {
+            background-color: #fff3cd;
+            color: #856404;
+            font-weight: bold;
+        }
+        .alert-ok {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .section-title {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Relatório Estratégico de Estoque</h1>
+    <div class="subtitle">
+        Gerado em: <span th:text="${#temporals.format(dataGeracao, 'dd/MM/yyyy HH:mm')}"></span>
+    </div>
+
+    <div class="summary">
+        <h2>Resumo Geral</h2>
+        <div class="summary-grid">
+            <div class="summary-item">
+                <strong>Total de Produtos</strong>
+                <span th:text="${totalProdutos}">0</span>
+            </div>
+            <div class="summary-item">
+                <strong>Total de Itens</strong>
+                <span th:text="${totalItens}">0</span>
+            </div>
+            <div class="summary-item">
+                <strong>Produtos em Estoque</strong>
+                <span th:text="${produtosEmEstoque}">0</span>
+            </div>
+            <div class="summary-item">
+                <strong>Produtos Zerados</strong>
+                <span th:text="${produtosZerados}">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">PRODUTOS COM ESTOQUE BAIXO (≤ 10 unidades)</div>
+    <div th:if="${#lists.isEmpty(produtosBaixoEstoque)}" class="alert alert-info" style="padding: 20px; text-align: center;">
+        Nenhum produto com estoque baixo
+    </div>
+    <table th:if="${not #lists.isEmpty(produtosBaixoEstoque)}">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th class="text-center">Quantidade</th>
+                <th>Unidade</th>
+                <th>Situação</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="produto : ${produtosBaixoEstoque}"
+                th:classappend="${produto.quantidade == 0 ? 'alert-critico' : 
+                               (produto.quantidade <= 5 ? 'alert-atencao' : '')}">
+                <td th:text="${produto.nome}">Produto</td>
+                <td th:text="${produto.tipo}">Tipo</td>
+                <td class="text-center" th:text="${produto.quantidade}">0</td>
+                <td th:text="${produto.unidade != null ? produto.unidade.nome : '-'}">Un</td>
+                <td class="text-center">
+                    <span th:if="${produto.quantidade == 0}">ZERADO</span>
+                    <span th:if="${produto.quantidade > 0 && produto.quantidade <= 5}">CRÍTICO</span>
+                    <span th:if="${produto.quantidade > 5}">BAIXO</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">PRODUTOS PRÓXIMOS AO VENCIMENTO (30 dias)</div>
+    <div th:if="${#lists.isEmpty(produtosProximosVencimento)}" class="alert alert-info" style="padding: 20px; text-align: center;">
+        Nenhum produto próximo ao vencimento
+    </div>
+    <table th:if="${not #lists.isEmpty(produtosProximosVencimento)}">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th class="text-center">Quantidade</th>
+                <th class="text-center">Vencimento</th>
+                <th class="text-center">Dias Restantes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="produto : ${produtosProximosVencimento}"
+                th:with="diasRestantes=${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), produto.dataDeVencimento)}"
+                th:classappend="${diasRestantes < 0 ? 'alert-critico' : 
+                               (diasRestantes <= 7 ? 'alert-atencao' : '')}">
+                <td th:text="${produto.nome}">Produto</td>
+                <td th:text="${produto.tipo}">Tipo</td>
+                <td class="text-center" th:text="${produto.quantidade}">0</td>
+                <td class="text-center" th:text="${#temporals.format(produto.dataDeVencimento, 'dd/MM/yyyy')}">01/01/2024</td>
+                <td class="text-center">
+                    <span th:if="${diasRestantes < 0}" th:text="${diasRestantes} + ' dias (VENCIDO)'">-5 dias (VENCIDO)</span>
+                    <span th:if="${diasRestantes >= 0}" th:text="${diasRestantes} + ' dias'">5 dias</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">DISTRIBUIÇÃO POR TIPO</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th class="text-center">Quantidade de Produtos</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entry : ${produtosPorTipo}">
+                <td th:text="${entry.key}">Alimento</td>
+                <td class="text-center" th:text="${entry.value}">0</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p>AlberguePro - Sistema de Gestão de Albergue</p>
+        <p>Este relatório apresenta informações estratégicas sobre o estoque para auxílio na gestão.</p>
+    </div>
+</body>
+</html>

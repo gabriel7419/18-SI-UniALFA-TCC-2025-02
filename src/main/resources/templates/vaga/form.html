@@ -60,6 +60,9 @@
                                 th:selected="${quartoSelecionadoId != null and quartoSelecionadoId == q.id}">
                         </option>
                     </select>
+                    <div th:if="${#fields.hasErrors('leito')}" class="text-danger">
+                        O quarto é obrigatório.
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -89,8 +92,8 @@
             </div>
             
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Salvar</button>
-                <a th:href="@{/vaga/listar}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Salvar</button>
+                <a th:href="@{/vaga/listar}" class="btn btn-secondary"><i class="fas fa-times"></i> Cancelar</a>
             </div>
         </form>
     </div>

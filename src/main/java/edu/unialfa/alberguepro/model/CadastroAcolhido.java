@@ -30,6 +30,7 @@ public class CadastroAcolhido {
     private String profissao;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     private Sexo sexo;
 
     private String cor;
@@ -106,6 +107,16 @@ public class CadastroAcolhido {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataSaida;
+
+    @Transient
+    public boolean isDataSaidaProxima() {
+        if (dataSaida == null) {
+            return false;
+        }
+        LocalDate hoje = LocalDate.now();
+        long diasRestantes = java.time.temporal.ChronoUnit.DAYS.between(hoje, dataSaida);
+        return diasRestantes >= 0 && diasRestantes <= 7;
+    }
 
 
     public Sexo getSexo() {
@@ -252,7 +263,8 @@ public class CadastroAcolhido {
 
     public enum Sexo {
         Masculino,
-        Feminino
+        Feminino,
+        Outro
     }
 
     public enum Escolaridade {
