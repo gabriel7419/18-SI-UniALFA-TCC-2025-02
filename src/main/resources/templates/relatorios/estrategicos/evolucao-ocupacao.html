@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
+<head>
+    <title>Relatório de Evolução de Ocupação</title>
+</head>
+<body>
+    <section>
+        <div class="card">
+            <div class="card-header card-header-blue">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-chart-line"></i> Relatório de Evolução de Ocupação
+                    </h3>
+                    <a th:href="@{/relatorios/estrategicos}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">
+                    <i class="fas fa-info-circle"></i> 
+                    Este relatório apresenta a evolução de entradas, saídas e taxa de ocupação dos leitos ao longo do período selecionado.
+                </p>
+
+                <form id="filtroForm" method="get">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="periodo"><i class="fas fa-calendar-alt"></i> Selecione o Período:</label>
+                                <select id="periodo" name="periodo" class="form-control" required>
+                                    <option value="">-- Selecione --</option>
+                                    <option value="semanal">Semanal (Últimas 12 Semanas)</option>
+                                    <option value="mensal" selected>Mensal (Últimos 12 Meses)</option>
+                                    <option value="trimestral">Trimestral (Últimos 8 Trimestres)</option>
+                                    <option value="anual">Anual (Últimos 5 Anos)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <div class="btn-group btn-block">
+                                    <button type="button" id="btnPdf" class="btn btn-danger">
+                                        <i class="fas fa-file-pdf"></i> Gerar PDF
+                                    </button>
+                                    <button type="button" id="btnExcel" class="btn btn-success">
+                                        <i class="fas fa-file-excel"></i> Gerar Excel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="alert alert-info mt-3">
+                    <h5><i class="fas fa-chart-bar"></i> Informações do Relatório:</h5>
+                    <ul class="mb-0">
+                        <li><strong>Entradas:</strong> Número de acolhidos que deram entrada no período</li>
+                        <li><strong>Saídas:</strong> Número de acolhidos que deram saída no período</li>
+                        <li><strong>Leitos Ocupados:</strong> Quantidade de leitos ocupados no final do período</li>
+                        <li><strong>Taxa de Ocupação:</strong> Percentual de leitos ocupados em relação ao total disponível</li>
+                        <li><strong>Saldo:</strong> Diferença entre entradas e saídas (Entradas - Saídas)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        document.getElementById('btnPdf').addEventListener('click', function() {
+            const periodo = document.getElementById('periodo').value;
+            
+            if (!periodo) {
+                alert('Por favor, selecione um período.');
+                return;
+            }
+
+            window.open('/relatorios/estrategicos/evolucao-ocupacao/pdf?periodo=' + periodo, '_blank');
+        });
+
+        document.getElementById('btnExcel').addEventListener('click', function() {
+            const periodo = document.getElementById('periodo').value;
+            
+            if (!periodo) {
+                alert('Por favor, selecione um período.');
+                return;
+            }
+
+            window.location.href = '/relatorios/estrategicos/evolucao-ocupacao/excel?periodo=' + periodo;
+        });
+    </script>
+</body>
+</html>
