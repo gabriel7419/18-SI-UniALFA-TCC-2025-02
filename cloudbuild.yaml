@@ -2,27 +2,18 @@ steps:
   # 1. Build do Maven
   - name: 'maven:3-amazoncorretto-21'
     entrypoint: 'mvn'
-    args:
-      - 'clean'
-      - 'install'
-      - '-U'
-      
+    args: ['clean', 'install', '-U']
+
   # 2. Build da Imagem Docker
-  - name: 'us-central1-docker.pkg.dev/cloud-builders/docker'
-    args:
-      - 'build'
-      - '-t'
-      - 'us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest'
-      - '.'
-      
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest', '.']
+
   # 3. Push da Imagem
-  - name: 'us-central1-docker.pkg.dev/cloud-builders/docker'
-    args:
-      - 'push'
-      - 'us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest'
-      
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest']
+
   # 4. Deploy no Cloud Run
-  - name: 'us-central1-docker.pkg.dev/cloud-builders/gcloud'
+  - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'gcloud'
     args:
       - 'run'
@@ -31,6 +22,7 @@ steps:
       - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest'
       - '--region=us-central1'
       - '--platform=managed'
+      - '--allow-unauthenticated'
 
 images:
   - 'us-central1-docker.pkg.dev/$PROJECT_ID/app-imagens/alberguepro:latest'
