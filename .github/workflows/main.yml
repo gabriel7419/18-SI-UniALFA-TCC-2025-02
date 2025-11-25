@@ -25,5 +25,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            gabriel7419/live-18-SI-UniAlfa-TCC-2025-02:v1
-            gabriel7419/live-18-SI-UniAlfa-TCC-2025-02:latest
+            gabriel7419/live-18-si-unialfa-tcc-2025-02:v1
+            gabriel7419/live-18-si-unialfa-tcc-2025-02:latest
