@@ -6,6 +6,15 @@
 </head>
 <body>
     <section>
+        <!-- Mensagem de erro -->
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
         <!-- Filtros Colapsáveis -->
         <div class="card card-primary collapsed-card mb-3">
             <div class="card-header card-header-blue">
@@ -148,13 +157,13 @@
             const tipo = document.getElementById('tipo').value;
             
             if (!dataInicio || !dataFim) {
-                showToast('Por favor, selecione as datas de início e fim.', 'warning');
+                alert('Por favor, selecione as datas de início e fim.');
                 return;
             }
             
             // Validar se data início não é posterior à data fim
             if (new Date(dataInicio) > new Date(dataFim)) {
-                showToast('A data de início não pode ser posterior à data de fim.', 'error');
+                alert('A data de início não pode ser posterior à data de fim.');
                 return;
             }
 
@@ -171,13 +180,13 @@
             const tipo = document.getElementById('tipo').value;
             
             if (!dataInicio || !dataFim) {
-                showToast('Por favor, selecione as datas de início e fim.', 'warning');
+                alert('Por favor, selecione as datas de início e fim.');
                 return;
             }
             
             // Validar se data início não é posterior à data fim
             if (new Date(dataInicio) > new Date(dataFim)) {
-                showToast('A data de início não pode ser posterior à data de fim.', 'error');
+                alert('A data de início não pode ser posterior à data de fim.');
                 return;
             }
 

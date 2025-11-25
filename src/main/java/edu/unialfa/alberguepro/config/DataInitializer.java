@@ -25,13 +25,11 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Verifica se o usuário 'admin' já existe
         if (usuarioRepository.findByUsername("admin").isEmpty()) {
             System.out.println("Criando usuário administrador padrão...");
 
             Usuario admin = new Usuario();
             admin.setUsername("admin");
-            // Criptografa a senha usando o PasswordEncoder da aplicação
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setRole("ADMIN");
             admin.setAtivo(true);
@@ -43,7 +41,6 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("Usuário administrador já existe. Nenhuma ação necessária.");
         }
 
-        // Verifica se as unidades de medida já existem
         if (unidadeRepository.count() == 0) {
             System.out.println("Criando unidades de medida padrão...");
 

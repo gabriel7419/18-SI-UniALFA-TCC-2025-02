@@ -77,16 +77,13 @@ public class EstoqueController {
         
         org.springframework.data.domain.Page<Produto> pageResult;
         
-        // Criar ordenação
         org.springframework.data.domain.Sort.Direction direction = dir.equals("desc") ? 
             org.springframework.data.domain.Sort.Direction.DESC : org.springframework.data.domain.Sort.Direction.ASC;
         org.springframework.data.domain.Sort sortObj = org.springframework.data.domain.Sort.by(direction, sort);
         
-        // Se o filtro de vencimento está ativo, usar lógica específica
         if (diasVencimento != null && diasVencimento > 0) {
             List<Produto> produtos = estoqueService.buscarProdutosProximosVencimento(diasVencimento);
             
-            // Aplicar filtros adicionais se necessário
             if (nome != null && !nome.isEmpty()) {
                 produtos = produtos.stream()
                     .filter(p -> p.getNome().toLowerCase().contains(nome.toLowerCase()))
@@ -103,14 +100,12 @@ public class EstoqueController {
                     .toList();
             }
             
-            // Paginar manualmente a lista
             int start = Math.min(page * size, produtos.size());
             int end = Math.min(start + size, produtos.size());
             List<Produto> pageContent = produtos.subList(start, end);
             pageResult = new org.springframework.data.domain.PageImpl<>(pageContent, 
                 org.springframework.data.domain.PageRequest.of(page, size, sortObj), produtos.size());
         } else {
-            // Lógica normal de filtros com paginação
             Specification<Produto> spec = Specification.where(null);
 
             if (nome != null && !nome.isEmpty()) {
@@ -161,31 +156,26 @@ public class EstoqueController {
 
     @PostMapping("/salvar")
     public String salvarProduto(@Valid Produto produto, BindingResult result, Model model) {
-        // Validação de unicidade que requer acesso ao banco
         if (produto.getNome() != null && produto.getTipo() != null) {
             if (!estoqueService.isNomeAndTipoUnique(produto.getNome(), produto.getTipo(), produto.getId())) {
                 result.rejectValue("nome", "error.produto", "Já existe um produto com este nome e tipo.");
             }
         }
 
-        // Validação customizada: data de vencimento obrigatória se não for produto não perecível
         if (produto.getNaoPerecivel() == null || !produto.getNaoPerecivel()) {
             if (produto.getDataDeVencimento() == null) {
                 result.rejectValue("dataDeVencimento", "error.produto", "A data de vencimento é obrigatória para produtos perecíveis.");
             }
         } else {
-            // Se for não perecível, limpa a data de vencimento
             produto.setDataDeVencimento(null);
         }
 
-        // Verifica todos os erros de validação
         if (result.hasErrors()) {
             carregarUnidades(model);
             model.addAttribute("errorMessage", "Há problemas em um dos campos preenchidos, verifique e corrija.");
             return "estoque/form";
         }
 
-        // Se a validação passou, o 'unidadeId' existe. 
         Optional<Unidade> unidadeOptional = unidadeRepository.findById(produto.getUnidadeId());
         if (unidadeOptional.isEmpty()) {    
             result.rejectValue("unidadeId", "error.produto", "Unidade selecionada é inválida.");
@@ -195,7 +185,7 @@ public class EstoqueController {
         }
         produto.setUnidade(unidadeOptional.get());
         
-        estoqueService.salvar(produto); // Alterado para usar o serviço
+        estoqueService.salvar(produto);
 
         return "redirect:/estoque";
     }
@@ -243,7 +233,7 @@ public class EstoqueController {
 
     @PostMapping("/excluir/{id}")
     public String excluirProduto(@PathVariable("id") Long id) {
-        estoqueService.excluir(id); // Alterado para usar o serviço
+        estoqueService.excluir(id);
         return "redirect:/estoque";
     }
 

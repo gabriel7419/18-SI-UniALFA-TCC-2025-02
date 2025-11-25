@@ -268,7 +268,6 @@ public class CadastroAcolhidoController {
                         Model model) {
         org.springframework.data.domain.Page<CadastroAcolhido> pageResult;
         
-        // Criar ordenação
         org.springframework.data.domain.Sort.Direction direction = dir.equals("desc") ? 
             org.springframework.data.domain.Sort.Direction.DESC : org.springframework.data.domain.Sort.Direction.ASC;
         org.springframework.data.domain.Sort sortObj = org.springframework.data.domain.Sort.by(direction, sort);
@@ -282,7 +281,6 @@ public class CadastroAcolhidoController {
                     .toList();
             }
             
-            // Ordenar manualmente a lista
             acolhidos = ordenarLista(acolhidos, sort, direction);
             
             int start = Math.min(page * size, acolhidos.size());
