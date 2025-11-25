@@ -834,6 +834,36 @@
 <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/webjars/AdminLTE/3.2.0/dist/js/adminlte.min.js}"></script>
+
+<!-- Container para toasts -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- Função global para exibir toasts -->
+<script>
+    function showToast(message, type = 'info') {
+        // Tipos: success, error, info, warning
+        const icon = {
+            'success': 'fas fa-check-circle',
+            'error': 'fas fa-exclamation-triangle',
+            'info': 'fas fa-info-circle',
+            'warning': 'fas fa-exclamation-circle'
+        }[type] || 'fas fa-info-circle';
+        
+        const toast = $('<div class="toast-msg ' + type + '">' +
+            '<i class="' + icon + '"></i>' +
+            '<span>' + message + '</span>' +
+            '<button class="close" onclick="this.parentElement.remove()">&times;</button>' +
+            '</div>');
+        
+        $('#toast-container').append(toast);
+        
+        // Auto remover após 4 segundos
+        setTimeout(function() {
+            toast.fadeOut(300, function() { $(this).remove(); });
+        }, 4000);
+    }
+</script>
+
 <!-- Redirecionar para página de consulta quando sidebar está colapsada -->
 <script>
 $(document).ready(function() {

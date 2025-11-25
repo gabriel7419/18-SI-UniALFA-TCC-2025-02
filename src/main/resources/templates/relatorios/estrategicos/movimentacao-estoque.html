@@ -154,13 +154,13 @@
             const tipo = document.getElementById('tipo').value;
             
             if (!dataInicio || !dataFim) {
-                alert('Por favor, selecione as datas de início e fim.');
+                showToast('Por favor, selecione as datas de início e fim.', 'warning');
                 return;
             }
             
             // Validar se data início não é posterior à data fim
             if (new Date(dataInicio) > new Date(dataFim)) {
-                alert('A data de início não pode ser posterior à data de fim.');
+                showToast('A data de início não pode ser posterior à data de fim.', 'error');
                 return;
             }
 
@@ -177,13 +177,13 @@
             const tipo = document.getElementById('tipo').value;
             
             if (!dataInicio || !dataFim) {
-                alert('Por favor, selecione as datas de início e fim.');
+                showToast('Por favor, selecione as datas de início e fim.', 'warning');
                 return;
             }
             
             // Validar se data início não é posterior à data fim
             if (new Date(dataInicio) > new Date(dataFim)) {
-                alert('A data de início não pode ser posterior à data de fim.');
+                showToast('A data de início não pode ser posterior à data de fim.', 'error');
                 return;
             }
 
