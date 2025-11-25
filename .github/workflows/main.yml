@@ -1,29 +1,25 @@
-name: CI-CD-Desenvolvimento
+name: Deploy via Google Cloud Build
 
 on:
   push:
-    branches: [ "desenvolvimento" ]
+    branches: [ "deploy-cloud" ] # Gatilho restrito a esta branch
 
 jobs:
-  CI:
+  trigger-cloud-build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout-repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Autenticação no DockerHub
-        uses: docker/login-action@v3.6.0
+      - name: Autenticação no Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          username: ${{secrets.DOCKERHUB_USER}}
-          password: ${{secrets.DOCKERHUB_PWD}}
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: |
-            gabriel7419/live-18-si-unialfa-tcc-2025-02:v1
-            gabriel7419/live-18-si-unialfa-tcc-2025-02:latest
+      - name: Configurar Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Disparar Cloud Build
+        run: |
+          gcloud builds submit --config=cloudbuild.yaml --region=us-central1 .
