@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -110,44 +111,10 @@ public class RelatorioEstrategicoController {
                 .body(new InputStreamResource(bis));
     }
 
-    @GetMapping("/patrimonio")
-    public String patrimonio(Model model) {
-        model.addAttribute("dataInicio", LocalDate.now().minusYears(1));
-        model.addAttribute("dataFim", LocalDate.now());
-        return "relatorios/estrategicos/patrimonio";
-    }
-
-    @GetMapping("/patrimonio/pdf")
-    public ResponseEntity<InputStreamResource> gerarRelatorioPatrimonioPdf(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim,
-            @RequestParam(required = false) String status) throws JRException {
-        
-        ByteArrayInputStream bis = service.gerarRelatorioPatrimonioPorPeriodoPdf(dataInicio, dataFim, status);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "inline; filename=relatorio_patrimonio_periodo.pdf");
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(bis));
-    }
-
-    @GetMapping("/patrimonio/excel")
-    public ResponseEntity<InputStreamResource> gerarRelatorioPatrimonioExcel(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim,
-            @RequestParam(required = false) String status) throws IOException {
-        
-        ByteArrayInputStream bis = service.gerarRelatorioPatrimonioPorPeriodoExcel(dataInicio, dataFim, status);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=relatorio_patrimonio_periodo.xlsx");
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .body(new InputStreamResource(bis));
+    @GetMapping("/vagas")
+    public String vagas(Model model, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", 
+            "Relatório de evolução de ocupação em desenvolvimento. Por favor, utilize os relatórios de vagas disponíveis no menu de Vagas > Relatório de Ocupação.");
+        return "redirect:/relatorios/estrategicos";
     }
 }
