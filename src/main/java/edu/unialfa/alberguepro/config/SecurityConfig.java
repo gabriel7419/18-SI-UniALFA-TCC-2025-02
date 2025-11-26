@@ -58,6 +58,12 @@ public class SecurityConfig {
                 .logout((logout) -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
+                )
+                .exceptionHandling((exception) -> exception
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            // Redirecionar para o dashboard com mensagem de erro
+                            response.sendRedirect("/home?error=acesso-negado");
+                        })
                 );
 
         return http.build();

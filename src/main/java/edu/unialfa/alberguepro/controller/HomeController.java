@@ -41,14 +41,16 @@ public class HomeController {
     private LeitoRepository leitoRepository;
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, @RequestParam(required = false) String error) {
+        if ("acesso-negado".equals(error)) {
+            model.addAttribute("errorMessage", "Você não tem permissão para acessar esta página.");
+        }
+        
         DashboardDTO dashboardDTO = new DashboardDTO();
 
-        // Acolhidos Ativos (todos os acolhidos cadastrados no sistema)
         long totalAcolhidosAtivos = cadastroAcolhidoRepository.count();
         dashboardDTO.setTotalAcolhidos(totalAcolhidosAtivos);
 
-        // Leitos
         long totalLeitos = leitoRepository.count();
         long leitosOcupados = vagaRepository.countLeitosOcupados();
         long leitosLivres = totalLeitos - leitosOcupados;
@@ -57,7 +59,6 @@ public class HomeController {
         dashboardDTO.setLeitosOcupados(leitosOcupados);
         dashboardDTO.setLeitosLivres(leitosLivres);
 
-        // Quartos
         long totalQuartos = quartoRepository.count();
         long quartosLivres = quartoRepository.countQuartosComLeitosLivres();
         long quartosOcupados = quartoRepository.countQuartosTotalmenteOcupados();
@@ -66,22 +67,18 @@ public class HomeController {
         dashboardDTO.setQuartosOcupados(quartosOcupados);
         dashboardDTO.setQuartosLivres(quartosLivres);
 
-        // Usuarios
         dashboardDTO.setTotalUsuarios(usuarioRepository.count());
 
-        // Patrimonio
         List<ControlePatrimonio> patrimonios = controlePatrimonioRepository.findAll();
         Map<String, Long> patrimonioPorStatus = patrimonios.stream()
                 .collect(Collectors.groupingBy(ControlePatrimonio::getStatus, Collectors.counting()));
         dashboardDTO.setPatrimonioPorStatus(patrimonioPorStatus);
 
-        // Estoque - Top 10 produtos com menor quantidade
         List<Produto> produtosBaixoEstoque = produtoRepository.findTop10ByOrderByQuantidadeAsc();
         Map<String, Integer> estoqueBaixo = produtosBaixoEstoque.stream()
                 .collect(Collectors.toMap(Produto::getNome, Produto::getQuantidade));
         dashboardDTO.setEstoqueBaixo(estoqueBaixo);
 
-        // Evolução de Acolhimentos - Últimos 6 meses
         List<Object[]> entradas = vagaRepository.countEntradasUltimos6Meses();
         List<Object[]> saidas = vagaRepository.countSaidasUltimos6Meses();
         
@@ -89,7 +86,6 @@ public class HomeController {
         List<Long> entradasList = new java.util.ArrayList<>();
         List<Long> saidasList = new java.util.ArrayList<>();
         
-        // Preencher últimos 6 meses
         java.time.LocalDate hoje = java.time.LocalDate.now();
         for (int i = 5; i >= 0; i--) {
             java.time.LocalDate data = hoje.minusMonths(i);
@@ -99,14 +95,12 @@ public class HomeController {
             String nomeMes = data.getMonth().getDisplayName(java.time.format.TextStyle.SHORT, new java.util.Locale("pt", "BR"));
             meses.add(nomeMes + "/" + String.valueOf(ano).substring(2));
             
-            // Buscar entradas do mês
             long qtdEntradas = entradas.stream()
                 .filter(e -> ((Number)e[0]).intValue() == mes && ((Number)e[1]).intValue() == ano)
                 .mapToLong(e -> ((Number)e[2]).longValue())
                 .sum();
             entradasList.add(qtdEntradas);
             
-            // Buscar saídas do mês
             long qtdSaidas = saidas.stream()
                 .filter(s -> ((Number)s[0]).intValue() == mes && ((Number)s[1]).intValue() == ano)
                 .mapToLong(s -> ((Number)s[2]).longValue())
@@ -122,6 +116,14 @@ public class HomeController {
         model.addAttribute("produtosBaixoEstoque", new PagedListHolder<>(produtosBaixoEstoque));
 
         return "index";
+    }
+    
+    @GetMapping("/home")
+    public String home(@RequestParam(required = false) String error) {
+        if ("acesso-negado".equals(error)) {
+            return "redirect:/?error=acesso-negado";
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/login")

@@ -48,19 +48,40 @@ public class UsuarioController {
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "15") int size,
                                  @RequestParam(defaultValue = "username") String sort,
-                                 @RequestParam(defaultValue = "asc") String dir) {
+                                 @RequestParam(defaultValue = "asc") String dir,
+                                 @RequestParam(required = false) String username,
+                                 @RequestParam(required = false) String role,
+                                 @RequestParam(required = false) String ativo) {
         // Criar ordenação
         org.springframework.data.domain.Sort.Direction direction = dir.equals("desc") ? 
             org.springframework.data.domain.Sort.Direction.DESC : org.springframework.data.domain.Sort.Direction.ASC;
         org.springframework.data.domain.Sort sortObj = org.springframework.data.domain.Sort.by(direction, sort);
         org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, sortObj);
-        org.springframework.data.domain.Page<UsuarioDTO> pageResult = usuarioService.findAllDTOPaginado(pageable);
+        
+        // Aplicar filtros
+        org.springframework.data.domain.Page<UsuarioDTO> pageResult;
+        if ((username != null && !username.isEmpty()) || 
+            (role != null && !role.isEmpty()) || 
+            (ativo != null && !ativo.isEmpty())) {
+            // Tem filtros - buscar com critérios
+            Boolean ativoBoolean = null;
+            if (ativo != null && !ativo.isEmpty()) {
+                ativoBoolean = Boolean.parseBoolean(ativo);
+            }
+            pageResult = usuarioService.findByFilters(username, role, ativoBoolean, pageable);
+        } else {
+            // Sem filtros - buscar todos
+            pageResult = usuarioService.findAllDTOPaginado(pageable);
+        }
         
         model.addAttribute("usuarios", pageResult.getContent());
         model.addAttribute("page", pageResult);
         model.addAttribute("size", size);
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
+        model.addAttribute("username", username);
+        model.addAttribute("role", role);
+        model.addAttribute("ativo", ativo);
         
         // Adicionar informação do usuário logado
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -166,8 +187,9 @@ public class UsuarioController {
     @PostMapping("/toggle/{id}")
     public String toggleAtivo(@PathVariable("id") Long id, RedirectAttributes attributes) {
         try {
-            usuarioService.toggleAtivo(id);
-            attributes.addFlashAttribute("successMessage", "Status do usuário alterado com sucesso!");
+            boolean novoStatus = usuarioService.toggleAtivo(id);
+            String mensagem = novoStatus ? "Usuário ativado com sucesso!" : "Usuário desativado com sucesso!";
+            attributes.addFlashAttribute("successMessage", mensagem);
         } catch (Exception e) {
             attributes.addFlashAttribute("errorMessage", "Erro ao alterar status: " + e.getMessage());
         }

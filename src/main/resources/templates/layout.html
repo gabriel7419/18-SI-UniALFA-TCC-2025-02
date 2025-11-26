@@ -479,6 +479,20 @@
             color: #856404 !important;
         }
         
+        /* Linha para produtos vencidos */
+        .table-danger-expiration {
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
+            border-left: 4px solid #dc3545 !important;
+        }
+        
+        /* Linha para produtos próximos do vencimento */
+        .table-warning-expiration {
+            background-color: #fff3cd !important;
+            color: #856404 !important;
+            border-left: 4px solid #ffc107 !important;
+        }
+        
         body.dark-mode .table-warning {
             background-color: #374151 !important;
             color: #000000 !important;
@@ -493,6 +507,28 @@
         body.dark-mode .table-warning .badge {
             background-color: #dc2626 !important;
             color: #ffffff !important;
+        }
+        
+        /* Dark mode para produtos vencidos */
+        body.dark-mode .table-danger-expiration {
+            background-color: #7f1d1d !important;
+            border-left: 4px solid #dc2626 !important;
+        }
+        
+        body.dark-mode .table-danger-expiration td {
+            color: #fecaca !important;
+            font-weight: 600 !important;
+        }
+        
+        /* Dark mode para produtos próximos do vencimento */
+        body.dark-mode .table-warning-expiration {
+            background-color: #78350f !important;
+            border-left: 4px solid #f59e0b !important;
+        }
+        
+        body.dark-mode .table-warning-expiration td {
+            color: #fde68a !important;
+            font-weight: 500 !important;
         }
         
         /* Dark Mode Styles - Simples */
@@ -522,6 +558,33 @@
         body.dark-mode .toast-msg.warning {
             background: #a16207 !important;
             color: #fef3c7 !important;
+        }
+        
+        /* Espaçamento entre botões - Global */
+        .card-tools .btn {
+            margin-left: 3px;
+        }
+        
+        .card-tools .btn:first-child {
+            margin-left: 0;
+        }
+        
+        .btn-group .btn {
+            margin-left: 0 !important;
+        }
+        
+        .d-flex.gap-2 > * {
+            margin-right: 0.5rem !important;
+            margin-bottom: 0.5rem !important;
+        }
+        
+        .d-flex.gap-2 > *:last-child {
+            margin-right: 0 !important;
+        }
+        
+        /* Espaçamento entre botões em formulários */
+        form .btn-group {
+            gap: 3px;
         }
         
         /* Navbar superior em dark mode */
@@ -756,9 +819,9 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a th:href="@{/relatorios/estrategicos/patrimonio}" class="nav-link">
+                                <a th:href="@{/relatorios/estrategicos/vagas}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Patrimônio</p>
+                                    <p>Evolução Ocupação</p>
                                 </a>
                             </li>
                         </ul>
@@ -798,9 +861,17 @@
 <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/webjars/AdminLTE/3.2.0/dist/js/adminlte.min.js}"></script>
+
 <!-- Redirecionar para página de consulta quando sidebar está colapsada -->
 <script>
 $(document).ready(function() {
+    // Auto-fechar banners de alerta após 5 segundos
+    setTimeout(function() {
+        $('.alert-dismissible').fadeOut('slow', function() {
+            $(this).remove();
+        });
+    }, 5000);
+    
     // Restaurar estado da sidebar ao carregar
     const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
     if (sidebarCollapsed) {

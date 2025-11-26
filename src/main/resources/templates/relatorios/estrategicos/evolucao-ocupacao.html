@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout (~{::title/text()}, ~{::section}, ~{::script})}">
+<head>
+    <title>Relatório de Evolução de Ocupação</title>
+</head>
+<body>
+    <section>
+        <!-- Mensagem de erro -->
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <!-- Filtros Colapsáveis -->
+        <div class="card card-primary collapsed-card mb-3">
+            <div class="card-header card-header-blue">
+                <h3 class="card-title">Filtros</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: none;">
+                <form id="filtroForm" method="get">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="periodo"><i class="fas fa-calendar-alt"></i> Selecione o Período:</label>
+                                <select id="periodo" name="periodo" class="form-control" required>
+                                    <option value="">-- Selecione --</option>
+                                    <option value="semanal">Semanal (Últimas 12 Semanas)</option>
+                                    <option value="mensal" selected>Mensal (Últimos 12 Meses)</option>
+                                    <option value="trimestral">Trimestral (Últimos 8 Trimestres)</option>
+                                    <option value="anual">Anual (Últimos 5 Anos)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Card Principal -->
+        <div class="card">
+            <div class="card-header card-header-blue">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-chart-line"></i> Relatório de Evolução de Ocupação
+                    </h3>
+                    <div class="card-tools mt-2 mt-md-0">
+                        <button type="button" id="btnPdf" class="btn btn-danger btn-sm">
+                            <i class="fas fa-file-pdf"></i> Gerar PDF
+                        </button>
+                        <button type="button" id="btnExcel" class="btn btn-success btn-sm">
+                            <i class="fas fa-file-excel"></i> Gerar Excel
+                        </button>
+                        <a th:href="@{/relatorios/estrategicos}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Selecione o período desejado nos filtros acima e clique em "Gerar PDF" ou "Gerar Excel".
+                </div>
+                
+                <div class="alert alert-info mt-3">
+                    <h5><i class="fas fa-chart-bar"></i> Informações do Relatório:</h5>
+                    <ul class="mb-0">
+                        <li><strong>Entradas:</strong> Número de acolhidos que deram entrada no período</li>
+                        <li><strong>Saídas:</strong> Número de acolhidos que deram saída no período</li>
+                        <li><strong>Leitos Ocupados:</strong> Quantidade de leitos ocupados no final do período</li>
+                        <li><strong>Taxa de Ocupação:</strong> Percentual de leitos ocupados em relação ao total disponível</li>
+                        <li><strong>Saldo:</strong> Diferença entre entradas e saídas (Entradas - Saídas)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        document.getElementById('btnPdf').addEventListener('click', function() {
+            const periodo = document.getElementById('periodo').value;
+            
+            if (!periodo) {
+                return;
+            }
+
+            window.open('/relatorios/estrategicos/evolucao-ocupacao/pdf?periodo=' + periodo, '_blank');
+        });
+
+        document.getElementById('btnExcel').addEventListener('click', function() {
+            const periodo = document.getElementById('periodo').value;
+            
+            if (!periodo) {
+                return;
+            }
+
+            window.location.href = '/relatorios/estrategicos/evolucao-ocupacao/excel?periodo=' + periodo;
+        });
+    </script>
+</body>
+</html>

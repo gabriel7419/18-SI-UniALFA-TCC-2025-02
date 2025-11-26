@@ -14,6 +14,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long>, JpaSpec
     List<Produto> findByNomeContainingIgnoreCase(String nome);
     Page<Produto> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
     List<Produto> findByNomeContainingIgnoreCaseAndTipoContainingIgnoreCase(String nome, String tipo);
+    Page<Produto> findByNomeContainingIgnoreCaseAndTipoContainingIgnoreCase(String nome, String tipo, Pageable pageable);
     Optional<Produto> findByNomeIgnoreCaseAndTipoIgnoreCase(String nome, String tipo);
     Optional<Produto> findByNomeIgnoreCaseAndTipoIgnoreCaseAndIdNot(String nome, String tipo, Long id);
     List<Produto> findTop5ByOrderByQuantidadeAsc();

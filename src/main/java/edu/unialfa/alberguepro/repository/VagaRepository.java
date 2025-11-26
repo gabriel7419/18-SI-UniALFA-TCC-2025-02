@@ -64,4 +64,15 @@ public interface VagaRepository extends JpaRepository<Vaga, Long>  {
     List<Vaga> findByAcolhidoNomeContainingIgnoreCase(String nome);
     
     Page<Vaga> findByAcolhidoNomeContainingIgnoreCase(String nome, Pageable pageable);
+
+    @Query("SELECT COUNT(v) FROM Vaga v WHERE v.dataEntrada BETWEEN :dataInicio AND :dataFim")
+    long countEntradasPorPeriodo(@Param("dataInicio") java.time.LocalDate dataInicio, 
+                                  @Param("dataFim") java.time.LocalDate dataFim);
+
+    @Query("SELECT COUNT(v) FROM Vaga v WHERE v.dataSaida BETWEEN :dataInicio AND :dataFim AND v.dataSaida IS NOT NULL")
+    long countSaidasPorPeriodo(@Param("dataInicio") java.time.LocalDate dataInicio, 
+                                @Param("dataFim") java.time.LocalDate dataFim);
+
+    @Query("SELECT COUNT(v) FROM Vaga v WHERE v.dataEntrada <= :data AND (v.dataSaida IS NULL OR v.dataSaida > :data)")
+    long countLeitosOcupadosNaData(@Param("data") java.time.LocalDate data);
 }

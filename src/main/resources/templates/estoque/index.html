@@ -102,43 +102,25 @@
                         <!-- Relatórios de Estoque Geral -->
                         <span th:if="${diasVencimento == null}">
                             <a th:href="@{/estoque/relatorio/pdf(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-danger btn-sm" target="_blank">
-                                <i class="fas fa-file-pdf"></i> PDF
+                                <i class="fas fa-file-pdf"></i> Gerar PDF
                             </a>
                             <a th:href="@{/estoque/relatorio/excel(nome=${nome}, tipo=${tipo}, unidadeId=${unidade != null ? unidade.id : ''})}" class="btn btn-success btn-sm">
-                                <i class="fas fa-file-excel"></i> Excel
+                                <i class="fas fa-file-excel"></i> Gerar Excel
                             </a>
                         </span>
                         <!-- Relatórios de Vencimento -->
                         <span th:if="${diasVencimento != null}">
                             <a th:href="@{/estoque/relatorio/vencimento/pdf(dias=${diasVencimento})}" class="btn btn-danger btn-sm" target="_blank">
-                                <i class="fas fa-file-pdf"></i> PDF
+                                <i class="fas fa-file-pdf"></i> Gerar PDF
                             </a>
                             <a th:href="@{/estoque/relatorio/vencimento/excel(dias=${diasVencimento})}" class="btn btn-success btn-sm">
-                                <i class="fas fa-file-excel"></i> Excel
+                                <i class="fas fa-file-excel"></i> Gerar Excel
                             </a>
                         </span>
                     </div>
                 </div>
             </div>
             <div class="card-body">
-                <!-- Legenda de Alertas -->
-                <div class="alert alert-info mb-3 alert-legend" style="padding: 0.75rem 1rem; font-size: 0.9rem;">
-                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-                        <span style="font-weight: 600;">
-                            <i class="fas fa-info-circle"></i> Legenda:
-                        </span>
-                        <span class="legend-item legend-danger" style="padding: 0.4rem 0.8rem; background-color: #FFE6E6; border-left: 4px solid #DC3545; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.4rem; color: #721C24; font-weight: 500;">
-                            <i class="fas fa-exclamation-triangle"></i> Produto Vencido
-                        </span>
-                        <span class="legend-item legend-warning" style="padding: 0.4rem 0.8rem; background-color: #FFF9E6; border-left: 4px solid #FFC107; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.4rem; color: #856404; font-weight: 500;">
-                            <i class="fas fa-clock"></i> Vence em menos de 3 dias
-                        </span>
-                        <span class="legend-item legend-stock-out" style="padding: 0.4rem 0.8rem; background-color: #FFF3CD; border-left: 4px solid #FFC107; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.4rem; color: #856404; font-weight: 500;">
-                            <i class="fas fa-box-open"></i> Estoque Esgotado
-                        </span>
-                    </div>
-                </div>
-
                 <!-- Se não tiver produto, mostra essa mensagem -->
                 <div th:if="${#lists.isEmpty(produtos)}" class="alert alert-info">
                     Nenhum produto cadastrado no estoque.

@@ -112,9 +112,37 @@ public class RelatorioEstrategicoController {
     }
 
     @GetMapping("/vagas")
-    public String vagas(Model model, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("errorMessage", 
-            "Relatório de evolução de ocupação em desenvolvimento. Por favor, utilize os relatórios de vagas disponíveis no menu de Vagas > Relatório de Ocupação.");
-        return "redirect:/relatorios/estrategicos";
+    public String vagas(Model model) {
+        return "relatorios/estrategicos/evolucao-ocupacao";
+    }
+
+    @GetMapping("/evolucao-ocupacao/pdf")
+    public ResponseEntity<InputStreamResource> gerarRelatorioEvolucaoOcupacaoPdf(
+            @RequestParam String periodo) throws IOException {
+        
+        ByteArrayInputStream bis = service.gerarRelatorioEvolucaoOcupacaoPdf(periodo);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=evolucao_ocupacao_" + periodo + ".pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
+    }
+
+    @GetMapping("/evolucao-ocupacao/excel")
+    public ResponseEntity<InputStreamResource> gerarRelatorioEvolucaoOcupacaoExcel(
+            @RequestParam String periodo) throws IOException {
+        
+        ByteArrayInputStream bis = service.gerarRelatorioEvolucaoOcupacaoExcel(periodo);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=evolucao_ocupacao_" + periodo + ".xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new InputStreamResource(bis));
     }
 }

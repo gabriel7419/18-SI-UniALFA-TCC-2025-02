@@ -15,7 +15,7 @@
 	<field name="nome" class="java.lang.String">
 		<fieldDescription><![CDATA[nome]]></fieldDescription>
 	</field>
-	<field name="patrimonio" class="java.lang.Integer">
+	<field name="patrimonio" class="java.lang.String">
 		<fieldDescription><![CDATA[patrimonio]]></fieldDescription>
 	</field>
 	<field name="data_aquisicao" class="java.time.LocalDate">

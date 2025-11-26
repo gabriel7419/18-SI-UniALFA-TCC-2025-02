@@ -127,7 +127,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void toggleAtivo(Long id) {
+    public boolean toggleAtivo(Long id) {
         String usernameLogado = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Usuario usuario = usuarioRepository.findById(id)
@@ -143,6 +143,9 @@ public class UsuarioService {
 
         // Salva a alteração no banco de dados
         usuarioRepository.save(usuario);
+        
+        // Retorna o novo status
+        return usuario.isAtivo();
     }
 
     public List<UsuarioDTO> findAllDTO() {
@@ -153,6 +156,27 @@ public class UsuarioService {
 
     public org.springframework.data.domain.Page<UsuarioDTO> findAllDTOPaginado(org.springframework.data.domain.Pageable pageable) {
         return usuarioRepository.findAll(pageable).map(UsuarioDTO::new);
+    }
+    
+    public org.springframework.data.domain.Page<UsuarioDTO> findByFilters(String username, String role, Boolean ativo, org.springframework.data.domain.Pageable pageable) {
+        org.springframework.data.jpa.domain.Specification<Usuario> spec = org.springframework.data.jpa.domain.Specification.where(null);
+        
+        if (username != null && !username.isEmpty()) {
+            spec = spec.and((root, query, cb) -> 
+                cb.like(cb.lower(root.get("username")), "%" + username.toLowerCase() + "%"));
+        }
+        
+        if (role != null && !role.isEmpty()) {
+            spec = spec.and((root, query, cb) -> 
+                cb.equal(root.get("role"), role));
+        }
+        
+        if (ativo != null) {
+            spec = spec.and((root, query, cb) -> 
+                cb.equal(root.get("ativo"), ativo));
+        }
+        
+        return usuarioRepository.findAll(spec, pageable).map(UsuarioDTO::new);
     }
 
     public Optional<UsuarioDTO> findByIdDTO(Long id) {
@@ -181,9 +205,9 @@ public class UsuarioService {
             throw new IllegalArgumentException("Apenas um Master pode alterar a senha de outro Master.");
         }
 
-        // Exige senha atual se o próprio usuário estiver alterando ou se não for master
-        boolean mustValidateCurrent = isSelf || (!isMaster);
-        if (mustValidateCurrent) {
+        // Exige senha atual SOMENTE se o próprio usuário estiver alterando sua senha
+        // Admin/Master alterando senha de outros não precisam informar senha atual
+        if (isSelf) {
             if (senhaAtual == null || !passwordEncoder.matches(senhaAtual, usuario.getPassword())) {
                 throw new IllegalArgumentException("Senha atual incorreta.");
             }

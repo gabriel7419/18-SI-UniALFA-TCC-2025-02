@@ -86,17 +86,15 @@
             <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <h3 class="card-title mb-0">Lista de Quartos</h3>
                 <div class="card-tools mt-2 mt-md-0">
-                    <!-- Botão de Ação Principal -->
+                    <!-- Botões de Ação Principal -->
                     <a th:href="@{/quarto/novo}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus"></i> Novo Quarto
                     </a>
-                </div>
-            </div>
-                    <a th:href="@{/quarto/relatorio/ocupacao-pdf}" class="btn btn-danger" target="_blank">
-                        <i class="fas fa-file-pdf"></i> Relatório de Ocupação PDF
+                    <a th:href="@{/quarto/relatorio/ocupacao-pdf}" class="btn btn-danger btn-sm" target="_blank">
+                        <i class="fas fa-file-pdf"></i> Gerar PDF
                     </a>
-                    <a th:href="@{/quarto/relatorio/ocupacao-excel}" class="btn btn-success">
-                        <i class="fas fa-file-excel"></i> Relatório de Ocupação Excel
+                    <a th:href="@{/quarto/relatorio/ocupacao-excel}" class="btn btn-success btn-sm">
+                        <i class="fas fa-file-excel"></i> Gerar Excel
                     </a>
                 </div>
             </div>
