@@ -157,6 +157,27 @@ public class UsuarioService {
     public org.springframework.data.domain.Page<UsuarioDTO> findAllDTOPaginado(org.springframework.data.domain.Pageable pageable) {
         return usuarioRepository.findAll(pageable).map(UsuarioDTO::new);
     }
+    
+    public org.springframework.data.domain.Page<UsuarioDTO> findByFilters(String username, String role, Boolean ativo, org.springframework.data.domain.Pageable pageable) {
+        org.springframework.data.jpa.domain.Specification<Usuario> spec = org.springframework.data.jpa.domain.Specification.where(null);
+        
+        if (username != null && !username.isEmpty()) {
+            spec = spec.and((root, query, cb) -> 
+                cb.like(cb.lower(root.get("username")), "%" + username.toLowerCase() + "%"));
+        }
+        
+        if (role != null && !role.isEmpty()) {
+            spec = spec.and((root, query, cb) -> 
+                cb.equal(root.get("role"), role));
+        }
+        
+        if (ativo != null) {
+            spec = spec.and((root, query, cb) -> 
+                cb.equal(root.get("ativo"), ativo));
+        }
+        
+        return usuarioRepository.findAll(spec, pageable).map(UsuarioDTO::new);
+    }
 
     public Optional<UsuarioDTO> findByIdDTO(Long id) {
         return usuarioRepository.findById(id).map(UsuarioDTO::new);
