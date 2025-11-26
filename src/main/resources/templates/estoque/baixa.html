@@ -67,9 +67,14 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label>&nbsp;</label>
-                            <button class="btn btn-primary btn-block" type="submit">
-                                <i class="fas fa-search"></i> Filtrar
-                            </button>
+                            <div class="btn-group btn-block">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i> Filtrar
+                                </button>
+                                <a th:href="@{/estoque/baixa}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Limpar
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
