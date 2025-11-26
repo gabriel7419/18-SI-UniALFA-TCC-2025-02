@@ -116,4 +116,49 @@ public class QuartoService {
             throw new RuntimeException("Falha crítica ao tentar deletar o quarto. Houve um erro de dependência inesperado.", e);
         }
     }
+
+    public Page<Quarto> buscarComFiltros(String numeroQuarto, Integer capacidadeMin, String disponibilidade, Pageable pageable) {
+        List<Quarto> todosQuartos = quartoRepository.findAll();
+        
+        // Filtrar por número do quarto
+        if (numeroQuarto != null && !numeroQuarto.trim().isEmpty()) {
+            todosQuartos = todosQuartos.stream()
+                    .filter(q -> q.getNumeroQuarto().contains(numeroQuarto))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+        
+        // Filtrar por capacidade mínima
+        if (capacidadeMin != null && capacidadeMin > 0) {
+            todosQuartos = todosQuartos.stream()
+                    .filter(q -> q.getLeitos().size() >= capacidadeMin)
+                    .collect(java.util.stream.Collectors.toList());
+        }
+        
+        // Filtrar por disponibilidade
+        if (disponibilidade != null && !disponibilidade.trim().isEmpty()) {
+            todosQuartos = todosQuartos.stream()
+                    .filter(q -> {
+                        long leitosOcupados = vagaRepository.countOccupiedBedsByRoom().stream()
+                                .filter(obj -> obj[0].equals(q.getNumeroQuarto()))
+                                .mapToLong(obj -> ((Number) obj[1]).longValue())
+                                .sum();
+                        long totalLeitos = q.getLeitos().size();
+                        
+                        if ("disponivel".equals(disponibilidade)) {
+                            return leitosOcupados < totalLeitos;
+                        } else if ("ocupado".equals(disponibilidade)) {
+                            return leitosOcupados >= totalLeitos;
+                        }
+                        return true;
+                    })
+                    .collect(java.util.stream.Collectors.toList());
+        }
+        
+        // Criar página manualmente
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), todosQuartos.size());
+        List<Quarto> paginatedList = todosQuartos.subList(start, end);
+        
+        return new org.springframework.data.domain.PageImpl<>(paginatedList, pageable, todosQuartos.size());
+    }
 }

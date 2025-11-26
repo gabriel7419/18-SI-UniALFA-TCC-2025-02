@@ -136,7 +136,7 @@
                            class="btn btn-danger btn-sm btn-confirm-delete"
                            data-toggle="tooltip"
                            data-placement="top"
-                           data-confirm-message="Tem certeza que deseja remover o &lt;strong&gt;Quarto ${quarto.numeroQuarto}&lt;/strong&gt; e todos os seus leitos?"
+                           th:attr="data-confirm-message='Tem certeza que deseja remover o &lt;strong&gt;Quarto ' + ${quarto.numeroQuarto} + '&lt;/strong&gt; e todos os seus leitos?'"
                            title="Excluir quarto e leitos">
                             <i class="fas fa-trash"></i>
                         </a>

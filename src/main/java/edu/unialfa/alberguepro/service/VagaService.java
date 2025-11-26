@@ -69,4 +69,13 @@ public class VagaService {
     public Page<Vaga> buscarPorNomeAcolhidoPaginado(String nome, Pageable pageable) {
         return repository.findByAcolhidoNomeContainingIgnoreCase(nome, pageable);
     }
+
+    public Page<Vaga> buscarComFiltros(String nomeAcolhido, String numeroQuarto, String numeroLeito, Pageable pageable) {
+        if ((nomeAcolhido == null || nomeAcolhido.trim().isEmpty()) &&
+            (numeroQuarto == null || numeroQuarto.trim().isEmpty()) &&
+            (numeroLeito == null || numeroLeito.trim().isEmpty())) {
+            return repository.findAll(pageable);
+        }
+        return repository.findByFiltros(nomeAcolhido, numeroQuarto, numeroLeito, pageable);
+    }
 }

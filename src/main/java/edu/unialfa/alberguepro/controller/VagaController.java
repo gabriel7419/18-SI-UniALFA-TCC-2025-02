@@ -228,15 +228,30 @@ public class VagaController {
     }
 
     @GetMapping("/pesquisar")
-    public String pesquisaForm(@RequestParam(value = "filtro", required = false) String filtro, Model model) {
-        List<Vaga> vagas;
-        if (filtro != null && !filtro.isEmpty()) {
-            vagas = service.buscarPorNomeAcolhido(filtro);
-        } else {
-            vagas = service.listarTodos();
-        }
-        model.addAttribute("vagas", vagas);
+    public String pesquisaForm(@RequestParam(value = "filtro", required = false) String filtro,
+                              @RequestParam(value = "numeroQuarto", required = false) String numeroQuarto,
+                              @RequestParam(value = "numeroLeito", required = false) String numeroLeito,
+                              @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "15") int size,
+                              @RequestParam(defaultValue = "acolhido.nome") String sort,
+                              @RequestParam(defaultValue = "asc") String dir,
+                              Model model) {
+        
+        org.springframework.data.domain.Sort.Direction direction = dir.equals("desc") ? 
+            org.springframework.data.domain.Sort.Direction.DESC : org.springframework.data.domain.Sort.Direction.ASC;
+        org.springframework.data.domain.Sort sortObj = org.springframework.data.domain.Sort.by(direction, sort);
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, sortObj);
+        
+        org.springframework.data.domain.Page<Vaga> pageResult = service.buscarComFiltros(filtro, numeroQuarto, numeroLeito, pageable);
+        
+        model.addAttribute("vagas", pageResult.getContent());
+        model.addAttribute("page", pageResult);
         model.addAttribute("filtro", filtro);
+        model.addAttribute("numeroQuarto", numeroQuarto);
+        model.addAttribute("numeroLeito", numeroLeito);
+        model.addAttribute("size", size);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         return "vaga/lista";
     }
 

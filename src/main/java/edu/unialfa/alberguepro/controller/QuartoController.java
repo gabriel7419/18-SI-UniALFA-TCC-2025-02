@@ -116,15 +116,30 @@ public class QuartoController {
     }
 
     @GetMapping("/pesquisar")
-    public String pesquisaForm(@RequestParam(value = "filtro", required = false) String filtro, Model model) {
-        List<Quarto> quartos;
-        if (filtro != null && !filtro.isEmpty()) {
-            quartos = quartoRepository.findByNumeroQuartoContainingIgnoreCase(filtro);
-        } else {
-            quartos = quartoRepository.findAll();
-        }
-        model.addAttribute("quartos", quartos);
+    public String pesquisaForm(@RequestParam(value = "filtro", required = false) String filtro,
+                              @RequestParam(value = "capacidadeMin", required = false) Integer capacidadeMin,
+                              @RequestParam(value = "disponibilidade", required = false) String disponibilidade,
+                              @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "15") int size,
+                              @RequestParam(defaultValue = "numeroQuarto") String sort,
+                              @RequestParam(defaultValue = "asc") String dir,
+                              Model model) {
+        
+        org.springframework.data.domain.Sort.Direction direction = dir.equals("desc") ? 
+            org.springframework.data.domain.Sort.Direction.DESC : org.springframework.data.domain.Sort.Direction.ASC;
+        org.springframework.data.domain.Sort sortObj = org.springframework.data.domain.Sort.by(direction, sort);
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, sortObj);
+        
+        org.springframework.data.domain.Page<Quarto> pageResult = service.buscarComFiltros(filtro, capacidadeMin, disponibilidade, pageable);
+        
+        model.addAttribute("quartos", pageResult.getContent());
+        model.addAttribute("page", pageResult);
         model.addAttribute("filtro", filtro);
+        model.addAttribute("capacidadeMin", capacidadeMin);
+        model.addAttribute("disponibilidade", disponibilidade);
+        model.addAttribute("size", size);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         adicionarContagemDeLeitosOcupados(model);
         return "Quarto/index";
     }
