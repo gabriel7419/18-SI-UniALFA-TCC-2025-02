@@ -255,6 +255,8 @@ public class CadastroAcolhidoController {
 
         acolhido.setCpf(cpfLimpo);
         service.salvar(acolhido);
+        String mensagem = (acolhido.getId() != null) ? "Acolhido atualizado com sucesso!" : "Acolhido cadastrado com sucesso!";
+        redirectAttributes.addFlashAttribute("successMessage", mensagem);
         return "redirect:/cadastroAcolhido/listar";
     }
 

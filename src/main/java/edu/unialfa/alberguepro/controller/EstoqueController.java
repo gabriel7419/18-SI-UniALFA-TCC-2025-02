@@ -155,7 +155,7 @@ public class EstoqueController {
     }
 
     @PostMapping("/salvar")
-    public String salvarProduto(@Valid Produto produto, BindingResult result, Model model) {
+    public String salvarProduto(@Valid Produto produto, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (produto.getNome() != null && produto.getTipo() != null) {
             if (!estoqueService.isNomeAndTipoUnique(produto.getNome(), produto.getTipo(), produto.getId())) {
                 result.rejectValue("nome", "error.produto", "Já existe um produto com este nome e tipo.");
@@ -186,6 +186,9 @@ public class EstoqueController {
         produto.setUnidade(unidadeOptional.get());
         
         estoqueService.salvar(produto);
+        
+        String mensagem = (produto.getId() != null) ? "Produto atualizado com sucesso!" : "Produto cadastrado com sucesso!";
+        redirectAttributes.addFlashAttribute("successMessage", mensagem);
 
         return "redirect:/estoque";
     }
@@ -249,8 +252,9 @@ public class EstoqueController {
     }
 
     @PostMapping("/excluir/{id}")
-    public String excluirProduto(@PathVariable("id") Long id) {
+    public String excluirProduto(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         estoqueService.excluir(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Produto excluído com sucesso!");
         return "redirect:/estoque";
     }
 
