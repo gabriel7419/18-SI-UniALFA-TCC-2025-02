@@ -31,7 +31,7 @@ public class EstoqueService {
             // Novo produto
             tipoMovimentacao = MovimentacaoEstoque.TipoMovimentacao.ENTRADA;
             quantidadeMovimentada = produto.getQuantidade();
-            observacao = "Criação de novo produto no estoque.";
+            observacao = "Inclusão de novo produto no estoque.";
         } else {
             // Produto existente
             Produto produtoExistente = produtoRepository.findById(produto.getId())
@@ -45,7 +45,7 @@ public class EstoqueService {
             } else if (produto.getQuantidade() < quantidadeAnterior) {
                 tipoMovimentacao = MovimentacaoEstoque.TipoMovimentacao.AJUSTE_NEGATIVO;
                 quantidadeMovimentada = quantidadeAnterior - produto.getQuantidade();
-                observacao = "Ajuste manual de estoque (redução).";
+                observacao = "Correção manual de estoque (redução).";
             } else {
                 // A quantidade não mudou, apenas salva outras possíveis alterações (nome, tipo, etc.)
                 return produtoRepository.save(produto);
