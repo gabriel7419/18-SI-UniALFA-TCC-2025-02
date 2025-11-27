@@ -101,7 +101,7 @@
     <columnHeader>
         <band height="30">
             <staticText>
-                <reportElement mode="Opaque" x="0" y="0" width="200" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="c69e9469-7245-4f25-a54e-72a397278f6e"/>
+                <reportElement mode="Opaque" x="0" y="0" width="200" height="30" backcolor="#D3D3D3" forecolor="#FFFFFF" uuid="c69e9469-7245-4f25-a54e-72a397278f6e"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>
@@ -109,7 +109,7 @@
                 <text><![CDATA[Mês/Ano]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="200" y="0" width="120" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="7d0590fc-abda-49b3-ab94-97a438102814"/>
+                <reportElement mode="Opaque" x="200" y="0" width="120" height="30" backcolor="#D3D3D3" forecolor="#FFFFFF" uuid="7d0590fc-abda-49b3-ab94-97a438102814"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>
@@ -117,7 +117,7 @@
                 <text><![CDATA[Total Acolhimentos]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="320" y="0" width="115" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="52ba22dd-a26e-4eb7-8557-eafa34dd3aa6"/>
+                <reportElement mode="Opaque" x="320" y="0" width="115" height="30" backcolor="#D3D3D3" forecolor="#FFFFFF" uuid="52ba22dd-a26e-4eb7-8557-eafa34dd3aa6"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>
@@ -125,7 +125,7 @@
                 <text><![CDATA[Ativas]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="435" y="0" width="120" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="ca9aa263-74ea-487d-b6fd-3231d87b06d2"/>
+                <reportElement mode="Opaque" x="435" y="0" width="120" height="30" backcolor="#D3D3D3" forecolor="#FFFFFF" uuid="ca9aa263-74ea-487d-b6fd-3231d87b06d2"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>
