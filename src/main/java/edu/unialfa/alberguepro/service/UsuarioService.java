@@ -114,13 +114,14 @@ public class UsuarioService {
             throw new IllegalStateException("Não é possível excluir o usuário logado.");
         }
 
-        // Impedir exclusão de usuários administradores e masters
-        if ("ADMIN".equals(usuarioParaExcluir.getRole())) {
-            throw new IllegalStateException("Não é possível excluir usuários administradores.");
-        }
-        
+        // Impedir exclusão de usuários masters
         if ("MASTER".equals(usuarioParaExcluir.getRole())) {
             throw new IllegalStateException("Não é possível excluir usuários master.");
+        }
+        
+        // Apenas MASTER pode excluir ADMIN
+        if ("ADMIN".equals(usuarioParaExcluir.getRole()) && !isMaster) {
+            throw new IllegalStateException("Apenas usuários Master podem excluir administradores.");
         }
 
         usuarioRepository.deleteById(id);
@@ -140,6 +141,11 @@ public class UsuarioService {
         // Check if the user is trying to deactivate themselves
         if (usuario.getUsername().equals(usernameLogado) && usuario.isAtivo()) {
             throw new IllegalStateException("Não é possível desativar o próprio usuário.");
+        }
+        
+        // Impedir que Admin altere status de Master
+        if ("MASTER".equals(usuario.getRole()) && isAdmin && !isMaster) {
+            throw new IllegalStateException("Apenas Masters podem ativar/desativar outros Masters.");
         }
 
         // Impedir que um admin desative outro admin ou master

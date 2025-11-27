@@ -138,8 +138,21 @@
                             </td>
                             <td th:text="${usuario.dataCriacao != null ? #temporals.format(usuario.dataCriacao, 'dd/MM/yyyy HH:mm') : 'N/A'}">01/01/2025 10:00</td>
                             <td>
-                                <!-- Botão de ativar/desativar -->
-                                <form th:action="@{/admin/usuarios/toggle/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">
+                                <!-- Botão de ativar/desativar - desabilitado se admin tentando gerenciar master -->
+                                <button th:if="${isAdmin && !isMaster && usuario.role == 'MASTER'}" 
+                                        type="button"
+                                        th:classappend="${usuario.ativo ? 'btn-outline-success' : 'btn-outline-danger'}"
+                                        class="btn btn-sm disabled"
+                                        style="width: 45px; opacity: 0.5; cursor: not-allowed;"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Apenas Masters podem ativar/desativar outros Masters">
+                                    <i th:classappend="${usuario.ativo ? 'fas fa-toggle-off' : 'fas fa-toggle-on'}"></i>
+                                </button>
+                                
+                                <!-- Botão de ativar/desativar - habilitado -->
+                                <form th:if="${!(isAdmin && !isMaster && usuario.role == 'MASTER')}" 
+                                      th:action="@{/admin/usuarios/toggle/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">
                                     <button type="submit"
                                             th:classappend="${usuario.ativo ? 'btn-outline-success' : 'btn-outline-danger'}"
                                             class="btn btn-sm"
@@ -195,8 +208,8 @@
                                     <i class="fas fa-key"></i>
                                 </a>
                                 
-                                <!-- Botão de excluir com confirmação - DESABILITADO para ADMIN, MASTER -->
-                                <form th:if="${usuario.role != 'ADMIN' && usuario.role != 'MASTER'}" 
+                                <!-- Botão de excluir com confirmação - MASTER pode excluir ADMIN, mas não pode excluir outro MASTER -->
+                                <form th:if="${usuario.role == 'ADMIN' ? isMaster : usuario.role != 'MASTER'}" 
                                       th:action="@{/admin/usuarios/excluir/{id}(id=${usuario.id})}" method="post" style="display: inline-block;">
                                     <button type="submit" class="btn btn-danger btn-sm btn-confirm-delete-form"
                                             data-toggle="tooltip"
@@ -206,14 +219,14 @@
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
-                                <!-- Botão desabilitado para administradores e masters -->
-                                <button th:if="${usuario.role == 'ADMIN' || usuario.role == 'MASTER'}" 
+                                <!-- Botão desabilitado para masters ou admins (quando não é master quem está tentando) -->
+                                <button th:if="${usuario.role == 'MASTER' || (usuario.role == 'ADMIN' && !isMaster)}" 
                                         type="button" 
                                         class="btn btn-danger btn-sm disabled" 
                                         style="opacity: 0.5; cursor: not-allowed;"
                                         data-toggle="tooltip"
                                         data-placement="top"
-                                        th:title="${usuario.role == 'MASTER' ? 'Não é possível excluir masters' : 'Não é possível excluir administradores'}">
+                                        th:title="${usuario.role == 'MASTER' ? 'Não é possível excluir masters' : 'Apenas Masters podem excluir administradores'}">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
