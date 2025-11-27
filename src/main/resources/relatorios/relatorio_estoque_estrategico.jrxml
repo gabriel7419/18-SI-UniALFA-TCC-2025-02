@@ -104,7 +104,7 @@
     <columnHeader>
         <band height="30">
             <staticText>
-                <reportElement mode="Opaque" x="0" y="0" width="200" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="4291f77c-75f5-4b1d-af41-8d3728c8ac04"/>
+                <reportElement mode="Opaque" x="0" y="0" width="200" height="30" backcolor="#D3D3D3" forecolor="#FFFFFF" uuid="4291f77c-75f5-4b1d-af41-8d3728c8ac04"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>
@@ -112,7 +112,7 @@
                 <text><![CDATA[Nome]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="200" y="0" width="100" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="e09a6468-b082-444c-98cf-95af2dd91d9e"/>
+                <reportElement mode="Opaque" x="200" y="0" width="100" height="30" backcolor="#D3D3D3" forecolor="#FFFFFF" uuid="e09a6468-b082-444c-98cf-95af2dd91d9e"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>
@@ -120,7 +120,7 @@
                 <text><![CDATA[Tipo]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="300" y="0" width="80" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="28f7d3c8-12de-4780-9ecc-677ed5c75be1"/>
+                <reportElement mode="Opaque" x="300" y="0" width="80" height="30" backcolor="#D3D3D3" forecolor="#FFFFFF" uuid="28f7d3c8-12de-4780-9ecc-677ed5c75be1"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>
@@ -128,7 +128,7 @@
                 <text><![CDATA[Quantidade]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="380" y="0" width="80" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="cb5eb4f8-706a-43c3-8d67-388c4f5a40b2"/>
+                <reportElement mode="Opaque" x="380" y="0" width="80" height="30" backcolor="#D3D3D3" forecolor="#FFFFFF" uuid="cb5eb4f8-706a-43c3-8d67-388c4f5a40b2"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>
@@ -136,7 +136,7 @@
                 <text><![CDATA[Unidade]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="460" y="0" width="95" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="7e82fb3f-385a-4f34-a692-a2d5df7b79c2"/>
+                <reportElement mode="Opaque" x="460" y="0" width="95" height="30" backcolor="#D3D3D3" forecolor="#FFFFFF" uuid="7e82fb3f-385a-4f34-a692-a2d5df7b79c2"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>

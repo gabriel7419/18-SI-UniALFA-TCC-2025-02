@@ -109,7 +109,7 @@
                 <text><![CDATA[Total Leitos]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="230" y="0" width="110" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="94bceabf-27d8-4e60-82b5-66f5df52c9ce"/>
+                <reportElement mode="Opaque" x="230" y="0" width="110" height="30" backcolor="#D3D3D3" forecolor="#FFFFFF" uuid="94bceabf-27d8-4e60-82b5-66f5df52c9ce"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>
@@ -117,7 +117,7 @@
                 <text><![CDATA[Ocupados]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="340" y="0" width="110" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="24025d89-8c9a-4309-8882-9b024b0d4eb1"/>
+                <reportElement mode="Opaque" x="340" y="0" width="110" height="30" backcolor="#D3D3D3" forecolor="#FFFFFF" uuid="24025d89-8c9a-4309-8882-9b024b0d4eb1"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>
@@ -125,7 +125,7 @@
                 <text><![CDATA[Livres]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="450" y="0" width="105" height="30" backcolor="#007BFF" forecolor="#FFFFFF" uuid="c0ae8584-e9a2-4552-93a5-b7b197684d67"/>
+                <reportElement mode="Opaque" x="450" y="0" width="105" height="30" backcolor="#D3D3D3" forecolor="#FFFFFF" uuid="c0ae8584-e9a2-4552-93a5-b7b197684d67"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>
