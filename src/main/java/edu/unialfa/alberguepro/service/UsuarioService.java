@@ -129,6 +129,10 @@ public class UsuarioService {
     @Transactional
     public boolean toggleAtivo(Long id) {
         String usernameLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                .stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        boolean isMaster = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                .stream().anyMatch(a -> a.getAuthority().equals("ROLE_MASTER"));
 
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Usuário não encontrado: " + id));
@@ -136,6 +140,12 @@ public class UsuarioService {
         // Check if the user is trying to deactivate themselves
         if (usuario.getUsername().equals(usernameLogado) && usuario.isAtivo()) {
             throw new IllegalStateException("Não é possível desativar o próprio usuário.");
+        }
+
+        // Impedir que um admin desative outro admin ou master
+        if (isAdmin && !isMaster && 
+            ("ADMIN".equals(usuario.getRole()) || "MASTER".equals(usuario.getRole()))) {
+            throw new IllegalStateException("Não é permitido desativar administradores ou usuários master.");
         }
 
         // Inverte o status atual (se era true, vira false; se era false, vira true)
