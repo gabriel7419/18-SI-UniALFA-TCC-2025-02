@@ -203,8 +203,14 @@ public class UsuarioController {
             model.addAttribute("usuario", usuario.get());
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+            boolean isMaster = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MASTER"));
             Long selfId = usuarioRepository.findByUsername(auth.getName()).map(u -> u.getId()).orElse(null);
-            boolean requireCurrentPassword = !(isAdmin && selfId != null && !selfId.equals(id));
+            
+            // Não requer senha atual se:
+            // - Admin/Master alterando senha de USER
+            // - Master alterando senha de ADMIN
+            boolean requireCurrentPassword = selfId != null && selfId.equals(id);
+            
             model.addAttribute("requireCurrentPassword", requireCurrentPassword);
             return "admin/usuarios/alterar-senha";
         }

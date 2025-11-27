@@ -126,7 +126,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="ec : ${estadosCivil}"
                                     th:value="${ec}"
-                                    th:text="${ec}">
+                                    th:text="${ec.displayName}">
                             </option>
                         </select>
                         <div th:if="${#fields.hasErrors('estadoCivil')}" th:errors="*{estadoCivil}" class="text-danger"></div>
@@ -194,7 +194,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="es : ${escolaridade}"
                                     th:value="${es}"
-                                    th:text="${es}">
+                                    th:text="${es.displayName}">
                             </option>
                         </select>
                         <div th:if="${#fields.hasErrors('escolaridade')}" th:errors="*{escolaridade}" class="text-danger"></div>
@@ -206,7 +206,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="re : ${renda}"
                                     th:value="${re}"
-                                    th:text="${re}">
+                                    th:text="${re.displayName}">
                             </option>
                         </select>
                         <div th:if="${#fields.hasErrors('renda')}" th:errors="*{renda}" class="text-danger"></div>
@@ -218,7 +218,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="be : ${beneficioSocial}"
                                     th:value="${be}"
-                                    th:text="${be}">
+                                    th:text="${be.displayName}">
                             </option>
                         </select>
                         <div th:if="${#fields.hasErrors('beneficioSocial')}" th:errors="*{beneficioSocial}" class="text-danger"></div>
@@ -247,7 +247,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="es : ${estadoSaude}"
                                     th:value="${es}"
-                                    th:text="${es}">
+                                    th:text="${es.displayName}">
                             </option>
                         </select>
                         <div th:if="${#fields.hasErrors('estadoSaude')}" th:errors="*{estadoSaude}" class="text-danger"></div>
@@ -259,7 +259,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="mc : ${medicamentoControlado}"
                                     th:value="${mc}"
-                                    th:text="${mc}">
+                                    th:text="${mc.displayName}">
                             </option>
                         </select>
                         <div th:if="${#fields.hasErrors('medicamentoControlado')}" th:errors="*{medicamentoControlado}" class="text-danger"></div>
@@ -277,7 +277,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="do : ${doencaSexualmentetransmissivel}"
                                     th:value="${do}"
-                                    th:text="${do}">
+                                    th:text="${do.displayName}">
                             </option>
                         </select>
                         <div th:if="${#fields.hasErrors('doencaSexualmentetransmissivel')}" th:errors="*{doencaSexualmentetransmissivel}" class="text-danger"></div>
@@ -289,7 +289,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="pa : ${possuiAlergia}"
                                     th:value="${pa}"
-                                    th:text="${pa}">
+                                    th:text="${pa.displayName}">
                             </option>
                         </select>
                         <div th:if="${#fields.hasErrors('possuiAlergia')}" th:errors="*{possuiAlergia}" class="text-danger"></div>
@@ -307,7 +307,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="fu : ${fumante}"
                                     th:value="${fu}"
-                                    th:text="${fu}">
+                                    th:text="${fu.displayName}">
                             </option>
                         </select>
                         <div th:if="${#fields.hasErrors('fumante')}" th:errors="*{fumante}" class="text-danger"></div>
@@ -319,7 +319,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="be : ${bebidaAlcoolica}"
                                     th:value="${be}"
-                                    th:text="${be}">
+                                    th:text="${be.displayName}">
                             </option>
                         </select>
                         <div th:if="${#fields.hasErrors('bebidaAlcoolica')}" th:errors="*{bebidaAlcoolica}" class="text-danger"></div>
@@ -331,7 +331,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="dr : ${usaDrogas}"
                                     th:value="${dr}"
-                                    th:text="${dr}">
+                                    th:text="${dr.displayName}">
                             </option>
                         </select>
                         </select>
@@ -360,7 +360,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="sr : ${situacaoRua}"
                                     th:value="${sr}"
-                                    th:text="${sr}">
+                                    th:text="${sr.displayName}">
                             </option>
                         </select>
                         <div th:if="${#fields.hasErrors('situacaoRua')}" th:errors="*{situacaoRua}" class="text-danger"></div>
@@ -378,7 +378,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="vf : ${vinculoFamiliar}"
                                     th:value="${vf}"
-                                    th:text="${vf}">
+                                    th:text="${vf.displayName}">
                             </option>
                         </select>
                         <div th:if="${#fields.hasErrors('vinculoFamiliar')}" th:errors="*{vinculoFamiliar}" class="text-danger"></div>
@@ -402,7 +402,7 @@
                             <option value="">Selecione...</option>
                             <option th:each="sa : ${servicoAcolhimento}"
                                     th:value="${sa}"
-                                    th:text="${sa}">
+                                    th:text="${sa.displayName}">
                             </option>
                         </select>
                         <div th:if="${#fields.hasErrors('servicoAcolhimento')}" th:errors="*{servicoAcolhimento}" class="text-danger"></div>
@@ -636,3 +636,4 @@
 </script>
 </body>
 </html>
+

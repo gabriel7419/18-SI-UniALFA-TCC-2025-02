@@ -252,7 +252,15 @@ public class CadastroAcolhido {
 
     public enum Filho {
         Sim,
-        Nao
+        Nao;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Sim: return "Sim";
+                case Nao: return "Não";
+                default: return this.name();
+            }
+        }
     }
 
     public enum EstadoCivil {
@@ -260,13 +268,28 @@ public class CadastroAcolhido {
         Casado,
         Divorciado,
         UniaoEstavel,
-        Viuvo
+        Viuvo;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Solteiro: return "Solteiro";
+                case Casado: return "Casado";
+                case Divorciado: return "Divorciado";
+                case UniaoEstavel: return "União Estável";
+                case Viuvo: return "Viúvo";
+                default: return this.name();
+            }
+        }
     }
 
     public enum Sexo {
         Masculino,
         Feminino,
-        Outro
+        Outro;
+        
+        public String getDisplayName() {
+            return this.name();
+        }
     }
 
     public enum Escolaridade {
@@ -276,66 +299,171 @@ public class CadastroAcolhido {
         EnsinoMedioIncompleto,
         EnsinoMedioCompleto,
         SuperiorIncompleto,
-        SuperiorCompleto
+        SuperiorCompleto;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Analfabeto: return "Analfabeto";
+                case EnsinoFundamentalIncompleto: return "Ensino Fundamental Incompleto";
+                case EnsinoFundamentalCompleto: return "Ensino Fundamental Completo";
+                case EnsinoMedioIncompleto: return "Ensino Médio Incompleto";
+                case EnsinoMedioCompleto: return "Ensino Médio Completo";
+                case SuperiorIncompleto: return "Superior Incompleto";
+                case SuperiorCompleto: return "Superior Completo";
+                default: return this.name();
+            }
+        }
     }
 
     public enum Renda {
         Sim,
-        Nao
+        Nao;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Sim: return "Sim";
+                case Nao: return "Não";
+                default: return this.name();
+            }
+        }
     }
 
     public enum BeneficioSocial {
         Sim,
-        Nao
+        Nao;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Sim: return "Sim";
+                case Nao: return "Não";
+                default: return this.name();
+            }
+        }
     }
 
     public enum EstadoSaude {
         Bom,
-        Regular
+        Regular;
+        
+        public String getDisplayName() {
+            return this.name();
+        }
     }
 
     public enum MedicamentoControlado {
         Sim,
-        Nao
+        Nao;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Sim: return "Sim";
+                case Nao: return "Não";
+                default: return this.name();
+            }
+        }
     }
 
     public enum DoencaSexualmentetransmissivel {
         Sim,
-        Nao
+        Nao;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Sim: return "Sim";
+                case Nao: return "Não";
+                default: return this.name();
+            }
+        }
     }
 
     public enum PossuiAlergia {
         Sim,
-        Nao
+        Nao;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Sim: return "Sim";
+                case Nao: return "Não";
+                default: return this.name();
+            }
+        }
     }
 
     public enum Fumante {
         Sim,
-        Nao
+        Nao;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Sim: return "Sim";
+                case Nao: return "Não";
+                default: return this.name();
+            }
+        }
     }
 
     public enum BebidaAlcoolica {
         Sim,
-        Nao
+        Nao;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Sim: return "Sim";
+                case Nao: return "Não";
+                default: return this.name();
+            }
+        }
     }
 
     public enum UsaDrogas {
         Sim,
-        Nao
+        Nao;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Sim: return "Sim";
+                case Nao: return "Não";
+                default: return this.name();
+            }
+        }
     }
 
     public enum SituacaoRua {
         Sim,
-        Nao
+        Nao;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Sim: return "Sim";
+                case Nao: return "Não";
+                default: return this.name();
+            }
+        }
     }
 
     public enum VinculoFamiliar {
         Sim,
-        Nao
+        Nao;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Sim: return "Sim";
+                case Nao: return "Não";
+                default: return this.name();
+            }
+        }
     }
 
     public enum ServicoAcolhimento {
         Sim,
-        Nao
+        Nao;
+        
+        public String getDisplayName() {
+            switch(this) {
+                case Sim: return "Sim";
+                case Nao: return "Não";
+                default: return this.name();
+            }
+        }
     }
 }
